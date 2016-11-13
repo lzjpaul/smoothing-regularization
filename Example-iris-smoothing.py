@@ -42,8 +42,8 @@ param_huber = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
               'estimator__mu': [100, 10, 1, 0.1, 1e-2, 1e-3]}
 
 smoothing = OneVsRestClassifier(Smoothing_Regularization())
-param_smoothing = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3], 
-              'estimator__lambd': [100, 10, 1, 0.1, 1e-2, 1e-3]}
+param_smoothing = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
+                   'estimator__alpha': [100, 10, 1, 0.1, 1e-2, 1e-3]}
 
 n_folds = 5
 param_folds = 3
