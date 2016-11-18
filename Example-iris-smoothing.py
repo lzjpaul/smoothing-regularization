@@ -22,7 +22,7 @@ warnings.filterwarnings("ignore")
 # X = scale(data['data'])
 # y = data['target']
 #
-X, y = classificationDataLoader('dataset/diabetic_data_categorical.csv', labelCol=0)
+X, y = classificationDataLoader('dataset/dermatology.categorical.csv', labelCol=-1, sparsify=True)
 print "X.shape = \n", X.shape
 print "y.shape = \n", y.shape
 
@@ -56,7 +56,7 @@ scoring = 'accuracy'
 
 result_df = pandas.DataFrame()
 for i, (train_index, test_index) in enumerate(StratifiedKFold(y, n_folds=n_folds)):
-    for clf_name, clf, param_grid in [#('Smoothing_Regularization', smoothing, param_smoothing),
+    for clf_name, clf, param_grid in [('Smoothing_Regularization', smoothing, param_smoothing),
                                       ('ElasticNet', elastic, param_elastic), 
                                       ('Ridge', ridge, param_ridge), 
                                       # ('HuberSVC', huber, param_huber),

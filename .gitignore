@@ -53,3 +53,10 @@ sklearn/
 
 # ipynb
 .ipynb_checkpoints/
+
+
+# dataset
+/dataset
+
+# pyc files
+*.pyc
