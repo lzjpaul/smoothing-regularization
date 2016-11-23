@@ -6,26 +6,17 @@ from sklearn.linear_model.base import LinearClassifierMixin, BaseEstimator
 from scipy import sparse
 
 
-# def smoothing_grad_descent(X, y, w, C, batch_size):
-#     randomIndex = np.random.random_integers(0, X.shape[0] - 1, batch_size)      # random sample #batch_size samples - SGD
-#     batch_X, batch_y = X[randomIndex], y[randomIndex]
-#
-#     if sparse.issparse(batch_X): batch_X = batch_X.toarray()
-#
-#     grad =  (np.exp(w) - 1) / (np.exp(w) + 1) # log(1+e^(-w)) + log(1+e^(w))
-#     f1 = np.exp(-batch_y * np.dot(w, batch_X.T))
-#     res = np.repeat((C * -batch_y * (f1 / (1.0 + f1))).reshape(batch_X.shape[0], 1), batch_X.shape[1], axis=1) * batch_X
-#     return grad + res.sum(axis=0)
-
 def smoothing_grad_descent(X, y, w, C, batch_size):
-    # debug
-    #print "SGD\n"
-    #randomIndex = np.random.random_integers(0, X.shape[0]-1, batch_size)
-    #X, y = X[randomIndex], y[randomIndex]       # random sample #batch_size samples - SGD
+    randomIndex = np.random.random_integers(0, X.shape[0] - 1, batch_size)      # random sample #batch_size samples - SGD
+    batch_X, batch_y = X[randomIndex], y[randomIndex]
+
+    if sparse.issparse(batch_X): batch_X = batch_X.toarray()
+
     grad =  (np.exp(w) - 1) / (np.exp(w) + 1) # log(1+e^(-w)) + log(1+e^(w))
-    f1 = np.exp(-y * np.dot(w, X.T))
-    res = np.repeat((C * -y * (f1 / (1.0 + f1))).reshape(X.shape[0], 1), X.shape[1], axis=1) * X
+    f1 = np.exp(-batch_y * np.dot(w, batch_X.T))
+    res = np.repeat((C * -batch_y * (f1 / (1.0 + f1))).reshape(batch_X.shape[0], 1), batch_X.shape[1], axis=1) * batch_X
     return grad + res.sum(axis=0)
+
 
 def smoothing_optimizator(X, y, C, max_iter, eps, alpha, decay, batch_size):
     k = 0
