@@ -14,7 +14,7 @@ def classificationDataLoader(fileName, labelCol=-1, delimiter=',', sparsify=Fals
     data = np.loadtxt(fileName, dtype='int32', delimiter=',')
     X, Y = data[:, xrange(data.shape[1]-1) if labelCol==-1 else xrange(1, data.shape[1])], data[:, labelCol]
     #print type(OneHotEncoder().fit_transform(X))
-    return OneHotEncoder().fit_transform(X, ), Y if sparsify==True else OneHotEncoder().fit_transform(X, ).toarray(), Y
+    return (OneHotEncoder().fit_transform(X, ), Y) if sparsify==True else (OneHotEncoder().fit_transform(X, ).toarray(), Y)
 
 
 # X, Y = classificationDataLoader('dataset/test.data')
