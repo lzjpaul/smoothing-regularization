@@ -22,10 +22,10 @@ warnings.filterwarnings("ignore")
 # X = scale(data['data'])
 # y = data['target']
 #
-X, y = classificationDataLoader('dataset/dermatology.categorical.csv', labelCol=-1, sparsify=True)
+X, y = classificationDataLoader('dataset/dermatology.categorical.csv', labelCol=-1, sparsify=False)
 print "X.shape = \n", X.shape
 print "y.shape = \n", y.shape
-
+print type(X)
 
 idx = np.random.permutation(X.shape[0])
 X = X[idx]
@@ -47,8 +47,8 @@ param_huber = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
               'estimator__mu': [100, 10, 1, 0.1, 1e-2, 1e-3]}
 
 smoothing = OneVsRestClassifier(Smoothing_Regularization())
-param_smoothing = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
-                   'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]}
+param_smoothing = {'estimator__C': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3],
+                   'estimator__alpha': [1000000, 100000, 10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]}
 
 n_folds = 5
 param_folds = 3
@@ -59,15 +59,16 @@ for i, (train_index, test_index) in enumerate(StratifiedKFold(y, n_folds=n_folds
     for clf_name, clf, param_grid in [('Smoothing_Regularization', smoothing, param_smoothing),
                                       ('ElasticNet', elastic, param_elastic), 
                                       ('Ridge', ridge, param_ridge), 
-                                      # ('HuberSVC', huber, param_huber),
+                                      #('HuberSVC', huber, param_huber),
                                       ('Lasso', lasso, param_lasso)]:
         print "clf_name: \n", clf_name
-        gs = GridSearchCV(clf, param_grid, scoring=scoring, cv=param_folds, n_jobs=-1)
+        gs = GridSearchCV(clf, param_grid, scoring=scoring, cv=param_folds, n_jobs=1)
         gs.fit(X[train_index], y[train_index])
         best_clf = gs.best_estimator_
 
         score = accuracy_score(y[test_index], best_clf.predict(X[test_index]))
         result_df.loc[i, clf_name] = score
+        print 'coeficient:', best_clf.coef_, '\n best params:', gs.best_params_, '\n best score', gs.best_score_
 
 print "result shows: \n"
 result_df.loc['Mean'] = result_df.mean()

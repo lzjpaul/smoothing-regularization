@@ -3,10 +3,25 @@ __version__ = "0.1.0"
 
 import numpy as np
 from sklearn.linear_model.base import LinearClassifierMixin, BaseEstimator
+from scipy import sparse
+
+
+# def smoothing_grad_descent(X, y, w, C, batch_size):
+#     randomIndex = np.random.random_integers(0, X.shape[0] - 1, batch_size)      # random sample #batch_size samples - SGD
+#     batch_X, batch_y = X[randomIndex], y[randomIndex]
+#
+#     if sparse.issparse(batch_X): batch_X = batch_X.toarray()
+#
+#     grad =  (np.exp(w) - 1) / (np.exp(w) + 1) # log(1+e^(-w)) + log(1+e^(w))
+#     f1 = np.exp(-batch_y * np.dot(w, batch_X.T))
+#     res = np.repeat((C * -batch_y * (f1 / (1.0 + f1))).reshape(batch_X.shape[0], 1), batch_X.shape[1], axis=1) * batch_X
+#     return grad + res.sum(axis=0)
 
 def smoothing_grad_descent(X, y, w, C, batch_size):
-    randomIndex = np.random.random_integers(0, X.shape[0]-1, batch_size)
-    X, y = X[randomIndex], y[randomIndex]       # random sample #batch_size samples - SGD
+    # debug
+    #print "SGD\n"
+    #randomIndex = np.random.random_integers(0, X.shape[0]-1, batch_size)
+    #X, y = X[randomIndex], y[randomIndex]       # random sample #batch_size samples - SGD
     grad =  (np.exp(w) - 1) / (np.exp(w) + 1) # log(1+e^(-w)) + log(1+e^(w))
     f1 = np.exp(-y * np.dot(w, X.T))
     res = np.repeat((C * -y * (f1 / (1.0 + f1))).reshape(X.shape[0], 1), X.shape[1], axis=1) * X
@@ -15,17 +30,18 @@ def smoothing_grad_descent(X, y, w, C, batch_size):
 def smoothing_optimizator(X, y, C, max_iter, eps, alpha, decay, batch_size):
     k = 0
     w = np.zeros(X.shape[1])
-    
+
     while True:
         vec = w
-        
+
         # making optimization in w
         w -= alpha * smoothing_grad_descent(X, y, w, C, batch_size)
-        
+
         alpha -= alpha * decay
         k += 1
 
         if k >= max_iter or np.linalg.norm(w - vec, ord=2) < eps:
+            #print "iteration %d, eps: %.5f" %(k, np.linalg.norm(w - vec, ord=2)), w
             break
 
     return k, w
@@ -45,7 +61,10 @@ class Smoothing_Regularization(BaseEstimator, LinearClassifierMixin):
         self.classes_, y = np.unique(y, return_inverse=True)
         y = 2. * y - 1
         if self.fit_intercept:
-            X = np.hstack((X, np.ones((X.shape[0], 1))))
+            if sparse.issparse(X):
+                X = sparse.hstack([X, np.ones((X.shape[0], 1))], format="csr")
+            else:
+                X = np.hstack((X, np.ones((X.shape[0], 1))))
         self.n_iter_, self.w_, = smoothing_optimizator(X, y, self.C,
                                                      self.max_iter, self.eps, self.alpha, self.decay, self.batch_size)
         self.coef_ = self.w_.reshape((1, X.shape[1]))
