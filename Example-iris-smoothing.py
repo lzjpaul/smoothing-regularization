@@ -1,4 +1,6 @@
 # n_folds = 5
+# python Example-iris-smoothing.py /data1/zhaojing/regularization/uci-dataset/car_evaluation/car.categorical.data 1 1
+# the first 1 is label column, the second 1 is scale or not
 from huber_svm import HuberSVC
 from smoothing_regularization import Smoothing_Regularization
 
@@ -14,6 +16,7 @@ from sklearn.preprocessing import scale
 from DataLoader import classificationDataLoader
 
 import warnings
+import sys
 warnings.filterwarnings("ignore")
 
 # data = load_iris()
@@ -22,11 +25,18 @@ warnings.filterwarnings("ignore")
 # X = scale(data['data'])
 # y = data['target']
 #
-# debug: using scale
-X, y = classificationDataLoader('/data/regularization/car_evaluation/car.categorical.data') # /data/regularization/Audiology/audio_data/audiology.standardized.traintestcategorical.data
+
+labelcol = int(sys.argv[2]) 
+X, y = classificationDataLoader(sys.argv[1], labelCol=(-1 * labelcol))
+# '/data/regularization/car_evaluation/car.categorical.data')
+# /data/regularization/Audiology/audio_data/audiology.standardized.traintestcategorical.data
 print "using data loader"
-print "using scale"
-X = scale(X)
+
+# debug: using scale
+if int(sys.argv[3]) == 1:
+    X = scale(X)
+    print "using scale"
+
 print "X.shape = \n", X.shape
 print "y.shape = \n", y.shape
 
@@ -63,15 +73,16 @@ for i, (train_index, test_index) in enumerate(StratifiedKFold(y, n_folds=n_folds
     for clf_name, clf, param_grid in [('Smoothing_Regularization', smoothing, param_smoothing),
                                       ('ElasticNet', elastic, param_elastic), 
                                       ('Ridge', ridge, param_ridge), 
-                                      ('HuberSVC', huber, param_huber),
+                                      #('HuberSVC', huber, param_huber),
                                       ('Lasso', lasso, param_lasso)]:
         print "clf_name: \n", clf_name
         gs = GridSearchCV(clf, param_grid, scoring=scoring, cv=param_folds, n_jobs=-1)
         gs.fit(X[train_index], y[train_index])
         best_clf = gs.best_estimator_
-
+        
         score = accuracy_score(y[test_index], best_clf.predict(X[test_index]))
         result_df.loc[i, clf_name] = score
+        print 'coeficient:', best_clf.coef_, '\n best params:', gs.best_params_, '\n best score', gs.best_score_
 
 print "result shows: \n"
 result_df.loc['Mean'] = result_df.mean()
