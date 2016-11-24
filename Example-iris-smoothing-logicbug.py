@@ -74,12 +74,15 @@ noreguridge = RidgeClassifier(solver='lsqr')
 param_noreguridge = {'alpha': [0]}
 
 noregu = OneVsRestClassifier(Smoothing_Regularization())
-param_noregu = {'estimator__C': [0],
-                   'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]}
+param_noregu = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
+                'estimator__lambd': [0],
+                'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]}
 
 smoothing = OneVsRestClassifier(Smoothing_Regularization())
-param_smoothing = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-                   'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]}
+param_smoothing = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
+                   'estimator__lambd': [100, 10, 1, 0.1, 1e-2, 1e-3]
+                   #'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]
+                  }
 
 n_folds = 5
 param_folds = 3
@@ -88,14 +91,16 @@ scoring = 'accuracy'
 result_df = pandas.DataFrame()
 for i, (train_index, test_index) in enumerate(StratifiedKFold(y, n_folds=n_folds)):
     for clf_name, clf, param_grid in [('Smoothing_Regularization', smoothing, param_smoothing),
-                                      ('ElasticNet', elastic, param_elastic), 
-                                      ('Ridge', ridge, param_ridge), 
+                                      ('noregu', noregu, param_noregu),
+                                      ('Lasso', lasso, param_lasso),
+                                      ('ElasticNet', elastic, param_elastic),
+                                      ('Ridge', ridge, param_ridge),
                                       ('noregulasso', noregulasso, param_noregulasso),
                                       ('noreguelastic', noreguelastic, param_noreguelastic), 
-                                      ('noreguridge', noreguridge, param_noreguridge),
-                                      ('noregu', noregu, param_noregu), 
-                                      #('HuberSVC', huber, param_huber),
-                                      ('Lasso', lasso, param_lasso)]:
+                                      ('noreguridge', noreguridge, param_noreguridge)
+                                      #('HuberSVC', huber, param_huber)
+                                      #('Lasso', lasso, param_lasso)
+                                      ]:
         print "clf_name: \n", clf_name
         gs = GridSearchCV(clf, param_grid, scoring=scoring, cv=param_folds, n_jobs=-1)
         gs.fit(X[train_index], y[train_index])
