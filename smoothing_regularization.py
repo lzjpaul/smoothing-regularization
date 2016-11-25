@@ -34,13 +34,13 @@ def smoothing_optimizator(X, y, lambd, C, max_iter, eps, alpha, decay, batch_siz
         alpha -= alpha * decay
         k += 1
 
-        print >> f1, "w: ", w
-        print >> f1, "vec", vec
-        print >> f1, "np.linalg.norm(w - vec, ord=2): ", np.linalg.norm(w - vec, ord=2)
-        print >> f1, "k: ", k
+        # print >> f1, "w: ", w
+        # print >> f1, "vec", vec
+        # print >> f1, "np.linalg.norm(w - vec, ord=2): ", np.linalg.norm(w - vec, ord=2)
+        # print >> f1, "k: ", k
         if k >= max_iter or np.linalg.norm(w - vec, ord=2) < eps:
             break
-        print 'k = ', k
+        #print 'k = ', k
     return k, w
 
 class Smoothing_Regularization(BaseEstimator, LinearClassifierMixin):
