@@ -20,7 +20,3 @@ def classificationDataLoader(fileName, labelCol=-1, delimiter=',', sparsify=Fals
 # X, Y = classificationDataLoader('dataset/test.data')
 # print X.shape, Y.shape
 # print X, Y
-
-
-
-
