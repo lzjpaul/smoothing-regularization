@@ -56,7 +56,7 @@ def smoothing_optimizator(X, y, lambd, C, max_iter, eps, alpha, decay, batch_siz
 
 class Smoothing_Regularization(BaseEstimator, LinearClassifierMixin):
 
-    def __init__(self, C=1.,lambd=1., max_iter=1000, eps=0.0001, alpha=0.01, decay=0.01, fit_intercept=True, batch_size=100):
+    def __init__(self, C=1.,lambd=1., max_iter=1000, eps=0.0001, alpha=0.01, decay=0.01, fit_intercept=True, batch_size=30):
         self.C = C
         self.lambd = lambd
         self.max_iter = max_iter
