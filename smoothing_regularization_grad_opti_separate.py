@@ -1,5 +1,4 @@
 #11-23 adding parama lambda for tuning parameters
-#11-29 move x to optimization
 __author__ = "Luo Zhaojing"
 __version__ = "0.1.0"
 
@@ -8,7 +7,25 @@ from sklearn.linear_model.base import LinearClassifierMixin, BaseEstimator
 import random
 from scipy import sparse
 
-def smoothing_grad_descent(batch_X, batch_y, w, param, C):
+def smoothing_grad_descent(X, y, w, param, C, batch_size, batch_iter):
+    # sparse matrix works, random.shuffle
+    # shuffle: next time shuffle index will be forgetten (static variable: smoothing_grad_descent.idx)
+    if not hasattr(smoothing_grad_descent, "idx"):
+        smoothing_grad_descent.idx = np.random.permutation(X.shape[0])
+    print "X.shape: ", X.shape
+    print "max idx: ", max(smoothing_grad_descent.idx)
+    X = X[smoothing_grad_descent.idx]
+    y = y[smoothing_grad_descent.idx]
+    index = (batch_size * batch_iter) % X.shape[0]
+    if (index + batch_size) > X.shape[0]: #new epoch
+        batch_X, batch_y = X[0 : batch_size], y[0: batch_size] #fixed shape
+        batch_X[0 : (X.shape[0] - index)], batch_y[0 : (X.shape[0] - index)] = X[index : X.shape[0]], y[index : X.shape[0]]
+        batch_X[(X.shape[0] - index) : batch_size], batch_y[(X.shape[0] - index) : batch_size] = X[0 : (index + batch_size - X.shape[0])], y[0 : (index + batch_size - X.shape[0])]
+        # trt print the idx
+        smoothing_grad_descent.idx = np.random.permutation(X.shape[0])
+    else: # need else here
+        batch_X, batch_y = X[index : (index + batch_size)], y[index : (index + batch_size)]
+    
     if sparse.issparse(batch_X): batch_X = batch_X.toarray()
 
     grad =  param * (np.exp(w) - 1) / (np.exp(w) + 1) # log(1+e^(-w)) + log(1+e^(w))
@@ -19,31 +36,14 @@ def smoothing_grad_descent(batch_X, batch_y, w, param, C):
     # print 'res.sum(axis=0) shape: ', res.sum(axis=0).shape
     return grad + res.sum(axis=0)
 
-
 def smoothing_optimizator(X, y, lambd, C, max_iter, eps, alpha, decay, batch_size):
     k = 0
     w = np.zeros(X.shape[1])
     f1 = open('outputfile', 'w+')
     
     batch_iter = 0
-    idx = np.random.permutation(X.shape[0])
-    X = X[idx]
-    y = y[idx]
     while True:
-        # sparse matrix works, random.shuffle
-        # shuffle: next time shuffle index will be forgetten (static variable: smoothing_grad_descent.idx)
-        # print "X.shape: ", X.shape
-        # print "max idx: ", max(idx)
-        index = (batch_size * batch_iter) % X.shape[0]
-        
-        if (index + batch_size) > X.shape[0]: #new epoch
-            index = 0
-            idx = np.random.permutation(X.shape[0])
-            X = X[idx]
-            y = y[idx]
-
-        batch_X, batch_y = X[index : (index + batch_size)], y[index : (index + batch_size)]
-        w_update = alpha * smoothing_grad_descent(batch_X, batch_y, w, lambd, C)
+        w_update = alpha * smoothing_grad_descent(X, y, w, lambd, C, batch_size, batch_iter)
         w -= w_update
         alpha -= alpha * decay
         k += 1
