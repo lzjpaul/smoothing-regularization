@@ -23,7 +23,7 @@ def smoothing_grad_descent(batch_X, batch_y, w, param, C):
 def smoothing_optimizator(X, y, lambd, C, max_iter, eps, alpha, decay, batch_size):
     k = 0
     w = np.zeros(X.shape[1])
-    f1 = open('outputfile', 'w+')
+    # f1 = open('outputfile', 'w+')
     
     batch_iter = 0
     idx = np.random.permutation(X.shape[0])
