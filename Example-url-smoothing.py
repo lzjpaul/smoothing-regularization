@@ -20,6 +20,9 @@ from svmlightDataLoader import svmlightclassificationDataLoader
 
 import warnings
 import sys
+import datetime
+import time
+
 warnings.filterwarnings("ignore")
 
 # data = load_iris()
@@ -75,8 +78,9 @@ param_noreguridge = {'alpha': [0]}
 
 noregu = OneVsRestClassifier(Smoothing_Regularization())
 param_noregu = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
-                'estimator__lambd': [0],
-                'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]}
+                'estimator__lambd': [0]
+                # 'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]
+               }
 
 smoothing = OneVsRestClassifier(Smoothing_Regularization())
 param_smoothing = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
@@ -102,6 +106,9 @@ for i, (train_index, test_index) in enumerate(StratifiedKFold(y, n_folds=n_folds
                                       #('Lasso', lasso, param_lasso)
                                       ]:
         print "clf_name: \n", clf_name
+        start = time.time()
+        st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
+        print st
         gs = GridSearchCV(clf, param_grid, scoring=scoring, cv=param_folds, n_jobs=-1)
         gs.fit(X[train_index], y[train_index])
         best_clf = gs.best_estimator_
@@ -109,6 +116,12 @@ for i, (train_index, test_index) in enumerate(StratifiedKFold(y, n_folds=n_folds
         score = accuracy_score(y[test_index], best_clf.predict(X[test_index]))
         result_df.loc[i, clf_name] = score
         print 'coeficient:', best_clf.coef_, '\n best params:', gs.best_params_, '\n best score', gs.best_score_
+        done = time.time()
+        do = datetime.datetime.fromtimestamp(done).strftime('%Y-%m-%d %H:%M:%S')
+        print do
+        elapsed = done - start
+        print elapsed
+
 
 print "result shows: \n"
 result_df.loc['Mean'] = result_df.mean()
