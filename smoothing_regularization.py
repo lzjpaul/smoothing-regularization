@@ -47,8 +47,8 @@ def smoothing_optimizator(X, y, lambd, C, max_iter, eps, alpha, decay, batch_siz
         w -= w_update
         alpha -= alpha * decay
         k += 1
-        # if k % 200 == 0:
-        #    print "smoothing_optimizator k: ", k
+        if k % 200 == 0:
+            print "smoothing_optimizator k: ", k
         batch_iter = batch_iter + 1
         if k >= max_iter or np.linalg.norm(w_update, ord=2) < eps:
             break

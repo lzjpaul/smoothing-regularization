@@ -1,9 +1,9 @@
 # logic bug: set regularization to 0 and see the scale for parameters
-#
-#
-# n_folds = 5
 # python Example-iris-smoothing.py /data1/zhaojing/regularization/uci-dataset/car_evaluation/car.categorical.data 1 1
 # the first 1 is label column, the second 1 is scale or not
+# important parameters
+# n_job = (-)1
+# batchsize = 30
 from huber_svm import HuberSVC
 from smoothing_regularization import Smoothing_Regularization
 
@@ -37,7 +37,7 @@ X, y = svmlightclassificationDataLoader(sys.argv[1])
 # '/data/regularization/car_evaluation/car.categorical.data')
 # /data/regularization/Audiology/audio_data/audiology.standardized.traintestcategorical.data
 print "using data loader"
-
+print "#process is 1?"
 # debug: using scale
 if int(sys.argv[3]) == 1:
     X = scale(X)

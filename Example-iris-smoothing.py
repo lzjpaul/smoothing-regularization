@@ -1,9 +1,9 @@
 # logic bug: set regularization to 0 and see the scale for parameters
-#
-#
-# n_folds = 5
 # python Example-iris-smoothing.py /data1/zhaojing/regularization/uci-dataset/car_evaluation/car.categorical.data 1 1
 # the first 1 is label column, the second 1 is scale or not
+# important parameters
+# n_job = (-)1
+# batchsize = 30
 from huber_svm import HuberSVC
 from smoothing_regularization import Smoothing_Regularization
 
@@ -37,7 +37,7 @@ X, y = classificationDataLoader(sys.argv[1], labelCol=(-1 * labelcol))
 # '/data/regularization/car_evaluation/car.categorical.data')
 # /data/regularization/Audiology/audio_data/audiology.standardized.traintestcategorical.data
 print "using data loader"
-
+print "#process is 1?"
 # debug: using scale
 if int(sys.argv[3]) == 1:
     X = scale(X)
@@ -109,7 +109,7 @@ for i, (train_index, test_index) in enumerate(StratifiedKFold(y, n_folds=n_folds
         start = time.time()
         st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
         print st
-        gs = GridSearchCV(clf, param_grid, scoring=scoring, cv=param_folds, n_jobs=-1)
+        gs = GridSearchCV(clf, param_grid, scoring=scoring, cv=param_folds, n_jobs=1)
         gs.fit(X[train_index], y[train_index])
         best_clf = gs.best_estimator_
         

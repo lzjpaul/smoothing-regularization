@@ -30,6 +30,18 @@ $smoothing_regularization.py: passing batch to smoothing_grad_descent, and shuff
 $Example-iris-smoothing.py: adding time() to calculate durating 
 $Example-url-smoothing.py: adding time() to calculate durating
 
+(5) 11-30
+5-1 the process number is set to 1
+
+
+
+#################################################################################################################
 
 small changes:
 11-29 batchsize = 1 for url-dataset
+11-29 Example-iris-smoothing-lasso.py: put lasso as the first classifier
+11-30:
+run URL data set (singa05 and singa06)
+n_job = 1
+only run one day Day0.svm
+
