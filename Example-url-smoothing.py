@@ -4,6 +4,7 @@
 # important parameters
 # n_job = (-)1
 # batchsize = 30
+# y == +-1??
 from huber_svm import HuberSVC
 from smoothing_regularization import Smoothing_Regularization
 
