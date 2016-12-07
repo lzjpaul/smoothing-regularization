@@ -7,6 +7,7 @@ import numpy as np
 from sklearn.linear_model.base import LinearClassifierMixin, BaseEstimator
 import random
 from scipy import sparse
+from scipy.sparse import csr_matrix
 
 def smoothing_grad_descent(batch_X, batch_y, w, param, C):
     if sparse.issparse(batch_X): batch_X = batch_X.toarray()
@@ -23,6 +24,7 @@ def smoothing_grad_descent(batch_X, batch_y, w, param, C):
 def smoothing_optimizator(X, y, lambd, C, max_iter, eps, alpha, decay, batch_size):
     k = 0
     w = np.zeros(X.shape[1])
+    # print "w shape: ", w.shape
     # f1 = open('outputfile', 'w+')
     
     batch_iter = 0
@@ -47,8 +49,8 @@ def smoothing_optimizator(X, y, lambd, C, max_iter, eps, alpha, decay, batch_siz
         w -= w_update
         alpha -= alpha * decay
         k += 1
-        if k % 200 == 0:
-            print "smoothing_optimizator k: ", k
+        # if k % 200 == 0:
+        #     print "smoothing_optimizator k: ", k
         batch_iter = batch_iter + 1
         if k >= max_iter or np.linalg.norm(w_update, ord=2) < eps:
             break
@@ -70,7 +72,13 @@ class Smoothing_Regularization(BaseEstimator, LinearClassifierMixin):
         self.classes_, y = np.unique(y, return_inverse=True)
         y = 2. * y - 1
         if self.fit_intercept:
-            X = np.hstack((X, np.ones((X.shape[0], 1))))
+            if sparse.issparse(X):
+                # X = np.hstack((X.toarray(), np.ones((X.shape[0], 1))))
+                # X = csr_matrix(X)
+                # X = sparse.hstack((X, csr_matrix(np.ones((X.shape[0], 1))))).tocsr()
+                X = sparse.hstack([X, np.ones((X.shape[0], 1))], format="csr")
+            else:
+                X = np.hstack((X, np.ones((X.shape[0], 1))))
         self.n_iter_, self.w_, = smoothing_optimizator(X, y, self.lambd, self.C,
                                                      self.max_iter, self.eps, self.alpha, self.decay, self.batch_size)
         self.coef_ = self.w_.reshape((1, X.shape[1]))
