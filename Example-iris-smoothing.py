@@ -63,7 +63,11 @@ if __name__ == '__main__':
 
     # debug: using scale
     if args.scale == 1:
-        X = preprocessing.scale(X)
+        if sparse.issparse(X):
+            dense_X = preprocessing.scale(X.toarray())
+            X = sparse.csr_matrix(dense_X)
+        else:
+            X = preprocessing.scale(X)
         print "using scale"
 
     print "X.shape = \n", X.shape
@@ -119,13 +123,13 @@ if __name__ == '__main__':
     result_df = pandas.DataFrame()
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y, n_folds=n_folds)):
         for clf_name, clf, param_grid in [('Smoothing_Regularization', smoothing, param_smoothing),
-                                          ('noregu', noregu, param_noregu),
+                                          # ('noregu', noregu, param_noregu),
                                           ('Lasso', lasso, param_lasso),
                                           ('ElasticNet', elastic, param_elastic),
-                                          ('Ridge', ridge, param_ridge),
-                                          ('noregulasso', noregulasso, param_noregulasso),
-                                          ('noreguelastic', noreguelastic, param_noreguelastic), 
-                                          ('noreguridge', noreguridge, param_noreguridge)
+                                          ('Ridge', ridge, param_ridge)
+                                          # ('noregulasso', noregulasso, param_noregulasso),
+                                          # ('noreguelastic', noreguelastic, param_noreguelastic), 
+                                          # ('noreguridge', noreguridge, param_noreguridge)
                                           #('HuberSVC', huber, param_huber)
                                           #('Lasso', lasso, param_lasso)
                                           ]:
