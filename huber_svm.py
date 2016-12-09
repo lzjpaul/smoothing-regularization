@@ -46,8 +46,16 @@ class HuberSVC(BaseEstimator, LinearClassifierMixin):
     def fit(self, X, y):
         self.classes_, y = np.unique(y, return_inverse=True)
         y = 2. * y - 1
+        #if self.fit_intercept:
+        #    X = np.hstack((X, np.ones((X.shape[0], 1))))
         if self.fit_intercept:
-            X = np.hstack((X, np.ones((X.shape[0], 1))))
+            if sparse.issparse(X):
+                # X = np.hstack((X.toarray(), np.ones((X.shape[0], 1))))
+                # X = csr_matrix(X)
+                # X = sparse.hstack((X, csr_matrix(np.ones((X.shape[0], 1))))).tocsr()
+                X = sparse.hstack([X, np.ones((X.shape[0], 1))], format="csr")
+            else:
+                X = np.hstack((X, np.ones((X.shape[0], 1))))
         self.n_iter_, self.w_, self.v_ = optimizator(X, y, self.lambd, self.mu, self.C, 
                                                      self.max_iter, self.eps, self.alpha, self.decay)
         self.coef_ = np.add(self.w_, self.v_).reshape((1, X.shape[1]))
