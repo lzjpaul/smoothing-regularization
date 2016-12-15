@@ -8,6 +8,10 @@
 # y = +-1?
 # sparse or not?
 # batch SGD or all-data in?
+# 12-15: 
+# ...n_job = -1
+# ...batchsize
+# ...gradient_average
 ##############################################################################
 from huber_svm import HuberSVC
 from smoothing_regularization import Smoothing_Regularization
@@ -44,9 +48,12 @@ if __name__ == '__main__':
     parser.add_argument('-datapath', type=str, help='the dataset path, not svm')
     parser.add_argument('-labelpath', type=str, help='(optional, others are must) the label path, used in NUH data set, not svm')
     parser.add_argument('-labelcolumn', type=int, help='labelcolumn, not svm')
+    parser.add_argument('-batchsize', type=int, help='batchsize')
     parser.add_argument('-svmlight', type=int, help='svmlight or not')
     parser.add_argument('-sparsify', type=int, help='sparsify or not, not svm')
     parser.add_argument('-scale', type=int, help='scale or not')
+    parser.add_argument('-njob', type=int, help='multiple jobs or not')
+    parser.add_argument('-gradaverage', type=int, help='gradient average or not')
     
     args = parser.parse_args()
 
@@ -73,7 +80,7 @@ if __name__ == '__main__':
     print "X.shape = \n", X.shape
     print "X dtype = \n", X.dtype
     print "y.shape = \n", y.shape
-
+    # print "args.batchsize = ", args.batchsize
 
     idx = np.random.permutation(X.shape[0])
     X = X[idx]
@@ -89,10 +96,13 @@ if __name__ == '__main__':
     ridge = RidgeClassifier(solver='lsqr')
     param_ridge = {'alpha': [100, 10, 1, 0.1, 1e-2, 1e-3]}
 
-    huber = OneVsRestClassifier(HuberSVC())
+    huber = OneVsRestClassifier(HuberSVC(batch_size=args.batchsize, gradaverage=args.gradaverage))
     param_huber = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
                   'estimator__lambd': [100, 10, 1, 0.1, 1e-2, 1e-3], 
-                  'estimator__mu': [100, 10, 1, 0.1, 1e-2, 1e-3]}
+                  'estimator__mu': [100, 10, 1, 0.1, 1e-2, 1e-3],
+                  'estimator__gradaverage': [args.gradaverage],
+                  'estimator__batch_size': [args.batchsize]
+                  }
 
     noregulasso = OneVsRestClassifier(Lasso())
     param_noregulasso = {'estimator__alpha': [0]}
@@ -104,15 +114,19 @@ if __name__ == '__main__':
     noreguridge = RidgeClassifier(solver='lsqr')
     param_noreguridge = {'alpha': [0]}
 
-    noregu = OneVsRestClassifier(Smoothing_Regularization())
+    noregu = OneVsRestClassifier(Smoothing_Regularization(batch_size=args.batchsize, gradaverage=args.gradaverage))
     param_noregu = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
-                    'estimator__lambd': [0]
+                    'estimator__lambd': [0],
+                    'estimator__gradaverage': [args.gradaverage],
+                    'estimator__batch_size': [args.batchsize]
                     # 'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]
                    }
 
-    smoothing = OneVsRestClassifier(Smoothing_Regularization())
+    smoothing = OneVsRestClassifier(Smoothing_Regularization(batch_size=args.batchsize, gradaverage=args.gradaverage))
     param_smoothing = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
-                       'estimator__lambd': [100, 10, 1, 0.1, 1e-2, 1e-3]
+                       'estimator__lambd': [100, 10, 1, 0.1, 1e-2, 1e-3],
+                       'estimator__gradaverage': [args.gradaverage],
+                       'estimator__batch_size': [args.batchsize]
                        #'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]
                       }
 
@@ -137,7 +151,14 @@ if __name__ == '__main__':
             start = time.time()
             st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
             print st
-            gs = GridSearchCV(clf, param_grid, scoring=scoring, cv=param_folds, n_jobs=-1)
+
+            number_jobs = 1
+            if args.njob == 1:
+                number_jobs = 1
+            else:
+                number_jobs = -1
+            print "number_jobs: ", number_jobs
+            gs = GridSearchCV(clf, param_grid, scoring=scoring, cv=param_folds, n_jobs=number_jobs)
             gs.fit(X[train_index], y[train_index])
             best_clf = gs.best_estimator_
             
