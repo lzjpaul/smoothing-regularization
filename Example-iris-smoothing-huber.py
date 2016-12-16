@@ -47,6 +47,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('-datapath', type=str, help='the dataset path, not svm')
     parser.add_argument('-labelpath', type=str, help='(optional, others are must) the label path, used in NUH data set, not svm')
+    parser.add_argument('-categoricalindexpath', type=str, help='(optional, others are must) the categorical index path, used in NUH data set')
     parser.add_argument('-labelcolumn', type=int, help='labelcolumn, not svm')
     parser.add_argument('-batchsize', type=int, help='batchsize')
     parser.add_argument('-svmlight', type=int, help='svmlight or not')
@@ -61,7 +62,7 @@ if __name__ == '__main__':
     if args.svmlight == 1:
         X, y = svmlightclassificationDataLoader(fileName=args.datapath)
     else:  
-        X, y = classificationDataLoader( fileName=args.datapath, labelfile=args.labelpath, labelCol=(-1 * args.labelcolumn), sparsify=(args.sparsify==1) )
+        X, y = classificationDataLoader( fileName=args.datapath, labelfile=args.labelpath, categorical_index_file = args.categoricalindexpath, labelCol=(-1 * args.labelcolumn), sparsify=(args.sparsify==1) )
     # '/data/regularization/car_evaluation/car.categorical.data')
     # /data/regularization/Audiology/audio_data/audiology.standardized.traintestcategorical.data
     print "using data loader"
@@ -80,7 +81,7 @@ if __name__ == '__main__':
     print "X.shape = \n", X.shape
     print "X dtype = \n", X.dtype
     print "y.shape = \n", y.shape
-
+    # print "args.batchsize = ", args.batchsize
 
     idx = np.random.permutation(X.shape[0])
     X = X[idx]
@@ -99,7 +100,10 @@ if __name__ == '__main__':
     huber = OneVsRestClassifier(HuberSVC(batch_size=args.batchsize, gradaverage=args.gradaverage))
     param_huber = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
                   'estimator__lambd': [100, 10, 1, 0.1, 1e-2, 1e-3], 
-                  'estimator__mu': [100, 10, 1, 0.1, 1e-2, 1e-3]}
+                  'estimator__mu': [100, 10, 1, 0.1, 1e-2, 1e-3],
+                  'estimator__gradaverage': [args.gradaverage],
+                  'estimator__batch_size': [args.batchsize]
+                  }
 
     noregulasso = OneVsRestClassifier(Lasso())
     param_noregulasso = {'estimator__alpha': [0]}
@@ -113,13 +117,17 @@ if __name__ == '__main__':
 
     noregu = OneVsRestClassifier(Smoothing_Regularization(batch_size=args.batchsize, gradaverage=args.gradaverage))
     param_noregu = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
-                    'estimator__lambd': [0]
+                    'estimator__lambd': [0],
+                    'estimator__gradaverage': [args.gradaverage],
+                    'estimator__batch_size': [args.batchsize]
                     # 'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]
                    }
 
     smoothing = OneVsRestClassifier(Smoothing_Regularization(batch_size=args.batchsize, gradaverage=args.gradaverage))
     param_smoothing = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
-                       'estimator__lambd': [100, 10, 1, 0.1, 1e-2, 1e-3]
+                       'estimator__lambd': [100, 10, 1, 0.1, 1e-2, 1e-3],
+                       'estimator__gradaverage': [args.gradaverage],
+                       'estimator__batch_size': [args.batchsize]
                        #'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]
                       }
 

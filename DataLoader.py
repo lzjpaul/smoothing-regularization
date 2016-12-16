@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 
-def classificationDataLoader(fileName, labelfile,  labelCol=-1, delimiter=',', sparsify=True):
+def classificationDataLoader(fileName, labelfile, categorical_index_file, labelCol=-1, delimiter=',', sparsify=True):
     '''load classification data from fileName, transform into onehot feature representation X, and label Y
         :param
             fileName:   data file
@@ -23,8 +23,11 @@ def classificationDataLoader(fileName, labelfile,  labelCol=-1, delimiter=',', s
         print "data shape in loader: ", data.shape
         X = data
         Y = label
-    return (OneHotEncoder().fit_transform(X, ), Y) if sparsify==True else (OneHotEncoder().fit_transform(X, ).toarray(), Y)
-
+    if categorical_index_file is None:
+        return (OneHotEncoder().fit_transform(X, ), Y) if sparsify==True else (OneHotEncoder().fit_transform(X, ).toarray(), Y)
+    else:
+        categorical_feature_index = np.loadtxt(categorical_index_file, dtype='int32', delimiter=',')
+        return (OneHotEncoder(categorical_features=categorical_feature_index).fit_transform(X, ), Y) if sparsify==True else (OneHotEncoder(categorical_features=categorical_feature_index).fit_transform(X, ).toarray(), Y)
 # X, Y = classificationDataLoader('dataset/test.data')
 # print X.shape, Y.shape
 # print X, Y

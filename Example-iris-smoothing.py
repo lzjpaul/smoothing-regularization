@@ -47,6 +47,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('-datapath', type=str, help='the dataset path, not svm')
     parser.add_argument('-labelpath', type=str, help='(optional, others are must) the label path, used in NUH data set, not svm')
+    parser.add_argument('-categoricalindexpath', type=str, help='(optional, others are must) the categorical index path, used in NUH data set')
     parser.add_argument('-labelcolumn', type=int, help='labelcolumn, not svm')
     parser.add_argument('-batchsize', type=int, help='batchsize')
     parser.add_argument('-svmlight', type=int, help='svmlight or not')
@@ -61,7 +62,7 @@ if __name__ == '__main__':
     if args.svmlight == 1:
         X, y = svmlightclassificationDataLoader(fileName=args.datapath)
     else:  
-        X, y = classificationDataLoader( fileName=args.datapath, labelfile=args.labelpath, labelCol=(-1 * args.labelcolumn), sparsify=(args.sparsify==1) )
+        X, y = classificationDataLoader( fileName=args.datapath, labelfile=args.labelpath, categorical_index_file = args.categoricalindexpath, labelCol=(-1 * args.labelcolumn), sparsify=(args.sparsify==1) )
     # '/data/regularization/car_evaluation/car.categorical.data')
     # /data/regularization/Audiology/audio_data/audiology.standardized.traintestcategorical.data
     print "using data loader"
@@ -82,6 +83,7 @@ if __name__ == '__main__':
     print "y.shape = \n", y.shape
     # print "args.batchsize = ", args.batchsize
 
+    print "isinstance(X, list): ", isinstance(X, list)
     idx = np.random.permutation(X.shape[0])
     X = X[idx]
     y = y[idx]
