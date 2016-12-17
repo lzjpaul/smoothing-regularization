@@ -89,7 +89,7 @@ def huber_optimizator(X, y, lambd, mu, C, max_iter, eps, alpha, decay, batch_siz
         batch_iter = batch_iter + 1
         if k >= max_iter or np.linalg.norm(np.add(w,v) - vec, ord=2) < eps:
             break
-
+    print "huber opt final k: ", k
     return k, w, v
 
 def huber_optimizator_avg(X, y, lambd, mu, C, max_iter, eps, alpha, decay, batch_size):
@@ -124,7 +124,7 @@ def huber_optimizator_avg(X, y, lambd, mu, C, max_iter, eps, alpha, decay, batch
         batch_iter = batch_iter + 1
         if k >= max_iter or np.linalg.norm(np.add(w,v) - vec, ord=2) < eps:
             break
-
+    print "huber opt avg final k: ", k
     return k, w, v
 
 
@@ -162,6 +162,7 @@ def smoothing_optimizator(X, y, lambd, C, max_iter, eps, alpha, decay, batch_siz
         batch_iter = batch_iter + 1
         if k >= max_iter or np.linalg.norm(w_update, ord=2) < eps:
             break
+    print "smoothing opt final k: ", k
     return k, w
 
 def smoothing_optimizator_avg(X, y, lambd, C, max_iter, eps, alpha, decay, batch_size):
@@ -198,4 +199,5 @@ def smoothing_optimizator_avg(X, y, lambd, C, max_iter, eps, alpha, decay, batch
         batch_iter = batch_iter + 1
         if k >= max_iter or np.linalg.norm(w_update, ord=2) < eps:
             break
+    print "smoothing opt avg final k: ", k
     return k, w

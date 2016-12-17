@@ -41,12 +41,12 @@ class Smoothing_Regularization(BaseEstimator, LinearClassifierMixin):
         if self.gradaverage == 0:
             # print "using smoothing_optimizator"
             # print "self.batch_size: ", self.batch_size
-            self.n_iter_, self.w_, = optimizator_gd.smoothing_optimizator(X, y, self.lambd, self.C,
+            self.n_iter_, self.w_ = optimizator_gd.smoothing_optimizator(X, y, self.lambd, self.C,
                                                         self.max_iter, self.eps, self.alpha, self.decay, self.batch_size)
         else:
             # print "using smoothing_optimizator_avg"
             # print "self.batch_size: ", self.batch_size
-            self.n_iter_, self.w_, = optimizator_gd.smoothing_optimizator_avg(X, y, self.lambd, self.C,
+            self.n_iter_, self.w_ = optimizator_gd.smoothing_optimizator_avg(X, y, self.lambd, self.C,
                                                         self.max_iter, self.eps, self.alpha, self.decay, self.batch_size)
         self.coef_ = self.w_.reshape((1, X.shape[1]))
         self.intercept_ = 0.0
