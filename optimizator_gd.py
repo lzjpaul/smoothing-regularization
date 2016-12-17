@@ -71,6 +71,7 @@ def huber_optimizator(X, y, lambd, mu, C, max_iter, eps, alpha, decay, batch_siz
 
         if (index + batch_size) >= X.shape[0]: #new epoch
             index = 0
+            batch_iter = 0 #new epoch
             idx = np.random.permutation(X.shape[0])
             X = X[idx]
             y = y[idx]
@@ -105,6 +106,7 @@ def huber_optimizator_avg(X, y, lambd, mu, C, max_iter, eps, alpha, decay, batch
 
         if (index + batch_size) >= X.shape[0]: #new epoch
             index = 0
+            batch_iter = 0 #new epoch
             idx = np.random.permutation(X.shape[0])
             X = X[idx]
             y = y[idx]
@@ -145,6 +147,7 @@ def smoothing_optimizator(X, y, lambd, C, max_iter, eps, alpha, decay, batch_siz
         
         if (index + batch_size) >= X.shape[0]: #new epoch
             index = 0
+            batch_iter = 0 #new epoch
             idx = np.random.permutation(X.shape[0])
             X = X[idx]
             y = y[idx]
@@ -180,6 +183,7 @@ def smoothing_optimizator_avg(X, y, lambd, C, max_iter, eps, alpha, decay, batch
         
         if (index + batch_size) >= X.shape[0]: #new epoch
             index = 0
+            batch_iter = 0 #new epoch
             idx = np.random.permutation(X.shape[0])
             X = X[idx]
             y = y[idx]
