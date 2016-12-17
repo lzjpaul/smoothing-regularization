@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
+from scipy import sparse
 
 def classificationDataLoader(fileName, labelfile, categorical_index_file, labelCol=-1, delimiter=',', sparsify=True):
     '''load classification data from fileName, transform into onehot feature representation X, and label Y
@@ -15,6 +16,7 @@ def classificationDataLoader(fileName, labelfile, categorical_index_file, labelC
         #print "label file is none"
         data = np.loadtxt(fileName, dtype='int32', delimiter=',')
         X, Y = data[:, xrange(data.shape[1]-1) if labelCol==-1 else xrange(1, data.shape[1])], data[:, labelCol]
+        print "X shape in loader: ", X.shape
         #print type(OneHotEncoder().fit_transform(X))
     else:
         #print "label file is not none"
@@ -27,7 +29,7 @@ def classificationDataLoader(fileName, labelfile, categorical_index_file, labelC
         return (OneHotEncoder().fit_transform(X, ), Y) if sparsify==True else (OneHotEncoder().fit_transform(X, ).toarray(), Y)
     else:
         categorical_feature_index = np.loadtxt(categorical_index_file, dtype='int32', delimiter=',')
-        return (OneHotEncoder(categorical_features=categorical_feature_index).fit_transform(X, ), Y) if sparsify==True else (OneHotEncoder(categorical_features=categorical_feature_index).fit_transform(X, ).toarray(), Y)
+        return (sparse.csr_matrix(OneHotEncoder(categorical_features=categorical_feature_index).fit_transform(X, ).toarray()), Y) if sparsify==True else (OneHotEncoder(categorical_features=categorical_feature_index).fit_transform(X, ).toarray(), Y)
 # X, Y = classificationDataLoader('dataset/test.data')
 # print X.shape, Y.shape
 # print X, Y
