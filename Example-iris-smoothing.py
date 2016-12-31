@@ -14,6 +14,9 @@
 # ...gradient_average
 ##############################################################################
 from huber_svm import HuberSVC
+from lasso_clf import Lasso_Classifier
+from ridge_clf import Ridge_Classifier
+from elasticnet_clf import Elasticnet_Classifier
 from smoothing_regularization import Smoothing_Regularization
 
 import pandas
@@ -88,46 +91,49 @@ if __name__ == '__main__':
     X = X[idx]
     y = y[idx]
 
-    lasso = OneVsRestClassifier(Lasso())
-    param_lasso = {'estimator__alpha': [100, 10, 1, 0.1, 1e-2, 1e-3]}
+    lasso = OneVsRestClassifier(Lasso_Classifier(batch_size=args.batchsize))
+    param_lasso = {'estimator__C': [1.],
+                   'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
+                   'estimator__batch_size': [args.batchsize]}
 
-    elastic = OneVsRestClassifier(ElasticNet())
-    param_elastic = {'estimator__alpha': [100, 10, 1, 0.1, 1e-2, 1e-3], 
-                     'estimator__l1_ratio': np.linspace(0.01, 0.99, 5)}
+    elastic = OneVsRestClassifier(Elasticnet_Classifier(batch_size=args.batchsize))
+    param_elastic = {'estimator__C': [1.],
+                     'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4], 
+                     'estimator__l1_ratio': np.linspace(0.01, 0.99, 5),
+                     'estimator__batch_size': [args.batchsize]}
 
-    ridge = RidgeClassifier(solver='lsqr')
-    param_ridge = {'alpha': [100, 10, 1, 0.1, 1e-2, 1e-3]}
+    ridge = OneVsRestClassifier(Ridge_Classifier(batch_size=args.batchsize))
+    param_ridge = {'estimator__C': [1.],
+                   'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
+                   'estimator__batch_size': [args.batchsize]}
 
-    huber = OneVsRestClassifier(HuberSVC(batch_size=args.batchsize, gradaverage=args.gradaverage))
-    param_huber = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
-                  'estimator__lambd': [100, 10, 1, 0.1, 1e-2, 1e-3], 
-                  'estimator__mu': [100, 10, 1, 0.1, 1e-2, 1e-3],
-                  'estimator__gradaverage': [args.gradaverage],
+    huber = OneVsRestClassifier(HuberSVC(batch_size=args.batchsize))
+    param_huber = {'estimator__C': [1.],
+                  'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4], 
+                  'estimator__mu': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                   'estimator__batch_size': [args.batchsize]
                   }
 
-    noregulasso = OneVsRestClassifier(Lasso())
-    param_noregulasso = {'estimator__alpha': [0]}
+ #   noregulasso = OneVsRestClassifier(Lasso())
+ #   param_noregulasso = {'estimator__alpha': [0]}
 
-    noreguelastic = OneVsRestClassifier(ElasticNet())
-    param_noreguelastic = {'estimator__alpha': [0], 
-                     'estimator__l1_ratio': np.linspace(0.01, 0.99, 5)}
+ #   noreguelastic = OneVsRestClassifier(ElasticNet())
+ #   param_noreguelastic = {'estimator__alpha': [0], 
+ #                    'estimator__l1_ratio': np.linspace(0.01, 0.99, 5)}
 
-    noreguridge = RidgeClassifier(solver='lsqr')
-    param_noreguridge = {'alpha': [0]}
+ #   noreguridge = RidgeClassifier(solver='lsqr')
+ #   param_noreguridge = {'alpha': [0]}
 
-    noregu = OneVsRestClassifier(Smoothing_Regularization(batch_size=args.batchsize, gradaverage=args.gradaverage))
-    param_noregu = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
-                    'estimator__lambd': [0],
-                    'estimator__gradaverage': [args.gradaverage],
-                    'estimator__batch_size': [args.batchsize]
+ #   noregu = OneVsRestClassifier(Smoothing_Regularization(batch_size=args.batchsize, gradaverage=args.gradaverage))
+ #   param_noregu = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
+ #                   'estimator__lambd': [0],
+ #                   'estimator__gradaverage': [args.gradaverage],
+ #                   'estimator__batch_size': [args.batchsize]
                     # 'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]
-                   }
+ #                  }
 
     smoothing = OneVsRestClassifier(Smoothing_Regularization(batch_size=args.batchsize, gradaverage=args.gradaverage))
-    param_smoothing = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
-                       'estimator__lambd': [100, 10, 1, 0.1, 1e-2, 1e-3],
-                       'estimator__gradaverage': [args.gradaverage],
+    param_smoothing = {'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                        'estimator__batch_size': [args.batchsize]
                        #'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]
                       }
