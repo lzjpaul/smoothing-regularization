@@ -8,7 +8,7 @@
 # y = +-1?
 # sparse or not?
 # batch SGD or all-data in?
-# 12-15: 
+# 12-15:
 # ...n_job = -1
 # ...batchsize
 # ...gradient_average
@@ -23,7 +23,8 @@ import pandas
 import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.datasets import load_iris
-from sklearn.multiclass import OneVsRestClassifier
+# from sklearn.multiclass import OneVsRestClassifier
+from logistic_ovr import LogisticOneVsRestClassifier
 from sklearn.linear_model import ElasticNet, Lasso, RidgeClassifier
 from sklearn.grid_search import GridSearchCV
 from sklearn.cross_validation import StratifiedKFold, cross_val_score
@@ -58,13 +59,13 @@ if __name__ == '__main__':
     parser.add_argument('-scale', type=int, help='scale or not')
     parser.add_argument('-njob', type=int, help='multiple jobs or not')
     parser.add_argument('-gradaverage', type=int, help='gradient average or not')
-    
+
     args = parser.parse_args()
 
     labelcol = args.labelcolumn
     if args.svmlight == 1:
         X, y = svmlightclassificationDataLoader(fileName=args.datapath)
-    else:  
+    else:
         X, y = classificationDataLoader( fileName=args.datapath, labelfile=args.labelpath, categorical_index_file = args.categoricalindexpath, labelCol=(-1 * args.labelcolumn), sparsify=(args.sparsify==1) )
     # '/data/regularization/car_evaluation/car.categorical.data')
     # /data/regularization/Audiology/audio_data/audiology.standardized.traintestcategorical.data
@@ -91,40 +92,40 @@ if __name__ == '__main__':
     X = X[idx]
     y = y[idx]
 
-    lasso = OneVsRestClassifier(Lasso_Classifier(batch_size=args.batchsize))
+    lasso = LogisticOneVsRestClassifier(Lasso_Classifier(batch_size=args.batchsize))
     param_lasso = {'estimator__C': [1.],
                    'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                    'estimator__batch_size': [args.batchsize]}
 
-    elastic = OneVsRestClassifier(Elasticnet_Classifier(batch_size=args.batchsize))
+    elastic = LogisticOneVsRestClassifier(Elasticnet_Classifier(batch_size=args.batchsize))
     param_elastic = {'estimator__C': [1.],
-                     'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4], 
+                     'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                      'estimator__l1_ratio': np.linspace(0.01, 0.99, 5),
                      'estimator__batch_size': [args.batchsize]}
 
-    ridge = OneVsRestClassifier(Ridge_Classifier(batch_size=args.batchsize))
+    ridge = LogisticOneVsRestClassifier(Ridge_Classifier(batch_size=args.batchsize))
     param_ridge = {'estimator__C': [1.],
                    'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                    'estimator__batch_size': [args.batchsize]}
 
-    huber = OneVsRestClassifier(HuberSVC(batch_size=args.batchsize))
+    huber = LogisticOneVsRestClassifier(HuberSVC(batch_size=args.batchsize))
     param_huber = {'estimator__C': [1.],
-                  'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4], 
+                  'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                   'estimator__mu': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                   'estimator__batch_size': [args.batchsize]
                   }
 
- #   noregulasso = OneVsRestClassifier(Lasso())
+ #   noregulasso = LogisticOneVsRestClassifier(Lasso())
  #   param_noregulasso = {'estimator__alpha': [0]}
 
- #   noreguelastic = OneVsRestClassifier(ElasticNet())
- #   param_noreguelastic = {'estimator__alpha': [0], 
+ #   noreguelastic = LogisticOneVsRestClassifier(ElasticNet())
+ #   param_noreguelastic = {'estimator__alpha': [0],
  #                    'estimator__l1_ratio': np.linspace(0.01, 0.99, 5)}
 
- #   noreguridge = RidgeClassifier(solver='lsqr')
+ #   noreguridge = LogisticRidgeClassifier(solver='lsqr')
  #   param_noreguridge = {'alpha': [0]}
 
- #   noregu = OneVsRestClassifier(Smoothing_Regularization(batch_size=args.batchsize, gradaverage=args.gradaverage))
+ #   noregu = LogisticOneVsRestClassifier(Smoothing_Regularization(batch_size=args.batchsize, gradaverage=args.gradaverage))
  #   param_noregu = {'estimator__C': [100, 10, 1, 0.1, 1e-2, 1e-3],
  #                   'estimator__lambd': [0],
  #                   'estimator__gradaverage': [args.gradaverage],
@@ -132,7 +133,7 @@ if __name__ == '__main__':
                     # 'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]
  #                  }
 
-    smoothing = OneVsRestClassifier(Smoothing_Regularization(batch_size=args.batchsize, gradaverage=args.gradaverage))
+    smoothing = LogisticOneVsRestClassifier(Smoothing_Regularization(batch_size=args.batchsize))
     param_smoothing = {'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                        'estimator__batch_size': [args.batchsize]
                        #'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]
@@ -150,9 +151,9 @@ if __name__ == '__main__':
                                           ('ElasticNet', elastic, param_elastic),
                                           ('Ridge', ridge, param_ridge)
                                           # ('noregulasso', noregulasso, param_noregulasso),
-                                          # ('noreguelastic', noreguelastic, param_noreguelastic), 
+                                          # ('noreguelastic', noreguelastic, param_noreguelastic),
                                           # ('noreguridge', noreguridge, param_noreguridge)
-                                          #('HuberSVC', huber, param_huber)
+                                          # ('HuberSVC', huber, param_huber)
                                           #('Lasso', lasso, param_lasso)
                                           ]:
             print "clf_name: \n", clf_name
@@ -169,7 +170,7 @@ if __name__ == '__main__':
             gs = GridSearchCV(clf, param_grid, scoring=scoring, cv=param_folds, n_jobs=number_jobs)
             gs.fit(X[train_index], y[train_index])
             best_clf = gs.best_estimator_
-            
+
             score = accuracy_score(y[test_index], best_clf.predict(X[test_index]))
             result_df.loc[i, clf_name] = score
             print 'coeficient:', best_clf.coef_, 'intercept:', best_clf.intercept_, '\n best params:', gs.best_params_, '\n best score', gs.best_score_

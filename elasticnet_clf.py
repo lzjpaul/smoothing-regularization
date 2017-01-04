@@ -11,7 +11,7 @@ from scipy import sparse
 from scipy.sparse import csr_matrix
 import optimizator_gd
 
-class Elasticnet_Classfier(BaseEstimator, LogisticLinearClassifierMixin):
+class Elasticnet_Classifier(BaseEstimator, LogisticLinearClassifierMixin):
 
     def __init__(self, C=1., lambd=1., l1_ratio = 0.01, max_iter=1000, eps=0.0001, alpha=0.01, decay=0.01, fit_intercept=True, batch_size=30):
         self.C = C
@@ -49,7 +49,7 @@ class Elasticnet_Classfier(BaseEstimator, LogisticLinearClassifierMixin):
             # print "using smoothing_optimizator_avg"
             # print "self.batch_size: ", self.batch_size
         self.n_iter_, self.w_ = optimizator_gd.non_huber_optimizator_avg(X, y, self.lambd, self.l1_ratio, self.C,
-                                                    self.max_iter, self.eps, self.alpha, self.l1_ratio, self.decay, self.batch_size, 'elasticnet')
+                                                    self.max_iter, self.eps, self.alpha, self.decay, self.batch_size, 'elasticnet')
         self.coef_ = self.w_.reshape((1, X.shape[1]))
         self.intercept_ = 0.0
         if self.fit_intercept:
@@ -58,7 +58,7 @@ class Elasticnet_Classfier(BaseEstimator, LogisticLinearClassifierMixin):
         return self
 
     def predict_proba(self, X):
-        return super(Smoothing_Regularization, self)._predict_proba_lr(X)
+        return super(Elasticnet_Classfier, self)._predict_proba_lr(X)
 
     def get_params(self, deep=True):
         return {'lambd': self.lambd,

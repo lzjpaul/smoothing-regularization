@@ -6,7 +6,7 @@ dbpcm is the main server that modifies the main code ... (not including batchsiz
 1-2 add param and C for tuning ratio between params and values
 
 $smoothing_regularization_batch.py: vec= copy(w) && adding param and C altogether && using all-samples
-$Example-iris-smoothing-logicbug.py: 
+$Example-iris-smoothing-logicbug.py:
  adding regularization constraint equals 0, such as:
  noreguridge = RidgeClassifier(solver='lsqr')
  param_noreguridge = {'alpha': [0]}
@@ -27,7 +27,7 @@ $ Example-url-smoothing.py: using svmlightDataLoader.py to load data
 4-2 adding time() to calculate durating
 
 $smoothing_regularization.py: passing batch to smoothing_grad_descent, and shuffle in smoothing_optimizator
-$Example-iris-smoothing.py: adding time() to calculate durating 
+$Example-iris-smoothing.py: adding time() to calculate durating
 $Example-url-smoothing.py: adding time() to calculate durating
 
 (5) 11-30
@@ -45,3 +45,7 @@ run URL data set (singa05 and singa06)
 n_job = 1
 only run one day Day0.svm
 
+################################################################################################################
+logistic function
+(1) decison function using lr_linear_mixin.py LogisticLinearClassifierMixin to calculate sigmoid output
+(2) predict using logistic_ovr.py LogisticOneVsRestClassifier to set threshold to .5

@@ -57,7 +57,7 @@ class Ridge_Classifier(BaseEstimator, LogisticLinearClassifierMixin):
         return self
 
     def predict_proba(self, X):
-        return super(Smoothing_Regularization, self)._predict_proba_lr(X)
+        return super(Ridge_Classifier, self)._predict_proba_lr(X)
 
     def get_params(self, deep=True):
         return {'lambd': self.lambd,

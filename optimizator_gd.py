@@ -23,8 +23,8 @@ def huber_grad_descent_avg(batch_X, batch_y, w, v, param, C, is_l1):
 def lasso_grad_descent_avg(batch_X, batch_y, w, param, l1_ratio_or_mu, C):
     if sparse.issparse(batch_X): batch_X = batch_X.toarray()
 
-    grad = param * np.sign(v)
-    f1 = np.exp(-batch_y * np.dot(w + v, batch_X.T))
+    grad = param * np.sign(w)
+    f1 = np.exp(-batch_y * np.dot(w, batch_X.T))
     res = np.repeat((C * -batch_y * (f1 / (1.0 + f1))).reshape(batch_X.shape[0], 1), batch_X.shape[1], axis=1) * batch_X
     ressum = res.sum(axis=0)
     ressum = ressum.astype(np.float)
@@ -35,7 +35,7 @@ def ridge_grad_descent_avg(batch_X, batch_y, w, param, l1_ratio_or_mu, C):
     if sparse.issparse(batch_X): batch_X = batch_X.toarray()
 
     grad = param * 2.0 * w
-    f1 = np.exp(-batch_y * np.dot(w + v, batch_X.T))
+    f1 = np.exp(-batch_y * np.dot(w, batch_X.T))
     res = np.repeat((C * -batch_y * (f1 / (1.0 + f1))).reshape(batch_X.shape[0], 1), batch_X.shape[1], axis=1) * batch_X
     ressum = res.sum(axis=0)
     ressum = ressum.astype(np.float)
@@ -45,8 +45,8 @@ def ridge_grad_descent_avg(batch_X, batch_y, w, param, l1_ratio_or_mu, C):
 def elasticnet_grad_descent_avg(batch_X, batch_y, w, param, l1_ratio_or_mu, C):
     if sparse.issparse(batch_X): batch_X = batch_X.toarray()
 
-    grad = param * l1_ratio_or_mu * np.sign(v) + param * (1 - l1_ratio_or_mu) * w
-    f1 = np.exp(-batch_y * np.dot(w + v, batch_X.T))
+    grad = param * l1_ratio_or_mu * np.sign(w) + param * (1 - l1_ratio_or_mu) * w
+    f1 = np.exp(-batch_y * np.dot(w, batch_X.T))
     res = np.repeat((C * -batch_y * (f1 / (1.0 + f1))).reshape(batch_X.shape[0], 1), batch_X.shape[1], axis=1) * batch_X
     ressum = res.sum(axis=0)
     ressum = ressum.astype(np.float)
@@ -72,7 +72,7 @@ def huber_optimizator_avg(X, y, lambd, l1_ratio_or_mu, C, max_iter, eps, alpha, 
     k = 0
     w = np.zeros(X.shape[1])
     v = np.zeros(X.shape[1])
-    
+
     batch_iter = 0
     idx = np.random.permutation(X.shape[0])
     X = X[idx]
@@ -95,7 +95,7 @@ def huber_optimizator_avg(X, y, lambd, l1_ratio_or_mu, C, max_iter, eps, alpha, 
         # making optimization in w and v
         v -= alpha * grad_descent_avg(batch_X, batch_y, w, v, l1_ratio_or_mu, C, True)
         w -= alpha * grad_descent_avg(batch_X, batch_y, w, v, lambd, C, False)
-        
+
         alpha -= alpha * decay
         k += 1
 
@@ -111,18 +111,18 @@ def non_huber_optimizator_avg(X, y, lambd, l1_ratio_or_mu, C, max_iter, eps, alp
     w = np.zeros(X.shape[1])
     # print "w shape: ", w.shape
     # f1 = open('outputfile', 'w+')
-    
+
     batch_iter = 0
     idx = np.random.permutation(X.shape[0])
     X = X[idx]
     y = y[idx]
-    if clf_name = 'lasso':
+    if clf_name == 'lasso':
         grad_descent_avg = lasso_grad_descent_avg
-    elif clf_name = 'ridge':
+    elif clf_name == 'ridge':
         grad_descent_avg = ridge_grad_descent_avg
-    elif clf_name = 'elasticnet':
+    elif clf_name == 'elasticnet':
         grad_descent_avg = elasticnet_grad_descent_avg
-    elif clf_name = 'smoothing':
+    elif clf_name == 'smoothing':
         grad_descent_avg = smoothing_grad_descent_avg
     while True:
         # sparse matrix works, random.shuffle
@@ -130,7 +130,7 @@ def non_huber_optimizator_avg(X, y, lambd, l1_ratio_or_mu, C, max_iter, eps, alp
         # print "X.shape: ", X.shape
         # print "max idx: ", max(idx)
         index = (batch_size * batch_iter) % X.shape[0]
-        
+
         if (index + batch_size) >= X.shape[0]: #new epoch
             index = 0
             batch_iter = 0 #new epoch
