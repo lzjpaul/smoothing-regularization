@@ -57,7 +57,7 @@ class Lasso_Classifier(BaseEstimator, LogisticLinearClassifierMixin):
         return self
 
     def predict_proba(self, X):
-        return super(Lasso_Classifier, self)._predict_proba_lr(X)
+        return super(Lasso_Classifier, self).decision_function(X)
 
     def get_params(self, deep=True):
         return {'lambd': self.lambd,

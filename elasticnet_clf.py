@@ -58,7 +58,7 @@ class Elasticnet_Classifier(BaseEstimator, LogisticLinearClassifierMixin):
         return self
 
     def predict_proba(self, X):
-        return super(Elasticnet_Classfier, self)._predict_proba_lr(X)
+        return super(Elasticnet_Classfier, self).decision_function(X)
 
     def get_params(self, deep=True):
         return {'lambd': self.lambd,

@@ -28,6 +28,9 @@ class LogisticLinearClassifierMixin(LinearClassifierMixin):
             class would be predicted.
         """
         print "in LogisticLinearClassifierMixin 12121212"
+        print "in LogisticLinearClassifierMixin  X norm: ", np.linalg.norm(X)
+        print "in LogisticLinearClassifierMixin  X shape: ", X.shape
+
         if not hasattr(self, 'coef_') or self.coef_ is None:
             raise NotFittedError("This %(name)s instance is not fitted"
                                  "yet" % {'name': type(self).__name__})
@@ -39,8 +42,13 @@ class LogisticLinearClassifierMixin(LinearClassifierMixin):
             raise ValueError("X has %d features per sample; expecting %d"
                              % (X.shape[1], n_features))
         print "in lr_linear_mixin.py Logistic dot 11-11-11"
+        print "in lr_linear_mixin.py self.intercept_ shape: ", self.intercept_.shape
+        print "in lr_linear_mixin.py self.intercept_ norm: ", np.linalg.norm(self.intercept_)
+        print "in lr_linear_mixin.py self.coef_: ", self.coef_
         scores = safe_sparse_dot(X, self.coef_.T,
                                  dense_output=True) + self.intercept_
         scores = 1. / (1. + np.exp(-scores))
-        print "scores shape: ", scores.shape
+        print "in lr_linear_mixin.py decision function scores norm: ", np.linalg.norm(scores)
+        print "in lr_linear_mixin.py decision function max scores: ", max(scores)
+        print "in lr_linear_mixin.py decision function min scores: ", min(scores)
         return scores.ravel() if scores.shape[1] == 1 else scores

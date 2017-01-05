@@ -53,7 +53,7 @@ class HuberSVC(BaseEstimator, LogisticLinearClassifierMixin):
         return self
 
     def predict_proba(self, X):
-        return super(HuberSVC, self)._predict_proba_lr(X)
+        return super(HuberSVC, self).decision_function(X)
 
     def get_params(self, deep=True):
         return {'lambd': self.lambd,
