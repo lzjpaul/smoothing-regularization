@@ -84,7 +84,9 @@ if __name__ == '__main__':
     # print "args.batchsize = ", args.batchsize
 
     print "isinstance(X, list): ", isinstance(X, list)
+    np.random.seed(10)
     idx = np.random.permutation(X.shape[0])
+    print "data idx: ", idx
     X = X[idx]
     y = y[idx]
 
@@ -160,7 +162,7 @@ if __name__ == '__main__':
             else:
                 number_jobs = -1
             print "number_jobs: ", number_jobs
-            gs = GridSearchCV(clf, param_grid, scoring=scoring, cv=param_folds, n_jobs=number_jobs)
+            gs = GridSearchCV(clf, param_grid, scoring=scoring, cv=param_folds, n_jobs=number_jobs, verbose=5)
             gs.fit(X[train_index], y[train_index])
             best_clf = gs.best_estimator_
             

@@ -14,6 +14,7 @@ def svmlightclassificationDataLoader(fileName):
     '''
     data = load_svmlight_file(fileName)
     X, Y = data[0], data[1]
+    X = X.astype(np.float64)
     #print type(OneHotEncoder().fit_transform(X))
     print "svmlight X shape: ", X.shape
     print "svmlight Y shape: ", Y.shape
