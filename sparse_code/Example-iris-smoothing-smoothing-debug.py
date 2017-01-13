@@ -1,7 +1,10 @@
+# 1-6: only smoothing function
+# 1-7: lambda = 0.01
 # logic bug: set regularization to 0 and see the scale for parameters
 # python Example-iris-smoothing.py /data1/zhaojing/regularization/uci-dataset/car_evaluation/car.categorical.data 1 1
 # the first 1 is label column, the second 1 is scale or not
-
+# 1-6: only smoothing function
+# 1-6: lambda = 0.01
 ########################important parameters##################################
 # n_job = (-)1
 # batchsize = 30
@@ -96,24 +99,25 @@ if __name__ == '__main__':
 
     lasso = LogisticOneVsRestClassifier(Lasso_Classifier(batch_size=args.batchsize))
     param_lasso = {'estimator__C': [1.],
-                   'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
+                   'estimator__lambd': [1e-2, 1e-3, 1e-4],
                    'estimator__batch_size': [args.batchsize]}
 
     elastic = LogisticOneVsRestClassifier(Elasticnet_Classifier(batch_size=args.batchsize))
     param_elastic = {'estimator__C': [1.],
-                     'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
-                     'estimator__l1_ratio': np.linspace(0.01, 0.99, 5),
+                     'estimator__lambd': [1e-2, 1e-3, 1e-4],
+                     # 'estimator__l1_ratio': np.linspace(0.01, 0.99, 5),
+                     'estimator__l1_ratio': [0.5],
                      'estimator__batch_size': [args.batchsize]}
 
     ridge = LogisticOneVsRestClassifier(Ridge_Classifier(batch_size=args.batchsize))
     param_ridge = {'estimator__C': [1.],
-                   'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
+                   'estimator__lambd': [1e-2, 1e-3, 1e-4],
                    'estimator__batch_size': [args.batchsize]}
 
     huber = LogisticOneVsRestClassifier(HuberSVC(batch_size=args.batchsize))
     param_huber = {'estimator__C': [1.],
-                  'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
-                  'estimator__mu': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
+                  'estimator__lambd': [1e-2, 1e-3, 1e-4],
+                  'estimator__mu': [1e-2, 1e-3, 1e-4],
                   'estimator__batch_size': [args.batchsize]
                   }
 
@@ -137,7 +141,7 @@ if __name__ == '__main__':
 
     smoothing = LogisticOneVsRestClassifier(Smoothing_Regularization(batch_size=args.batchsize))
     param_smoothing = {'estimator__C': [1.],
-                       'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
+                       'estimator__lambd': [1e-2, 1e-3, 1e-4, 0.1],
                        'estimator__batch_size': [args.batchsize]
                        #'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]
                       }
@@ -148,15 +152,15 @@ if __name__ == '__main__':
 
     result_df = pandas.DataFrame()
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y, n_folds=n_folds)):
-        for clf_name, clf, param_grid in [('Smoothing_Regularization', smoothing, param_smoothing),
+        for clf_name, clf, param_grid in [# ('Smoothing_Regularization', smoothing, param_smoothing),
                                           # ('noregu', noregu, param_noregu),
-                                          ('Lasso', lasso, param_lasso),
-                                          ('ElasticNet', elastic, param_elastic),
-                                          ('Ridge', ridge, param_ridge)
+                                          # ('Lasso', lasso, param_lasso),
+                                          # ('ElasticNet', elastic, param_elastic),
+                                          # ('Ridge', ridge, param_ridge)
                                           # ('noregulasso', noregulasso, param_noregulasso),
                                           # ('noreguelastic', noreguelastic, param_noreguelastic),
                                           # ('noreguridge', noreguridge, param_noreguridge)
-                                          # ('HuberSVC', huber, param_huber)
+                                          ('HuberSVC', huber, param_huber)
                                           #('Lasso', lasso, param_lasso)
                                           ]:
             print "clf_name: \n", clf_name
@@ -178,13 +182,6 @@ if __name__ == '__main__':
             gs = GridSearchCV(clf, param_grid, scoring=scoring, cv=param_folds, n_jobs=number_jobs, verbose=5)
             gs.fit(X[train_index], y[train_index])
             best_clf = gs.best_estimator_
-
-            print()
-            for params, mean_score, scores in gs.grid_scores_:
-                print("%0.3f (+/-%0.03f) for %r"
-                      % (mean_score, scores.std() * 2, params))
-                print ("scores: ", scores)
-            print()
 
             score = accuracy_score(y[test_index], best_clf.predict(X[test_index]))
             result_df.loc[i, clf_name] = score

@@ -186,6 +186,7 @@ if __name__ == '__main__':
                 print ("scores: ", scores)
             print()
 
+
             score = accuracy_score(y[test_index], best_clf.predict(X[test_index]))
             result_df.loc[i, clf_name] = score
             print 'coeficient:', best_clf.coef_, 'intercept:', best_clf.intercept_, '\n best params:', gs.best_params_, '\n best score', gs.best_score_

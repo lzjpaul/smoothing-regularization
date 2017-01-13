@@ -12,12 +12,16 @@ from scipy.sparse import csr_matrix
 def huber_grad_descent_avg(batch_X, batch_y, w, v, param, C, is_l1):
     if sparse.issparse(batch_X): batch_X = batch_X.toarray()
     # print "in huber gd avg"
+    # print "batch_X norm: ", np.linalg.norm(batch_X)
     grad = param * np.sign(v) if is_l1 else param * 2.0 * w
     f1 = np.exp(-batch_y * np.dot(w + v, batch_X.T))
     res = np.repeat((C * -batch_y * (f1 / (1.0 + f1))).reshape(batch_X.shape[0], 1), batch_X.shape[1], axis=1) * batch_X
     ressum = res.sum(axis=0)
     ressum = ressum.astype(np.float)
     ressum /=  float(batch_X.shape[0])
+    # print "grad: ", grad
+    # print "ressum: ", ressum
+    print "grad + ressum sum: ", np.linalg.norm(grad + ressum)
     return grad + ressum
 
 def lasso_grad_descent_avg(batch_X, batch_y, w, param, l1_ratio_or_mu, C):
@@ -64,6 +68,8 @@ def smoothing_grad_descent_avg(batch_X, batch_y, w, param, l1_ratio_or_mu, C):
     # print "float(batch_X.shape[0]): ", float(batch_X.shape[0])
     # print 'grad.shape: ', grad.shape
     f1 = np.exp(-batch_y * np.dot(w, batch_X.T))
+    # print "f1 norms: ", np.linalg.norm(f1)
+    # print "f1 dtype: ", f1.dtype
     res = np.repeat((C * -batch_y * (f1 / (1.0 + f1))).reshape(batch_X.shape[0], 1), batch_X.shape[1], axis=1) * batch_X
     # print 'res.shape: ', res.shape
     # print 'res.sum(axis=0) shape: ', res.sum(axis=0).shape
@@ -79,6 +85,7 @@ def huber_optimizator_avg(X, y, lambd, l1_ratio_or_mu, C, max_iter, eps, alpha, 
     v = np.zeros(X.shape[1])
 
     batch_iter = 0
+    np.random.seed(10)
     idx = np.random.permutation(X.shape[0])
     X = X[idx]
     y = y[idx]
@@ -90,6 +97,7 @@ def huber_optimizator_avg(X, y, lambd, l1_ratio_or_mu, C, max_iter, eps, alpha, 
         if (index + batch_size) >= X.shape[0]: #new epoch
             index = 0
             batch_iter = 0 #new epoch
+            np.random.seed(k)
             idx = np.random.permutation(X.shape[0])
             X = X[idx]
             y = y[idx]
@@ -100,6 +108,12 @@ def huber_optimizator_avg(X, y, lambd, l1_ratio_or_mu, C, max_iter, eps, alpha, 
         # making optimization in w and v
         v -= alpha * grad_descent_avg(batch_X, batch_y, w, v, l1_ratio_or_mu, C, True)
         w -= alpha * grad_descent_avg(batch_X, batch_y, w, v, lambd, C, False)
+        # v_update = alpha * grad_descent_avg(batch_X, batch_y, w, v, l1_ratio_or_mu, C, True)
+        # v -= v_update
+        # print "v_update norm: ", np.linalg.norm(v_update)
+        # w_update = alpha * grad_descent_avg(batch_X, batch_y, w, v, lambd, C, False)
+        # w -= w_update
+        # print "w_update norm: ", np.linalg.norm(w_update)
 
         alpha -= alpha * decay
         k += 1
@@ -118,7 +132,9 @@ def non_huber_optimizator_avg(X, y, lambd, l1_ratio_or_mu, C, max_iter, eps, alp
     # f1 = open('outputfile', 'w+')
 
     batch_iter = 0
+    np.random.seed(10)
     idx = np.random.permutation(X.shape[0])
+    print "data idx: ", idx
     X = X[idx]
     y = y[idx]
     if clf_name == 'lasso':
@@ -139,12 +155,14 @@ def non_huber_optimizator_avg(X, y, lambd, l1_ratio_or_mu, C, max_iter, eps, alp
         if (index + batch_size) >= X.shape[0]: #new epoch
             index = 0
             batch_iter = 0 #new epoch
+            np.random.seed(k)
             idx = np.random.permutation(X.shape[0])
             X = X[idx]
             y = y[idx]
 
         batch_X, batch_y = X[index : (index + batch_size)], y[index : (index + batch_size)]
         w_update = alpha * grad_descent_avg(batch_X, batch_y, w, lambd, l1_ratio_or_mu, C)
+        print "w_update norm: ", np.linalg.norm(w_update)
         w -= w_update
         alpha -= alpha * decay
         k += 1

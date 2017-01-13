@@ -1,3 +1,5 @@
+# 1-10: only smoothing
+# 1-10: param only 100 and 10
 # logic bug: set regularization to 0 and see the scale for parameters
 # python Example-iris-smoothing.py /data1/zhaojing/regularization/uci-dataset/car_evaluation/car.categorical.data 1 1
 # the first 1 is label column, the second 1 is scale or not
@@ -136,8 +138,8 @@ if __name__ == '__main__':
  #                  }
 
     smoothing = LogisticOneVsRestClassifier(Smoothing_Regularization(batch_size=args.batchsize))
-    param_smoothing = {'estimator__C': [1.],
-                       'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
+    param_smoothing = {'estimator__C': [100],
+                       'estimator__lambd': [10],
                        'estimator__batch_size': [args.batchsize]
                        #'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]
                       }
@@ -150,9 +152,9 @@ if __name__ == '__main__':
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y, n_folds=n_folds)):
         for clf_name, clf, param_grid in [('Smoothing_Regularization', smoothing, param_smoothing),
                                           # ('noregu', noregu, param_noregu),
-                                          ('Lasso', lasso, param_lasso),
-                                          ('ElasticNet', elastic, param_elastic),
-                                          ('Ridge', ridge, param_ridge)
+                                          # ('Lasso', lasso, param_lasso),
+                                          # ('ElasticNet', elastic, param_elastic),
+                                          # ('Ridge', ridge, param_ridge)
                                           # ('noregulasso', noregulasso, param_noregulasso),
                                           # ('noreguelastic', noreguelastic, param_noreguelastic),
                                           # ('noreguridge', noreguridge, param_noreguridge)
@@ -178,13 +180,6 @@ if __name__ == '__main__':
             gs = GridSearchCV(clf, param_grid, scoring=scoring, cv=param_folds, n_jobs=number_jobs, verbose=5)
             gs.fit(X[train_index], y[train_index])
             best_clf = gs.best_estimator_
-
-            print()
-            for params, mean_score, scores in gs.grid_scores_:
-                print("%0.3f (+/-%0.03f) for %r"
-                      % (mean_score, scores.std() * 2, params))
-                print ("scores: ", scores)
-            print()
 
             score = accuracy_score(y[test_index], best_clf.predict(X[test_index]))
             result_df.loc[i, clf_name] = score

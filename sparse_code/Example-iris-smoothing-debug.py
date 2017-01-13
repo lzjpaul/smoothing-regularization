@@ -136,8 +136,7 @@ if __name__ == '__main__':
  #                  }
 
     smoothing = LogisticOneVsRestClassifier(Smoothing_Regularization(batch_size=args.batchsize))
-    param_smoothing = {'estimator__C': [1.],
-                       'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
+    param_smoothing = {'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                        'estimator__batch_size': [args.batchsize]
                        #'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]
                       }
@@ -145,18 +144,19 @@ if __name__ == '__main__':
     n_folds = 5
     param_folds = 3
     scoring = 'accuracy'
+    # scoring = 'roc_auc'
 
     result_df = pandas.DataFrame()
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y, n_folds=n_folds)):
-        for clf_name, clf, param_grid in [('Smoothing_Regularization', smoothing, param_smoothing),
+        for clf_name, clf, param_grid in [# ('Smoothing_Regularization', smoothing, param_smoothing),
                                           # ('noregu', noregu, param_noregu),
-                                          ('Lasso', lasso, param_lasso),
-                                          ('ElasticNet', elastic, param_elastic),
-                                          ('Ridge', ridge, param_ridge)
+                                          # ('Lasso', lasso, param_lasso),
+                                          # ('ElasticNet', elastic, param_elastic),
+                                          # ('Ridge', ridge, param_ridge)
                                           # ('noregulasso', noregulasso, param_noregulasso),
                                           # ('noreguelastic', noreguelastic, param_noreguelastic),
                                           # ('noreguridge', noreguridge, param_noreguridge)
-                                          # ('HuberSVC', huber, param_huber)
+                                          ('HuberSVC', huber, param_huber)
                                           #('Lasso', lasso, param_lasso)
                                           ]:
             print "clf_name: \n", clf_name
@@ -176,15 +176,12 @@ if __name__ == '__main__':
                 number_jobs = args.njob
             print "number_jobs: ", number_jobs
             gs = GridSearchCV(clf, param_grid, scoring=scoring, cv=param_folds, n_jobs=number_jobs, verbose=5)
+            # print "in Example-iris.py X[train] norm: ", np.linalg.norm(X[train_index])
+            print "in Example-iris.py X[train]shape: ", X[train_index].shape
+            print "in Example-iris.py y[train] norm: ", np.linalg.norm(y[train_index])
+            print "in Example-iris.py y[train]shape: ", y[train_index].shape
             gs.fit(X[train_index], y[train_index])
             best_clf = gs.best_estimator_
-
-            print()
-            for params, mean_score, scores in gs.grid_scores_:
-                print("%0.3f (+/-%0.03f) for %r"
-                      % (mean_score, scores.std() * 2, params))
-                print ("scores: ", scores)
-            print()
 
             score = accuracy_score(y[test_index], best_clf.predict(X[test_index]))
             result_df.loc[i, clf_name] = score
