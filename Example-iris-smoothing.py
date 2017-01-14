@@ -96,22 +96,26 @@ if __name__ == '__main__':
 
     lasso = LogisticOneVsRestClassifier(Lasso_Classifier(batch_size=args.batchsize))
     param_lasso = {'estimator__C': [1.],
+                   'estimator__alpha': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                    'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                    'estimator__batch_size': [args.batchsize]}
 
     elastic = LogisticOneVsRestClassifier(Elasticnet_Classifier(batch_size=args.batchsize))
     param_elastic = {'estimator__C': [1.],
+                     'estimator__alpha': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                      'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                      'estimator__l1_ratio': np.linspace(0.01, 0.99, 5),
                      'estimator__batch_size': [args.batchsize]}
 
     ridge = LogisticOneVsRestClassifier(Ridge_Classifier(batch_size=args.batchsize))
     param_ridge = {'estimator__C': [1.],
+                   'estimator__alpha': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                    'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                    'estimator__batch_size': [args.batchsize]}
 
     huber = LogisticOneVsRestClassifier(HuberSVC(batch_size=args.batchsize))
     param_huber = {'estimator__C': [1.],
+                  'estimator__alpha': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                   'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                   'estimator__mu': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                   'estimator__batch_size': [args.batchsize]
@@ -137,6 +141,7 @@ if __name__ == '__main__':
 
     smoothing = LogisticOneVsRestClassifier(Smoothing_Regularization(batch_size=args.batchsize))
     param_smoothing = {'estimator__C': [1.],
+                       'estimator__alpha': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                        'estimator__lambd': [1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4],
                        'estimator__batch_size': [args.batchsize]
                        #'estimator__alpha': [10000, 1000, 100, 10, 1, 0.1, 1e-2, 1e-3, 1e-4]
