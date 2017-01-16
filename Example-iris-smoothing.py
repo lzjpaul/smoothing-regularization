@@ -59,6 +59,7 @@ if __name__ == '__main__':
     parser.add_argument('-scale', type=int, help='scale or not')
     parser.add_argument('-njob', type=int, help='multiple jobs or not')
     parser.add_argument('-gradaverage', type=int, help='gradient average or not')
+    parser.add_argument('--not_onehot', action='store_true', help='not using one-hot')
 
     args = parser.parse_args()
 
@@ -66,7 +67,7 @@ if __name__ == '__main__':
     if args.svmlight == 1:
         X, y = svmlightclassificationDataLoader(fileName=args.datapath)
     else:
-        X, y = classificationDataLoader( fileName=args.datapath, labelfile=args.labelpath, categorical_index_file = args.categoricalindexpath, labelCol=(-1 * args.labelcolumn), sparsify=(args.sparsify==1) )
+        X, y = classificationDataLoader( fileName=args.datapath, labelfile=args.labelpath, categorical_index_file = args.categoricalindexpath, labelCol=(-1 * args.labelcolumn), sparsify=(args.sparsify==1), not_onehot=args.not_onehot )
     # '/data/regularization/car_evaluation/car.categorical.data')
     # /data/regularization/Audiology/audio_data/audiology.standardized.traintestcategorical.data
     print "using data loader"

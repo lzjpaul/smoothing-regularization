@@ -21,7 +21,7 @@ def huber_grad_descent_avg(batch_X, batch_y, w, v, param, C, is_l1):
     ressum /=  float(batch_X.shape[0])
     # print "grad: ", grad
     # print "ressum: ", ressum
-    print "grad + ressum sum: ", np.linalg.norm(grad + ressum)
+    print "huber grad + ressum sum: ", np.linalg.norm(grad + ressum)
     return grad + ressum
 
 def lasso_grad_descent_avg(batch_X, batch_y, w, param, l1_ratio_or_mu, C):
@@ -162,12 +162,12 @@ def non_huber_optimizator_avg(X, y, lambd, l1_ratio_or_mu, C, max_iter, eps, alp
 
         batch_X, batch_y = X[index : (index + batch_size)], y[index : (index + batch_size)]
         w_update = alpha * grad_descent_avg(batch_X, batch_y, w, lambd, l1_ratio_or_mu, C)
-        print "w_update norm: ", np.linalg.norm(w_update)
+        # print "w_update norm: ", np.linalg.norm(w_update)
         w -= w_update
         alpha -= alpha * decay
         k += 1
-        # if k % 200 == 0:
-        print "smoothing_optimizator k: ", k
+        if k % 200 == 0:
+            print "smoothing_optimizator k: ", k
         batch_iter = batch_iter + 1
         if k >= max_iter or np.linalg.norm(w_update, ord=2) < eps:
             break

@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 from scipy import sparse
 
-def classificationDataLoader(fileName, labelfile, categorical_index_file, labelCol=-1, delimiter=',', sparsify=True):
+def classificationDataLoader(fileName, labelfile, categorical_index_file, labelCol=-1, delimiter=',', sparsify=True, not_onehot=False):
     '''load classification data from fileName, transform into onehot feature representation X, and label Y
         :param
             fileName:   data file
@@ -26,10 +26,20 @@ def classificationDataLoader(fileName, labelfile, categorical_index_file, labelC
         X = data
         Y = label
     if categorical_index_file is None:
-        return (OneHotEncoder().fit_transform(X, ), Y) if sparsify==True else (OneHotEncoder().fit_transform(X, ).toarray(), Y)
+        if not_onehot:
+            print "no one-hot encoding1"
+            return (X.astype(np.float), Y)
+        else:
+            print "one-hot encoding2"
+            return (OneHotEncoder().fit_transform(X, ), Y) if sparsify==True else (OneHotEncoder().fit_transform(X, ).toarray(), Y)
     else:
-        categorical_feature_index = np.loadtxt(categorical_index_file, dtype='int32', delimiter=',')
-        return (sparse.csr_matrix(OneHotEncoder(categorical_features=categorical_feature_index).fit_transform(X, ).toarray()), Y) if sparsify==True else (OneHotEncoder(categorical_features=categorical_feature_index).fit_transform(X, ).toarray(), Y)
+        if not_onehot:
+            print "no one-hot encoding3"
+            return (X.astype(np.float), Y)
+        else:
+            print "one-hot encoding4"
+            categorical_feature_index = np.loadtxt(categorical_index_file, dtype='int32', delimiter=',')
+            return (sparse.csr_matrix(OneHotEncoder(categorical_features=categorical_feature_index).fit_transform(X, ).toarray()), Y) if sparsify==True else (OneHotEncoder(categorical_features=categorical_feature_index).fit_transform(X, ).toarray(), Y)
 # X, Y = classificationDataLoader('dataset/test.data')
 # print X.shape, Y.shape
 # print X, Y
