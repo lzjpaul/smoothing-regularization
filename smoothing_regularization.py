@@ -29,14 +29,14 @@ class Smoothing_Regularization(BaseEstimator, LogisticLinearClassifierMixin):
         # print "init self.gradaverage: ", self.gradaverage
 
     def fit(self, X, y):
-        print "fit begin y: ", y[0:100]
+        # print "fit begin y: ", y[0:100]
         self.classes_, y = np.unique(y, return_inverse=True)
         print "in Smoothing_Regularization fit"
         print "fit X shape: ", X.shape
         # print "fit X norm: ", np.linalg.norm(X)
         print "fit y shape: ", y.shape
         print "fit y norm: ", np.linalg.norm(y)
-        print "fit y after unique: ", y[0:100]
+        # print "fit y after unique: ", y[0:100]
         print "fit y after unique self.classes_: ", self.classes_
         y = 2. * y - 1
         if self.fit_intercept:

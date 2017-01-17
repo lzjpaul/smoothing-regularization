@@ -134,7 +134,7 @@ def non_huber_optimizator_avg(X, y, lambd, l1_ratio_or_mu, C, max_iter, eps, alp
     batch_iter = 0
     np.random.seed(10)
     idx = np.random.permutation(X.shape[0])
-    print "data idx: ", idx
+    # print "data idx: ", idx
     X = X[idx]
     y = y[idx]
     if clf_name == 'lasso':

@@ -175,6 +175,7 @@ if __name__ == '__main__':
             #    number_jobs = 1
             #else:
             #    number_jobs = -1
+            print "args.njob: ", args.njob
             number_jobs = 1
             if args.njob == 100:
                 number_jobs = -1
