@@ -1,0 +1,11 @@
+# pycharm IDE
+.idea/
+
+# pyc file
+*.pyc
+
+# test file
+test.py
+
+# pkl data file
+simulator.pkl
