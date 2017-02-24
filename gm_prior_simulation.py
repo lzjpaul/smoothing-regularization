@@ -21,13 +21,13 @@ class Simulator():
         # generate w with corresponding gaussian variance
         gm_count = np.bincount(self.w_origin)
         for gm_index in xrange(self.gm_num):
-            self.w[self.w_origin==gm_index] = np.random.normal(0.0, self.variance[gm_index], size=(gm_count[gm_index]))
+            self.w[self.w_origin==gm_index] = np.random.normal(0.0, np.sqrt(self.variance[gm_index]), size=(gm_count[gm_index]))
 
     def xGenerator(self):
         self.x = np.random.multivariate_normal(mean=np.zeros(shape=(self.dimension)), cov=self.covariance, size=(self.sample_num,))
 
     def labelGenerator(self, noiseVar=0.1):
-        lg = np.dot(self.x, self.w) + np.random.normal(0.0, noiseVar, size=(self.sample_num))
+        lg = np.dot(self.x, self.w) + np.random.normal(0.0, np.sqrt(noiseVar), size=(self.sample_num)) # adding the gaussian noise term
         y_vals = 1/(1+np.exp(-lg))
 
         uniform_vals = np.random.uniform(low=0.0, high=1.0, size=(self.sample_num))
