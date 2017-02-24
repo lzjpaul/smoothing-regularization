@@ -35,7 +35,7 @@ class Logistic_Regression():
         xTrain = np.hstack((np.ones(shape=(self.trainNum, 1)), xTrain))
 
         try:
-            iter, best_accuracy, best_iter = 0, 0.0, 0
+            iter, self.best_accuracy, self.best_iter = 0, 0.0, 0
             while True:
                 # calc the delta_w to update w
                 delta_w = self.delta_w(xTrain, yTrain)
@@ -49,15 +49,14 @@ class Logistic_Regression():
 
                 test_accuracy = self.accuracy(self.predict(xTest), yTest)
                 train_accuracy = self.accuracy(self.predict(xTrain), yTrain)
-                if best_accuracy < test_accuracy:
-                    best_accuracy, best_iter = test_accuracy, iter
+                if self.best_accuracy < test_accuracy:
+                    self.best_accuracy, self.best_iter = test_accuracy, iter
                 print "iter %4d\t|\ttrain_accuracy %10.6f\t|\ttest_accuracy %10.6f\t|\tbest_accuracy %10.6f"\
-                      %(iter, train_accuracy, test_accuracy, best_accuracy)
+                      %(iter, train_accuracy, test_accuracy, self.best_accuracy)
         except:
             pass
         finally:
-            print 'model parameter {\treg: %.6f, lr: %.6f, batch_size: %5d, best_iter: %6d, best_accuracy: %.6f\t}' \
-                %(self.reg_lambda, self.learning_rate, self.batch_size, best_iter, best_accuracy)
+            print self
 
 
     # predict result
@@ -74,19 +73,22 @@ class Logistic_Regression():
     def sigmoid(self, matrix):
         return 1.0/(1.0+np.exp(-matrix))
 
-
+    # model parameter
+    def __str__(self):
+        return 'model parameter {\treg: %.6f, lr: %.6f, batch_size: %5d, best_iter: %6d, best_accuracy: %.6f\t}' \
+            % (self.reg_lambda, self.learning_rate, self.batch_size, self.best_iter, self.best_accuracy)
 
 if __name__ == '__main__':
     # load the simulation data
     xTrain, xTest, yTrain, yTest = loadData('simulator.pkl', trainPerc=0.7)
 
     # create logistic regression class
-    reg_lambda, learning_rate, max_iter, eps, batch_size = 1, 0.1, 100, 1e-3, 500
+    reg_lambda, learning_rate, max_iter, eps, batch_size = 1, 0.1, 100, 1e-3, 7000
     LG = Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
     LG.fit(xTrain, yTrain, xTest, yTest)
 
 
 '''
-
+model parameter {	reg: 1.000000, lr: 0.100000, batch_size:  7000, best_iter:     39, best_accuracy: 0.900667	}
 '''
 
