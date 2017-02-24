@@ -1,3 +1,8 @@
+'''
+Cai Shaofeng - 2017.2
+Implementation of the Logistic Regression
+'''
+
 import numpy as np
 import matplotlib.pyplot as plt
 import pickle
@@ -21,8 +26,10 @@ class Simulator():
     def xGenerator(self):
         self.x = np.random.multivariate_normal(mean=np.zeros(shape=(self.dimension)), cov=self.covariance, size=(self.sample_num,))
 
-    def labelGenerator(self):
-        y_vals = 1/(1+np.exp(-np.dot(self.x, self.w)))
+    def labelGenerator(self, noiseVar=0.1):
+        lg = np.dot(self.x, self.w) + np.random.normal(0.0, noiseVar, size=(self.sample_num))
+        y_vals = 1/(1+np.exp(-lg))
+
         uniform_vals = np.random.uniform(low=0.0, high=1.0, size=(self.sample_num))
         self.label = (y_vals>=uniform_vals)
 
@@ -58,10 +65,19 @@ if __name__ == '__main__':
     simulator.labelGenerator()
 
     # save the generated simulator
-    with open('simulator.pkl', 'wb') as saveFile:
+    with open('simulator.pkl', 'w') as saveFile:
         pickle.dump(simulator, saveFile)
 
 '''
 generated results see generated_y_vals.dta
 simulator file saved in simulator.pkl
+
+using pkl data:
+import pickle
+from gm_prior_simulation import Simulator
+pickle.load(open('simulator.pkl', 'r'))
 '''
+
+
+
+
