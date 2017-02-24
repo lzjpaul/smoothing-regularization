@@ -7,15 +7,15 @@ from data_loader import *
 
 # base logistic regression class
 class Logistic_Regression():
-    def __init__(self, reg_lambda=1, learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1):
-        self.reg_lambda, self.learning_rate = reg_lambda, learning_rate
-        self.max_iter, self.eps, self.batch_size = max_iter, eps, batch_size
+    def __init__(self, reg_lambda=1, learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.3):
+        self.reg_lambda, self.learning_rate, self.max_iter = reg_lambda, learning_rate, max_iter
+        self.eps, self.batch_size, self.validation_perc = eps, batch_size, validation_perc
 
     # calc the delta w to update w, using newton's method here
     def delta_w(self, xTrain, yTrain):
         # mini batch, not used here
         if self.batch_size != -1:
-            randomIndex = np.random.random_integers(0, self.trainNum-1, self.batch_size)
+            randomIndex = np.random.random_integers(0, xTrain.shape[0]-1, self.batch_size)
             xTrain, yTrain = xTrain[randomIndex], yTrain[randomIndex]
 
         mu = self.sigmoid(np.matmul(xTrain, self.w))
@@ -26,13 +26,18 @@ class Logistic_Regression():
         hessian = np.matmul(xTrain.T, np.matmul(S, xTrain)) + self.reg_lambda*np.identity(self.w.shape[0])
         return -np.matmul(np.linalg.pinv(hessian), grad_w)
 
-    def fit(self, xTrain, yTrain, xTest, yTest):
+    def fit(self, xTrain, yTrain):
         # find the number of class and feature, allocate memory for model parameters
         self.trainNum, self.featureNum = xTrain.shape[0], xTrain.shape[1]
         self.w = np.zeros(shape=(self.featureNum+1, 1), dtype='float32')#np.random.normal(0, 1, size=(self.featureNum+1, 1))
 
         # adding 1s to each training examples
         xTrain = np.hstack((np.ones(shape=(self.trainNum, 1)), xTrain))
+
+        # validation set
+        validationNum = int(self.validation_perc*xTrain.shape[0])
+        xVallidation, yVallidation = xTrain[:validationNum, ], yTrain[:validationNum, ]
+        xTrain, yTrain = xTrain[validationNum:, ], yTrain[validationNum:, ]
 
         try:
             iter, self.best_accuracy, self.best_iter = 0, 0.0, 0
@@ -47,7 +52,7 @@ class Logistic_Regression():
                 if iter > self.max_iter or np.linalg.norm(delta_w, ord=2) < self.eps:
                     break
 
-                test_accuracy = self.accuracy(self.predict(xTest), yTest)
+                test_accuracy = self.accuracy(self.predict(xVallidation), yVallidation)
                 train_accuracy = self.accuracy(self.predict(xTrain), yTrain)
                 if self.best_accuracy < test_accuracy:
                     self.best_accuracy, self.best_iter = test_accuracy, iter
@@ -83,12 +88,13 @@ if __name__ == '__main__':
     xTrain, xTest, yTrain, yTest = loadData('simulator.pkl', trainPerc=0.7)
 
     # create logistic regression class
-    reg_lambda, learning_rate, max_iter, eps, batch_size = 1, 0.1, 100, 1e-3, 7000
+    reg_lambda, learning_rate, max_iter, eps, batch_size = 1, 0.1, 100, 1e-3, 500
     LG = Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
-    LG.fit(xTrain, yTrain, xTest, yTest)
+    LG.fit(xTrain, yTrain)
+    print "finally accuracy: %.6f" %(LG.accuracy(LG.predict(xTest), yTest))
 
 
 '''
-model parameter {	reg: 1.000000, lr: 0.100000, batch_size:  7000, best_iter:     39, best_accuracy: 0.900667	}
+model parameter {	reg: 1.000000, lr: 0.100000, batch_size:   500, best_iter:     73, best_accuracy: 0.760000	}
 '''
 
