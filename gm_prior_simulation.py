@@ -1,6 +1,6 @@
 '''
 Cai Shaofeng - 2017.2
-Implementation of the Logistic Regression
+Implementation of the Simulator
 '''
 
 import numpy as np
