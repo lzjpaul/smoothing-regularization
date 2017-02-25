@@ -21,10 +21,11 @@ class Logistic_Regression():
         mu = self.sigmoid(np.matmul(xTrain, self.w))
         # check here, no regularization over bias term
         grad_w = np.matmul(xTrain.T, (mu-yTrain)) + np.vstack(([0], np.full((self.w.shape[0]-1,1), self.reg_lambda, dtype='float32')))*self.w
-        #grad_w = np.matmul(xTrain.T, (mu - yTrain)) + self.reg_lambda * self.w
+        grad_w = np.matmul(xTrain.T, (mu - yTrain)) + self.reg_lambda * self.w
         S = np.diag((mu*(1-mu)).reshape((xTrain.shape[0])))
         hessian = np.matmul(xTrain.T, np.matmul(S, xTrain)) + self.reg_lambda*np.identity(self.w.shape[0])
         return -np.matmul(np.linalg.pinv(hessian), grad_w)
+        #return -grad_w
 
     def fit(self, xTrain, yTrain):
         # find the number of class and feature, allocate memory for model parameters
@@ -87,9 +88,9 @@ if __name__ == '__main__':
     train_accuracy, test_accuracy =  [], []
 
     # create logistic regression class
-    reg_lambda, learning_rate, max_iter, eps, batch_size = [0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000, 10000], 0.1, 50, 1e-3, 500
+    reg_lambda, learning_rate, max_iter, eps, batch_size = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000], 0.1, 50, 1e-3, 500
     for reg in reg_lambda:
-        print "\nreg_lambda: %.5f" % reg
+        print "\nreg_lambda: %f" %(reg)
         LG = Logistic_Regression(reg, learning_rate, max_iter, eps, batch_size)
         LG.fit(xTrain, yTrain)
         train_accuracy.append(LG.best_accuracy)
@@ -100,9 +101,14 @@ if __name__ == '__main__':
     fig, ax = plt.subplots()
     ax.plot(reg_lambda, train_accuracy, 'r', label='train_accuracy'); ax.plot(reg_lambda, test_accuracy, 'b', label='test_accuracy');
     ax.set_xscale('log'); ax.set_xticks(reg_lambda); plt.xlabel('reg_lambda');plt.ylabel('accuracy');
-    plt.title('accuracy VS reg_lambda'); plt.savefig('data/l2_accuracy.eps', format='eps', dpi=1000)
+    plt.legend(loc="lower left", ncol=1, shadow=True, fancybox=True)
+    plt.title('accuracy VS reg_lambda'); plt.savefig('data/l2_accuracy.eps', format='eps', dpi=1000);
+    plt.show()
+
 
 '''
+best reg_lamdba in range [0.1, 10], around 1, most likely to be [1, 10]
+
 reg_lambda: 0.00001
 finally accuracy: 0.603333
 model parameter {	reg: 0.000010, lr: 0.100000, batch_size:   500, best_iter:     33, best_accuracy: 0.790000	}
