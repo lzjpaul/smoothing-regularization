@@ -17,5 +17,6 @@ def loadData(simulatorPath, trainPerc=0.7):
     print 'finish loading data...\ntraining data samples %d\ntesting data samples %d' %(trainNum, simulator.sample_num-trainNum)
     print 'data dimension %d' %(simulator.dimension)
     print '\n===============================================\n'
+
     return xTrain, xTest, yTrain, yTest
 

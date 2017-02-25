@@ -29,7 +29,7 @@ class Logistic_Regression():
     def fit(self, xTrain, yTrain):
         # find the number of class and feature, allocate memory for model parameters
         self.trainNum, self.featureNum = xTrain.shape[0], xTrain.shape[1]
-        self.w = np.zeros(shape=(self.featureNum+1, 1), dtype='float32')#np.random.normal(0, 1, size=(self.featureNum+1, 1))
+        self.w = np.random.normal(0, 0.0001, size=(self.featureNum+1, 1)) #np.zeros(shape=(self.featureNum+1, 1), dtype='float32')#np.random.normal(0, 1, size=(self.featureNum+1, 1))
 
         # adding 1s to each training examples
         xTrain = np.hstack((np.ones(shape=(self.trainNum, 1)), xTrain))
@@ -56,13 +56,10 @@ class Logistic_Regression():
                 train_accuracy = self.accuracy(self.predict(xTrain), yTrain)
                 if self.best_accuracy < test_accuracy:
                     self.best_accuracy, self.best_iter = test_accuracy, iter
-                print "iter %4d\t|\ttrain_accuracy %10.6f\t|\ttest_accuracy %10.6f\t|\tbest_accuracy %10.6f"\
-                      %(iter, train_accuracy, test_accuracy, self.best_accuracy)
+                # print "iter %4d\t|\ttrain_accuracy %10.6f\t|\ttest_accuracy %10.6f\t|\tbest_accuracy %10.6f"\
+                #       %(iter, train_accuracy, test_accuracy, self.best_accuracy)
         except:
             pass
-        finally:
-            print self
-
 
     # predict result
     def predict(self, samples):
@@ -87,14 +84,66 @@ if __name__ == '__main__':
     # load the simulation data
     xTrain, xTest, yTrain, yTest = loadData('simulator.pkl', trainPerc=0.7)
 
-    # create logistic regression class
-    reg_lambda, learning_rate, max_iter, eps, batch_size = 1, 0.1, 100, 1e-3, 500
-    LG = Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
-    LG.fit(xTrain, yTrain)
-    print "finally accuracy: %.6f" %(LG.accuracy(LG.predict(xTest), yTest))
+    train_accuracy, test_accuracy =  [], []
 
+    # create logistic regression class
+    reg_lambda, learning_rate, max_iter, eps, batch_size = [0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000, 10000], 0.1, 50, 1e-3, 500
+    for reg in reg_lambda:
+        print "\nreg_lambda: %.5f" % reg
+        LG = Logistic_Regression(reg, learning_rate, max_iter, eps, batch_size)
+        LG.fit(xTrain, yTrain)
+        train_accuracy.append(LG.best_accuracy)
+        test_accuracy.append(LG.accuracy(LG.predict(xTest), yTest))
+        print "finally accuracy: %.6f" %(test_accuracy[-1])
+        print LG
+
+    fig, ax = plt.subplots()
+    ax.plot(reg_lambda, train_accuracy, 'r', label='train_accuracy'); ax.plot(reg_lambda, test_accuracy, 'b', label='test_accuracy');
+    ax.set_xscale('log'); ax.set_xticks(reg_lambda); plt.xlabel('reg_lambda');plt.ylabel('accuracy');
+    plt.title('accuracy VS reg_lambda'); plt.savefig('data/l2_accuracy.eps', format='eps', dpi=1000)
 
 '''
-model parameter {	reg: 1.000000, lr: 0.100000, batch_size:   500, best_iter:     73, best_accuracy: 0.760000	}
+reg_lambda: 0.00001
+finally accuracy: 0.603333
+model parameter {	reg: 0.000010, lr: 0.100000, batch_size:   500, best_iter:     33, best_accuracy: 0.790000	}
+
+reg_lambda: 0.00010
+/home/shawn/Desktop/GM_prior/logistic_regression.py:76: RuntimeWarning: overflow encountered in exp
+  return 1.0/(1.0+np.exp(-matrix))
+finally accuracy: 0.706667
+model parameter {	reg: 0.000100, lr: 0.100000, batch_size:   500, best_iter:     44, best_accuracy: 0.793810	}
+
+reg_lambda: 0.00100
+finally accuracy: 0.805333
+model parameter {	reg: 0.001000, lr: 0.100000, batch_size:   500, best_iter:     38, best_accuracy: 0.792381	}
+
+reg_lambda: 0.01000
+finally accuracy: 0.796333
+model parameter {	reg: 0.010000, lr: 0.100000, batch_size:   500, best_iter:     27, best_accuracy: 0.781429	}
+
+reg_lambda: 0.10000
+finally accuracy: 0.800333
+model parameter {	reg: 0.100000, lr: 0.100000, batch_size:   500, best_iter:     49, best_accuracy: 0.783333	}
+
+reg_lambda: 1.00000
+finally accuracy: 0.817000
+model parameter {	reg: 1.000000, lr: 0.100000, batch_size:   500, best_iter:     35, best_accuracy: 0.794762	}
+
+reg_lambda: 10.00000
+finally accuracy: 0.805667
+model parameter {	reg: 10.000000, lr: 0.100000, batch_size:   500, best_iter:     36, best_accuracy: 0.783333	}
+
+reg_lambda: 100.00000
+finally accuracy: 0.760000
+model parameter {	reg: 100.000000, lr: 0.100000, batch_size:   500, best_iter:     30, best_accuracy: 0.748095	}
+
+reg_lambda: 1000.00000
+finally accuracy: 0.691667
+model parameter {	reg: 1000.000000, lr: 0.100000, batch_size:   500, best_iter:     44, best_accuracy: 0.677143	}
+
+reg_lambda: 10000.00000
+finally accuracy: 0.645333
+model parameter {	reg: 10000.000000, lr: 0.100000, batch_size:   500, best_iter:     42, best_accuracy: 0.631905	}
+
 '''
 

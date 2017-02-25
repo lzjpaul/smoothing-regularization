@@ -63,7 +63,7 @@ def generateCov(n=5, a=1, showCov=True):
 
 if __name__ == '__main__':
     gm_num, dimension, sample_num = 4, 1000, 10000
-    pi, variance, covariance = np.array([0.4, 0.3, 0.2, 0.1]), np.array([0.001, 0.01, 0.02, 0.04]), generateCov(n=dimension, a=1, showCov=False)
+    pi, variance, covariance = np.array([0.4, 0.3, 0.2, 0.1]), np.array([0.001, 0.01, 0.02, 0.1]), generateCov(n=dimension, a=1, showCov=False)
 
     simulator = Simulator(gm_num, dimension, sample_num, pi, variance, covariance)
     simulator.wGenerator()
