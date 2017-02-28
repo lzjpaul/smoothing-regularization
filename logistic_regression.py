@@ -6,7 +6,7 @@ Implementation of the Logistic Regression
 from data_loader import *
 
 # base logistic regression class
-class Logistic_Regression():
+class Logistic_Regression(object):
     def __init__(self, reg_lambda=1, learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.3):
         self.reg_lambda, self.learning_rate, self.max_iter = reg_lambda, learning_rate, max_iter
         self.eps, self.batch_size, self.validation_perc = eps, batch_size, validation_perc
@@ -19,8 +19,13 @@ class Logistic_Regression():
             xTrain, yTrain = xTrain[randomIndex], yTrain[randomIndex]
 
         mu = self.sigmoid(np.matmul(xTrain, self.w))
-        # check here, no regularization over bias term
-        grad_w = np.matmul(xTrain.T, (mu - yTrain)) + self.reg_lambda * self.w
+        # check here, no regularization over bias term # need normalization with xTrain.shape[0]/batch_size here
+        grad_w = (self.trainNum/self.batch_size)*np.matmul(xTrain.T, (mu - yTrain))
+        print 'reg', self.reg_lambda
+        print 'w', self.w
+        print 'reg_w', self.reg_lambda * self.w
+        print 'grad_w', grad_w
+        grad_w += self.reg_lambda * self.w
         return -grad_w
 
     def fit(self, xTrain, yTrain):
@@ -37,30 +42,30 @@ class Logistic_Regression():
         xTrain, yTrain = xTrain[validationNum:, ], yTrain[validationNum:, ]
 
 
-        try:
-            iter, self.best_accuracy, self.best_iter = 0, 0.0, 0
-            while True:
-                # calc the delta_w to update w
-                delta_w = self.delta_w(xTrain, yTrain)
-                # update w
-                self.w += self.learning_rate * delta_w
+        # try:
+        iter, self.best_accuracy, self.best_iter = 0, 0.0, 0
+        while True:
+            # calc the delta_w to update w
+            delta_w = self.delta_w(xTrain, yTrain)
+            # update w
+            self.w += self.learning_rate * delta_w
 
-                # stop updating if converge
-                iter += 1
-                if iter > self.max_iter or np.linalg.norm(delta_w, ord=2) < self.eps:
-                    break
+            # stop updating if converge
+            iter += 1
+            if iter > self.max_iter or np.linalg.norm(delta_w, ord=2) < self.eps:
+                break
 
-                if iter % 100 == 0:
-                    # print np.sum(np.abs(self.w))/self.featureNum, np.linalg.norm(self.w, ord=2)
-                    test_accuracy, train_accuracy = self.accuracy(self.predict(xVallidation), yVallidation), self.accuracy(self.predict(xTrain), yTrain)
-                    if self.best_accuracy < test_accuracy:
-                         self.best_w, self.best_accuracy, self.best_iter = np.copy(self.w), test_accuracy, iter
-                    # print "iter %4d\t|\ttrain_accuracy %10.6f\t|\ttest_accuracy %10.6f\t|\tbest_accuracy %10.6f"\
-                    #       %(iter, train_accuracy, test_accuracy, self.best_accuracy)
+            if iter % 100 == 0:
+                # print np.sum(np.abs(self.w))/self.featureNum, np.linalg.norm(self.w, ord=2)
+                test_accuracy, train_accuracy = self.accuracy(self.predict(xVallidation), yVallidation), self.accuracy(self.predict(xTrain), yTrain)
+                if self.best_accuracy < test_accuracy:
+                     self.best_w, self.best_accuracy, self.best_iter = np.copy(self.w), test_accuracy, iter
+                print "iter %4d\t|\ttrain_accuracy %10.6f\t|\ttest_accuracy %10.6f\t|\tbest_accuracy %10.6f"\
+                      %(iter, train_accuracy, test_accuracy, self.best_accuracy)
         # except:
         #     pass
-        finally:
-            self.w = self.best_w
+        # finally:
+        #     self.w = self.best_w
 
     # predict result
     def predict(self, samples):
@@ -85,11 +90,11 @@ if __name__ == '__main__':
     # load the simulation data
     xTrain, xTest, yTrain, yTest = loadData('simulator.pkl', trainPerc=0.7)
 
-    reg_lambda, learning_rate, max_iter, eps, batch_size = 5, 0.001, 2000, 1e-3, 500
+    reg_lambda, learning_rate, max_iter, eps, batch_size = 10, 0.0001, 2000, 1e-3, 500
     print "\nreg_lambda: %f" % (reg_lambda)
     LG = Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
     LG.fit(xTrain, yTrain)
-    print "finally accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
+    print "\n\nfinal accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
     print LG, LG.best_w
 
 
