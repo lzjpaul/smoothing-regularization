@@ -62,17 +62,20 @@ def generateCov(n=5, a=1, showCov=True):
 
 
 if __name__ == '__main__':
-    gm_num, dimension, sample_num = 4, 1000, 10000
-    pi, variance, covariance = np.array([0.4, 0.3, 0.2, 0.1]), np.array([0.001, 0.01, 0.02, 0.1]), generateCov(n=dimension, a=1, showCov=False)
+    gm_num, dimension, sample_num = 4, 1000, 50000
+    pi, variance, covariance = np.array([0.70, 0.05, 0.2, 0.05]), np.array([0.005, 0.005, 0.1, 0.8]), np.identity(dimension)#generateCov(n=dimension, a=1, showCov=False)
 
     simulator = Simulator(gm_num, dimension, sample_num, pi, variance, covariance)
     simulator.wGenerator()
     simulator.xGenerator()
-    simulator.labelGenerator(noiseVar=0.5)
+    simulator.labelGenerator(noiseVar=1.2)
 
     # save the generated simulator
     with open('simulator.pkl', 'w') as saveFile:
         pickle.dump(simulator, saveFile)
+
+    plt.hist(simulator.w, bins=50, normed=1, color='g', alpha=0.75)
+    plt.show()
 
 '''
 generated results see generated_y_vals.dta
