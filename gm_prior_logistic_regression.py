@@ -26,7 +26,10 @@ class GM_Logistic_Regression(Logistic_Regression):
         grad_w = (self.trainNum/self.batch_size)*np.matmul(xTrain.T, (mu - yTrain))
         # gaussian mixture reg term grad
         self.calcResponsibility()
-        grad_w += np.sum(self.responsibility*self.reg_lambda, axis=1).reshape(self.w.shape) * self.w
+        reg_grad_w = np.sum(self.responsibility*self.reg_lambda, axis=1).reshape((self.w.shape[0]-1, 1)) * self.w[:-1]
+        print "reg_grad_w shape: ", reg_grad_w.shape
+        print "self.responsibility shape: ", self.responsibility.shape
+        grad_w += np.vstack((reg_grad_w, np.array([0.0])))
 
         # update gm prior: pi, reg_lambda
         self.update_GM_Prior()
@@ -39,16 +42,16 @@ class GM_Logistic_Regression(Logistic_Regression):
         # update reg_lambda
         self.pi = (np.sum(self.responsibility, axis=0) + self.alpha-1) / (self.featureNum + self.gm_num*(self.alpha-1))
 
-        print 'reg_lambda', self.reg_lambda
-        print 'pi:', self.pi
+        # print 'reg_lambda', self.reg_lambda
+        # print 'pi:', self.pi
 
 
     # calc the resposibilities for pj(wi)
     def calcResponsibility(self):
         # responsibility normalized with pi
-        responsibility = gaussian.pdf(self.w, loc=np.zeros(shape=(1, self.gm_num)), scale=1/np.sqrt(self.reg_lambda))*self.pi
+        responsibility = gaussian.pdf(self.w[:-1], loc=np.zeros(shape=(1, self.gm_num)), scale=1/np.sqrt(self.reg_lambda))*self.pi
         # responsibility normalized with summation(denominator)
-        self.responsibility = responsibility/(np.sum(responsibility, axis=1).reshape(self.w.shape))
+        self.responsibility = responsibility/(np.sum(responsibility, axis=1).reshape((self.w.shape[0]-1, 1)))
 
     def softmax(self, x):
         """Compute softmax values for each sets of scores in x."""
