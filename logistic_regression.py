@@ -21,11 +21,14 @@ class Logistic_Regression(object):
         mu = self.sigmoid(np.matmul(xTrain, self.w))
         # check here, no regularization over bias term # need normalization with xTrain.shape[0]/batch_size here
         grad_w = (self.trainNum/self.batch_size)*np.matmul(xTrain.T, (mu - yTrain))
-        grad_w += self.reg_lambda * self.w
+        reg_grad_w = self.reg_lambda * self.w
+        reg_grad_w[-1, 0] = 0.0 # bias
+        grad_w += reg_grad_w
         return -grad_w
 
     def fit(self, xTrain, yTrain, verbos=False):
         # find the number of class and feature, allocate memory for model parameters
+        print "in fit"
         self.trainNum, self.featureNum = xTrain.shape[0], xTrain.shape[1]
         self.w = np.random.normal(0, 0.01, size=(self.featureNum+1, 1))#np.zeros(shape=(self.featureNum+1, 1), dtype='float32')
 
@@ -44,13 +47,13 @@ class Logistic_Regression(object):
                 # calc the delta_w to update w
                 delta_w = self.delta_w(xTrain, yTrain)
                 # update w
+                print "update w"
                 self.w += self.learning_rate * delta_w
 
                 # stop updating if converge
                 iter += 1
                 if iter > self.max_iter or np.linalg.norm(delta_w, ord=2) < self.eps:
                     break
-
                 if iter % 100 == 0:
                     # print np.sum(np.abs(self.w))/self.featureNum, np.linalg.norm(self.w, ord=2)
                     test_accuracy, train_accuracy = self.accuracy(self.predict(xVallidation), yVallidation), self.accuracy(self.predict(xTrain), yTrain)
@@ -68,7 +71,7 @@ class Logistic_Regression(object):
     def predict(self, samples):
         if samples.shape[1] != self.w.shape[0]:
             samples = np.hstack((np.ones(shape=(samples.shape[0], 1)), samples))
-        return np.matmul(samples, self.w)>0.5
+        return np.matmul(samples, self.w)>0.0
 
     # calc accuracy
     def accuracy(self, yPredict, yTrue):
@@ -88,7 +91,7 @@ if __name__ == '__main__':
     xTrain, xTest, yTrain, yTest = loadData('simulator.pkl', trainPerc=0.7)
 
 
-    reg_lambda, learning_rate, max_iter, eps, batch_size = 0, 0.00001, 3000, 1e-3, 500
+    reg_lambda, learning_rate, max_iter, eps, batch_size = 0.01, 0.00001, 3000, 1e-3, 500
     print "\nreg_lambda: %f" % (reg_lambda)
     LG = Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
     LG.fit(xTrain, yTrain, verbos=True)
