@@ -4,7 +4,6 @@ Implementation of the Logistic Regression
 '''
 
 from data_loader import *
-
 # base logistic regression class
 class Logistic_Regression(object):
     def __init__(self, reg_lambda=1, learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.3):
@@ -28,7 +27,6 @@ class Logistic_Regression(object):
 
     def fit(self, xTrain, yTrain, verbos=False):
         # find the number of class and feature, allocate memory for model parameters
-        print "in fit"
         self.trainNum, self.featureNum = xTrain.shape[0], xTrain.shape[1]
         self.w = np.random.normal(0, 0.01, size=(self.featureNum+1, 1))#np.zeros(shape=(self.featureNum+1, 1), dtype='float32')
 
@@ -47,7 +45,6 @@ class Logistic_Regression(object):
                 # calc the delta_w to update w
                 delta_w = self.delta_w(xTrain, yTrain)
                 # update w
-                print "update w"
                 self.w += self.learning_rate * delta_w
 
                 # stop updating if converge
@@ -62,6 +59,8 @@ class Logistic_Regression(object):
                     if verbos:
                         print "iter %4d\t|\ttrain_accuracy %10.6f\t|\ttest_accuracy %10.6f\t|\tbest_accuracy %10.6f"\
                           %(iter, train_accuracy, test_accuracy, self.best_accuracy)
+                        print "w norm, delta_w norm: ", np.linalg.norm(self.w, ord=2), np.linalg.norm(self.learning_rate * delta_w, ord=2)
+
         # except:
         #     pass
         finally:
@@ -89,15 +88,14 @@ class Logistic_Regression(object):
 if __name__ == '__main__':
     # load the simulation data
     xTrain, xTest, yTrain, yTest = loadData('simulator.pkl', trainPerc=0.7)
-
-
-    reg_lambda, learning_rate, max_iter, eps, batch_size = 0.01, 0.00001, 3000, 1e-3, 500
+    
+    reg_lambda, learning_rate, max_iter, eps, batch_size = 0.0, 0.00001, 3000, 1e-3, 500
     print "\nreg_lambda: %f" % (reg_lambda)
     LG = Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
     LG.fit(xTrain, yTrain, verbos=True)
     print "\n\nfinal accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
     print LG, LG.best_w
-
+    
     plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
     plt.show()
 

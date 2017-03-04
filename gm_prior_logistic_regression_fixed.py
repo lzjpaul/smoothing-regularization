@@ -74,11 +74,11 @@ if __name__ == '__main__':
     # print LG, LG.best_w
 
     gm_num, a, b, alpha = 4, 1, 10, 50
-    pi, reg_lambda, learning_rate, max_iter, eps, batch_size = np.array([0.70, 0.05, 0.2, 0.05]), np.array([0.005, 0.005, 0.1, 0.8]), 0.00001, 2000, 1e-3, 500
+    pi, reg_lambda, learning_rate, max_iter, eps, batch_size = np.array([0.70, 0.05, 0.2, 0.05]), np.array([0.005, 0.005, 0.1, 0.8]), 0.00001, 3000, 1e-3, 500
     LG = GM_Logistic_Regression(hyperpara=[a, b, alpha], gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
     LG.fit(xTrain, yTrain, verbos=True)
     print "\n\nfinal accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
-    print LG, LG.best_w
+    print LG, LG.best_w[:100]
     plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
     plt.show()
 
