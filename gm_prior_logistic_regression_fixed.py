@@ -26,7 +26,7 @@ class GM_Logistic_Regression(Logistic_Regression):
         grad_w = (self.trainNum/self.batch_size)*np.matmul(xTrain.T, (mu - yTrain))
         # gaussian mixture reg term grad
         self.calcResponsibility()
-        reg_grad_w = np.sum(self.responsibility*self.reg_lambda, axis=1).reshape((self.w.shape[0]-1, 1)) * self.w[:-1]
+        reg_grad_w = np.sum(self.responsibility*self.reg_lambda, axis=1).reshape(self.w[:-1].shape) * self.w[:-1]
         grad_w += np.vstack((reg_grad_w, np.array([0.0])))
 
         # update gm prior: pi, reg_lambda
@@ -49,7 +49,7 @@ class GM_Logistic_Regression(Logistic_Regression):
         # responsibility normalized with pi
         responsibility = gaussian.pdf(self.w[:-1], loc=np.zeros(shape=(1, self.gm_num)), scale=1/np.sqrt(self.reg_lambda))*self.pi
         # responsibility normalized with summation(denominator)
-        self.responsibility = responsibility/(np.sum(responsibility, axis=1).reshape((self.w.shape[0]-1, 1)))
+        self.responsibility = responsibility/(np.sum(responsibility, axis=1).reshape(self.w[:-1].shape))
 
     def softmax(self, x):
         """Compute softmax values for each sets of scores in x."""
@@ -74,7 +74,7 @@ if __name__ == '__main__':
     # print LG, LG.best_w
 
     gm_num, a, b, alpha = 4, 1, 10, 50
-    pi, reg_lambda, learning_rate, max_iter, eps, batch_size = np.array([0.70, 0.05, 0.2, 0.05]), np.array([0.005, 0.005, 0.1, 0.8]), 0.00001, 4000, 1e-3, 500
+    pi, reg_lambda, learning_rate, max_iter, eps, batch_size = np.array([0.70, 0.05, 0.2, 0.05]), np.array([0.005, 0.005, 0.1, 0.8]), 0.00001, 2000, 1e-3, 500
     LG = GM_Logistic_Regression(hyperpara=[a, b, alpha], gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
     LG.fit(xTrain, yTrain, verbos=True)
     print "\n\nfinal accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
