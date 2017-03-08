@@ -2,7 +2,6 @@
 Cai Shaofeng - 2017.2
 Implementation of the Gaussian Mixture Prior Logistic Regression
 '''
-# pi_r initialization has nothing to do with pi ??
 
 from logistic_regression import Logistic_Regression
 from data_loader import *
@@ -13,7 +12,7 @@ class GM_Logistic_Regression(Logistic_Regression):
         Logistic_Regression.__init__(self, reg_lambda, learning_rate, max_iter, eps, batch_size, validation_perc)
         self.a, self.b, self.alpha, self.gm_num, self.pi = hyperpara[0], hyperpara[1], hyperpara[2], gm_num, pi
         self.pi, self.reg_lambda = np.reshape(np.array(pi), (1, gm_num)), np.reshape(np.array(reg_lambda), (1, gm_num))
-        self.pi_r, self.reg_lambda_s = np.zeros(gm_num).reshape((1, gm_num)), np.log(self.reg_lambda)
+        self.pi_r, self.reg_lambda_s = np.log(self.pi), np.log(self.reg_lambda)
         self.pi_r_learning_rate, self.reg_lambda_s_learning_rate = pi_r_learning_rate, reg_lambda_s_learning_rate
 
     # calc the delta w to update w, using gm_prior_sgd here, update pi, reg_lambda here
