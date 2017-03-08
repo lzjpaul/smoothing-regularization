@@ -16,8 +16,12 @@ class GM_Logistic_Regression(Logistic_Regression):
         self.pi_r_learning_rate, self.reg_lambda_s_learning_rate = pi_r_learning_rate, reg_lambda_s_learning_rate
 
     # calc the delta w to update w, using gm_prior_sgd here, update pi, reg_lambda here
-    def delta_w(self, xTrain, yTrain, index):
-        xTrain, yTrain = xTrain[index: (index + self.batch_size)], yTrain[index: (index + self.batch_size)]
+    def delta_w(self, xTrain, yTrain):
+        # mini batch, not used here
+        if self.batch_size != -1:
+            randomIndex = np.random.random_integers(0, xTrain.shape[0] - 1, self.batch_size)
+            xTrain, yTrain = xTrain[randomIndex], yTrain[randomIndex]
+
         mu = self.sigmoid(np.matmul(xTrain, self.w))
         # check here, data part grad, need normalization with train_num/batch_size here
         grad_w = (self.trainNum/self.batch_size)*np.matmul(xTrain.T, (mu - yTrain))
@@ -27,7 +31,7 @@ class GM_Logistic_Regression(Logistic_Regression):
         grad_w += np.vstack((reg_grad_w, np.array([0.0])))
 
         # update gm prior: pi, reg_lambda
-        # self.update_GM_Prior()
+        self.update_GM_Prior()
         return -grad_w
 
     def update_GM_Prior(self):

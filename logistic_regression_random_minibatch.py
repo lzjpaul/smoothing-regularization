@@ -11,8 +11,11 @@ class Logistic_Regression(object):
         self.eps, self.batch_size, self.validation_perc = eps, batch_size, validation_perc
 
     # calc the delta w to update w, using sgd here
-    def delta_w(self, xTrain, yTrain, index):
-        xTrain, yTrain = xTrain[index : (index + self.batch_size)], yTrain[index : (index + self.batch_size)]
+    def delta_w(self, xTrain, yTrain):
+        # mini batch, not used here
+        if self.batch_size != -1:
+            randomIndex = np.random.random_integers(0, xTrain.shape[0]-1, self.batch_size)
+            xTrain, yTrain = xTrain[randomIndex], yTrain[randomIndex]
 
         mu = self.sigmoid(np.matmul(xTrain, self.w))
         # check here, no regularization over bias term # need normalization with xTrain.shape[0]/batch_size here
@@ -38,31 +41,14 @@ class Logistic_Regression(object):
 
         try:
             iter, self.best_accuracy, self.best_iter = 0, 0.0, 0
-            # minibatch initialization
-            batch_iter = 0
-            np.random.seed(10)
-            idx = np.random.permutation(xTrain.shape[0])
-            xTrain = xTrain[idx]
-            yTrain = yTrain[idx]
             while True:
-                # minibatch calculation
-                index = self.batch_size * batch_iter
-                if (index + self.batch_size) > xTrain.shape[0]:  # new epoch
-                    index = 0
-                    batch_iter = 0  # new epoch
-                    np.random.seed(iter)
-                    idx = np.random.permutation(xTrain.shape[0])
-                    xTrain = xTrain[idx]
-                    yTrain = yTrain[idx]
-
                 # calc the delta_w to update w
-                delta_w = self.delta_w(xTrain, yTrain, index)
+                delta_w = self.delta_w(xTrain, yTrain)
                 # update w
                 self.w += self.learning_rate * delta_w
 
                 # stop updating if converge
                 iter += 1
-                batch_iter += 1
                 if iter > self.max_iter or np.linalg.norm(delta_w, ord=2) < self.eps:
                     break
                 if iter % 100 == 0:
