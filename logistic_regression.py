@@ -60,9 +60,11 @@ class Logistic_Regression(object):
                     if verbos:
                         print "iter %4d\t|\ttrain_accuracy %10.6f\t|\ttest_accuracy %10.6f\t|\tbest_accuracy %10.6f"\
                           %(iter, train_accuracy, test_accuracy, self.best_accuracy)
-                        print "iter %4d\t|\ttrain_loss %10.6f\t|\ttest_loss %10.6f\t" \
+                        print "iter %4d\t|\ttrain_loss     %10.6f\t|\ttest_loss     %10.6f\t" \
                               % (iter, train_loss, test_loss)
-                        print "w norm, delta_w norm: ", np.linalg.norm(self.w, ord=2), np.linalg.norm(self.learning_rate * delta_w, ord=2)
+                        print "w norm %10.6f\t|\tdelta_w norm %10.6f "%(np.linalg.norm(self.w, ord=2), np.linalg.norm(self.learning_rate * delta_w, ord=2))
+                        if hasattr(self, 'pi'):
+                            print "pi, reg_lambda: ", self.pi, self.reg_lambda
 
         # except:
         #     pass
@@ -71,7 +73,6 @@ class Logistic_Regression(object):
 
     # loss function
     def loss(self, samples, yTrue):
-        print "float(samples.shape[0]): ", float(samples.shape[0])
         threshold = 1e-320
         yTrue = yTrue.astype(int)
         mu = self.sigmoid(np.matmul(samples, self.w))
