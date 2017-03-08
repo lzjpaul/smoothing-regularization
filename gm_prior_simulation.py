@@ -34,6 +34,7 @@ class Simulator():
         uniform_vals = np.random.uniform(low=0.0, high=1.0, size=(self.sample_num))
         self.label_no_noise = (y_vals_no_noise >= uniform_vals)
         self.label = (y_vals>=uniform_vals)
+        print "optimal accuracy: ", np.sum((lg >= 0) != self.label) / float(self.sample_num)
 
         # save generated y_vals_noise
         with open('generated_y_vals.dta', 'w') as saveFile:
@@ -62,7 +63,7 @@ def generateCov(n=5, a=1, showCov=True):
 
 
 if __name__ == '__main__':
-    gm_num, dimension, sample_num = 4, 500, 5000
+    gm_num, dimension, sample_num = 4, 1000, 10000
     pi, variance, covariance = np.array([0.70, 0.05, 0.2, 0.05]), np.array([0.005, 0.005, 0.1, 0.8]), np.identity(dimension)#generateCov(n=dimension, a=1, showCov=False)
 
     simulator = Simulator(gm_num, dimension, sample_num, pi, variance, covariance)

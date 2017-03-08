@@ -54,17 +54,31 @@ class Logistic_Regression(object):
                 if iter % 100 == 0:
                     # print np.sum(np.abs(self.w))/self.featureNum, np.linalg.norm(self.w, ord=2)
                     test_accuracy, train_accuracy = self.accuracy(self.predict(xVallidation), yVallidation), self.accuracy(self.predict(xTrain), yTrain)
+                    test_loss, train_loss = self.loss(xVallidation, yVallidation), self.loss(xTrain, yTrain)
                     if self.best_accuracy < test_accuracy:
                          self.best_w, self.best_accuracy, self.best_iter = np.copy(self.w), test_accuracy, iter
                     if verbos:
                         print "iter %4d\t|\ttrain_accuracy %10.6f\t|\ttest_accuracy %10.6f\t|\tbest_accuracy %10.6f"\
                           %(iter, train_accuracy, test_accuracy, self.best_accuracy)
+                        print "iter %4d\t|\ttrain_loss %10.6f\t|\ttest_loss %10.6f\t" \
+                              % (iter, train_loss, test_loss)
                         print "w norm, delta_w norm: ", np.linalg.norm(self.w, ord=2), np.linalg.norm(self.learning_rate * delta_w, ord=2)
 
         # except:
         #     pass
         finally:
             self.w = self.best_w
+
+    # loss function
+    def loss(self, samples, yTrue):
+        print "float(samples.shape[0]): ", float(samples.shape[0])
+        threshold = 1e-320
+        yTrue = yTrue.astype(int)
+        mu = self.sigmoid(np.matmul(samples, self.w))
+        mu_false = (1-mu)
+        return np.sum((-yTrue * np.log(np.piecewise(mu, [mu < threshold, mu >= threshold], [threshold, lambda mu:mu])) \
+                       - (1-yTrue) * np.log(np.piecewise(mu_false, [mu_false < threshold, mu_false >= threshold], [threshold, lambda mu_false:mu_false]))), axis = 0) / float(samples.shape[0])
+
 
     # predict result
     def predict(self, samples):
@@ -89,7 +103,7 @@ if __name__ == '__main__':
     # load the simulation data
     xTrain, xTest, yTrain, yTest = loadData('simulator.pkl', trainPerc=0.7)
     
-    reg_lambda, learning_rate, max_iter, eps, batch_size = 0.0, 0.00001, 3000, 1e-3, 500
+    reg_lambda, learning_rate, max_iter, eps, batch_size = 0.0, 0.00001, 50000, 1e-4, 500
     print "\nreg_lambda: %f" % (reg_lambda)
     LG = Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
     LG.fit(xTrain, yTrain, verbos=True)
