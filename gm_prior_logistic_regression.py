@@ -3,21 +3,43 @@ Cai Shaofeng - 2017.2
 Implementation of the Gaussian Mixture Prior Logistic Regression
 '''
 
+'''
+hyper:
+(1) lr decay
+(2) threshold for train_loss
+'''
 import sys
 from logistic_regression import Logistic_Regression
 from data_loader import *
 from scipy.stats import norm as gaussian
 
 class GM_Logistic_Regression(Logistic_Regression):
-    def __init__(self, hyperpara, gm_num, pi, reg_lambda, learning_rate=0.1, pi_r_learning_rate=0.1, reg_lambda_s_learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.3):
+    def __init__(self, hyperpara, gm_num, pi, reg_lambda, learning_rate=0.1, pi_r_learning_rate=0.1, reg_lambda_s_learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
         Logistic_Regression.__init__(self, reg_lambda, learning_rate, max_iter, eps, batch_size, validation_perc)
         self.a, self.b, self.alpha, self.gm_num, self.pi = hyperpara[0], hyperpara[1], hyperpara[2], gm_num, pi
         self.pi, self.reg_lambda = np.reshape(np.array(pi), (1, gm_num)), np.reshape(np.array(reg_lambda), (1, gm_num))
         self.pi_r, self.reg_lambda_s = np.log(self.pi), np.log(self.reg_lambda)
         self.pi_r_learning_rate, self.reg_lambda_s_learning_rate = pi_r_learning_rate, reg_lambda_s_learning_rate
 
+    def pi_r_lr(self, epoch):
+        if epoch < 100:
+            return self.pi_r_learning_rate
+        elif epoch < 150:
+            return self.pi_r_learning_rate / float(10)
+        else:
+            return self.pi_r_learning_rate / float(100)
+
+    def reg_lambda_s_lr(self, epoch):
+        if epoch < 100:
+            return self.reg_lambda_s_learning_rate
+        elif epoch < 150:
+            return self.reg_lambda_s_learning_rate / float(10)
+        else:
+            return self.reg_lambda_s_learning_rate / float(100)
+
+
     # calc the delta w to update w, using gm_prior_sgd here, update pi, reg_lambda here
-    def delta_w(self, xTrain, yTrain, index):
+    def delta_w(self, xTrain, yTrain, index, epoch_num):
         xTrain, yTrain = xTrain[index: (index + self.batch_size)], yTrain[index: (index + self.batch_size)]
 
         mu = self.sigmoid(np.matmul(xTrain, self.w))
@@ -29,16 +51,16 @@ class GM_Logistic_Regression(Logistic_Regression):
         grad_w += np.vstack((reg_grad_w, np.array([0.0])))
 
         # update gm prior: pi, reg_lambda
-        self.update_GM_Prior()
+        self.update_GM_Prior(epoch_num)
         return -grad_w
 
-    def update_GM_Prior(self):
+    def update_GM_Prior(self, epoch_num):
         #update reg_lambda_s
         delta_reg_lambda = np.sum((self.responsibility / (2.0 * self.reg_lambda) - self.responsibility * 0.5 * self.w[:-1] * self.w[:-1]), axis=0).reshape((1,-1))
         delta_reg_lambda += (self.a - 1) / (self.reg_lambda.astype(float)) - self.b
         delta_reg_lambda = -delta_reg_lambda
         delta_reg_lambda_s = delta_reg_lambda * self.reg_lambda
-        self.reg_lambda_s -= self.reg_lambda_s_learning_rate * delta_reg_lambda_s
+        self.reg_lambda_s -= self.reg_lambda_s_lr(epoch_num) * delta_reg_lambda_s
 
         #update reg_lambda
         self.reg_lambda = np.exp(self.reg_lambda_s)
@@ -48,7 +70,7 @@ class GM_Logistic_Regression(Logistic_Regression):
         delta_pi = -delta_pi
         delta_pi_k_j_mat = np.array([[(int(j==k)*self.pi[0,j] - self.pi[0,j] *self.pi[0,k]) for j in range(self.gm_num)] for k in range(self.gm_num)])
         delta_pi_r = np.matmul(delta_pi, delta_pi_k_j_mat)
-        self.pi_r -= self.pi_r_learning_rate * delta_pi_r
+        self.pi_r -= self.pi_r_lr(epoch_num) * delta_pi_r
 
         #update pi
         pi_r_exp = np.exp(self.pi_r)
@@ -64,8 +86,8 @@ class GM_Logistic_Regression(Logistic_Regression):
 
     # model parameter
     def __str__(self):
-        return 'model config {\thyper: [a-%d,b-%d,alpha-%d] reg: %s, lr: %.6f, batch_size: %5d, best_iter: %6d, best_accuracy: %.6f\t}' \
-               % (self.a, self.b, self.alpha, self.reg_lambda, self.learning_rate, self.batch_size, self.best_iter, self.best_accuracy)
+        return 'model config {\thyper: [a-%d,b-%d,alpha-%d] reg: %s, lr: %.6f, pi_r_lr: %.6f, reg_lambda_s_lr: %.6f, batch_size: %5d\t}' \
+               % (self.a, self.b, self.alpha, self.reg_lambda, self.learning_rate, self.pi_r_learning_rate, self.reg_lambda_s_learning_rate, self.batch_size)
 
 if __name__ == '__main__':
     # load the simulation data
@@ -77,11 +99,11 @@ if __name__ == '__main__':
     # LG = GM_Logistic_Regression(hyperpara=[a, b, alpha], gm_num=4, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
     # LG.fit(xTrain, yTrain, verbos=True)
     # print "\n\nfinal accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
-    # print LG, LG.best_w
+    # print LG
 
     gm_num, a, b, alpha = 4, 1, 10, 50
     pi, reg_lambda, learning_rate, pi_r_learning_rate, reg_lambda_s_learning_rate, max_iter, eps, batch_size \
-        = np.array([0.70, 0.05, 0.2, 0.05]), np.array([200, 200, 10, 1.25]), 0.00001, 0.00001, 0.00001, 50000, 1e-4, 500
+        = np.array([0.70, 0.05, 0.2, 0.05]), np.array([200, 200, 10, 1.25]), 0.00001, 0.00001, 0.00001, 50000, 1e-6, 500
     LG = GM_Logistic_Regression(hyperpara=[a, b, alpha], gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, \
                                 pi_r_learning_rate=pi_r_learning_rate, reg_lambda_s_learning_rate=reg_lambda_s_learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
     LG.fit(xTrain, yTrain, verbos=True)
