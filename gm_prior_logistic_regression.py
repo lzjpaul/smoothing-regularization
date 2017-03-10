@@ -3,6 +3,7 @@ Cai Shaofeng - 2017.2
 Implementation of the Gaussian Mixture Prior Logistic Regression
 '''
 
+import sys
 from logistic_regression import Logistic_Regression
 from data_loader import *
 from scipy.stats import norm as gaussian
@@ -85,9 +86,10 @@ if __name__ == '__main__':
                                 pi_r_learning_rate=pi_r_learning_rate, reg_lambda_s_learning_rate=reg_lambda_s_learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
     LG.fit(xTrain, yTrain, verbos=True)
     print "\n\nfinal accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
-    print LG, LG.best_w[:100]
-    plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
-    plt.show()
+    print LG
+    # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
+    # plt.show()
+    np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
 
 
 '''
@@ -155,7 +157,8 @@ def update_GM_Prior(self):
 
 '''
 def softmax(self, x):
-    """Compute softmax values for each sets of scores in x."""
+    #Compute softmax values for each sets of scores in x.
     e_x = np.exp(x - np.max(x))
     return e_x / e_x.sum(axis=1)
 '''
+

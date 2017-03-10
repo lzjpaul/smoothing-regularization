@@ -2,7 +2,7 @@
 Cai Shaofeng - 2017.2
 Implementation of the Logistic Regression
 '''
-
+import sys
 from data_loader import *
 # base logistic regression class
 class Logistic_Regression(object):
@@ -117,16 +117,18 @@ class Logistic_Regression(object):
 if __name__ == '__main__':
     # load the simulation data
     xTrain, xTest, yTrain, yTest = loadData('simulator.pkl', trainPerc=0.7)
-    
+
     reg_lambda, learning_rate, max_iter, eps, batch_size = 0.0, 0.00001, 50000, 1e-4, 500
     print "\nreg_lambda: %f" % (reg_lambda)
     LG = Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
     LG.fit(xTrain, yTrain, verbos=True)
     print "\n\nfinal accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
     print LG, LG.best_w
-    
-    plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
-    plt.show()
+
+    # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
+    # plt.show()
+    np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
+
 
     # train_accuracy, test_accuracy = [], []
     # #create logistic regression class
