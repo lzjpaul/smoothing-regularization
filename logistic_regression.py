@@ -76,7 +76,7 @@ class Logistic_Regression(object):
                 # https://www.coursera.org/learn/machine-learning/lecture/fKi0M/stochastic-gradient-descent-convergence
                 iter += 1
                 batch_iter += 1
-                if iter % 100 == 0:
+                if iter % 1000 == 0:
                     train_loss = self.loss(xTrain, yTrain)
                     print "train_loss %10.6f abs(train_loss - pre_train_loss) %10.8f self.eps %10.6f"%(train_loss, abs(train_loss - pre_train_loss), self.eps)
                     if iter > self.max_iter or abs(train_loss - pre_train_loss) < self.eps:
@@ -130,7 +130,7 @@ if __name__ == '__main__':
     # load the simulation data
     xTrain, xTest, yTrain, yTest = loadData('simulator.pkl', trainPerc=0.7)
 
-    reg_lambda, learning_rate, max_iter, eps, batch_size = 10, 0.00001, 50000, 1e-6, 500
+    reg_lambda, learning_rate, max_iter, eps, batch_size = 10, 0.00001, 1000000, 1e-8, 500
     print "\nreg_lambda: %f" % (reg_lambda)
     LG = Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
     LG.fit(xTrain, yTrain, verbos=True)

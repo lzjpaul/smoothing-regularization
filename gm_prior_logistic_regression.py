@@ -103,7 +103,7 @@ if __name__ == '__main__':
 
     gm_num, a, b, alpha = 4, 1, 10, 50
     pi, reg_lambda, learning_rate, pi_r_learning_rate, reg_lambda_s_learning_rate, max_iter, eps, batch_size \
-        = np.array([0.70, 0.05, 0.2, 0.05]), np.array([200, 200, 10, 1.25]), 0.00001, 0.00001, 0.00001, 50000, 1e-6, 500
+        = np.array([0.70, 0.05, 0.2, 0.05]), np.array([200, 200, 10, 1.25]), 0.00001, 0.00001, 0.00001, 1000000, 1e-8, 500
     LG = GM_Logistic_Regression(hyperpara=[a, b, alpha], gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, \
                                 pi_r_learning_rate=pi_r_learning_rate, reg_lambda_s_learning_rate=reg_lambda_s_learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
     LG.fit(xTrain, yTrain, verbos=True)
