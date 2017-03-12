@@ -19,6 +19,10 @@ class GM_Logistic_Regression(Logistic_Regression):
         self.a, self.b, self.alpha, self.gm_num, self.pi = hyperpara[0], hyperpara[1], hyperpara[2], gm_num, pi
         self.pi, self.reg_lambda = np.reshape(np.array(pi), (1, gm_num)), np.reshape(np.array(reg_lambda), (1, gm_num))
         self.pi_r, self.reg_lambda_s = np.log(self.pi), np.log(self.reg_lambda)
+        print "init self.reg_lambda: ", self.reg_lambda
+        print "init self.pi: ", self.pi
+        print "init self.reg_lambda_s: ", self.reg_lambda_s
+        print "init self.pi_r: ", self.pi_r
         self.pi_r_learning_rate, self.reg_lambda_s_learning_rate = pi_r_learning_rate, reg_lambda_s_learning_rate
 
     def pi_r_lr(self, epoch):
@@ -39,7 +43,7 @@ class GM_Logistic_Regression(Logistic_Regression):
 
 
     # calc the delta w to update w, using gm_prior_sgd here, update pi, reg_lambda here
-    def delta_w(self, xTrain, yTrain, index, epoch_num):
+    def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num):
         xTrain, yTrain = xTrain[index: (index + self.batch_size)], yTrain[index: (index + self.batch_size)]
 
         mu = self.sigmoid(np.matmul(xTrain, self.w))
@@ -51,17 +55,20 @@ class GM_Logistic_Regression(Logistic_Regression):
         grad_w += np.vstack((reg_grad_w, np.array([0.0])))
 
         # update gm prior: pi, reg_lambda
-        self.update_GM_Prior(epoch_num)
+        self.update_GM_Prior(epoch_num, iter_num)
         return -grad_w
 
-    def update_GM_Prior(self, epoch_num):
+    def update_GM_Prior(self, epoch_num, iter_num):
         #update reg_lambda_s
         delta_reg_lambda = np.sum((self.responsibility / (2.0 * self.reg_lambda) - self.responsibility * 0.5 * self.w[:-1] * self.w[:-1]), axis=0).reshape((1,-1))
         delta_reg_lambda += (self.a - 1) / (self.reg_lambda.astype(float)) - self.b
         delta_reg_lambda = -delta_reg_lambda
         delta_reg_lambda_s = delta_reg_lambda * self.reg_lambda
         self.reg_lambda_s -= self.reg_lambda_s_lr(epoch_num) * delta_reg_lambda_s
-
+        if iter_num % 100 == 0:
+            print "self.reg_lambda_s      , self.reg_lambda_s norm: ", self.reg_lambda_s, np.linalg.norm(self.reg_lambda_s)
+            print "lr * delta_reg_lambda_s, lr * delta_reg_lambda_s norm: ", (self.reg_lambda_s_lr(epoch_num) * delta_reg_lambda_s), np.linalg.norm(self.reg_lambda_s_lr(epoch_num) * delta_reg_lambda_s)
+            print "\n"
         #update reg_lambda
         self.reg_lambda = np.exp(self.reg_lambda_s)
 
@@ -71,7 +78,10 @@ class GM_Logistic_Regression(Logistic_Regression):
         delta_pi_k_j_mat = np.array([[(int(j==k)*self.pi[0,j] - self.pi[0,j] *self.pi[0,k]) for j in range(self.gm_num)] for k in range(self.gm_num)])
         delta_pi_r = np.matmul(delta_pi, delta_pi_k_j_mat)
         self.pi_r -= self.pi_r_lr(epoch_num) * delta_pi_r
-
+        if iter_num % 100 == 0:
+            print "self.pi_r      , self.pi_r norm:       ", self.pi_r, np.linalg.norm(self.pi_r)
+            print "lr * delta_pi_r, lr * delta_pi_r norm: ", (self.pi_r_lr(epoch_num) * delta_pi_r), np.linalg.norm(self.pi_r_lr(epoch_num) * delta_pi_r)
+            print "\n"
         #update pi
         pi_r_exp = np.exp(self.pi_r)
         self.pi = pi_r_exp / np.sum(pi_r_exp)
@@ -103,7 +113,7 @@ if __name__ == '__main__':
 
     gm_num, a, b, alpha = 4, 1, 10, 50
     pi, reg_lambda, learning_rate, pi_r_learning_rate, reg_lambda_s_learning_rate, max_iter, eps, batch_size \
-        = np.array([0.70, 0.05, 0.2, 0.05]), np.array([200, 200, 10, 1.25]), 0.00001, 0.00001, 0.00001, 1000000, 1e-8, 500
+        = np.array([0.70, 0.05, 0.2, 0.05]), np.array([200, 200, 10, 1.25]), 0.00001, 0.0001, 0.0001, 1000000, 1e-10, 500
     LG = GM_Logistic_Regression(hyperpara=[a, b, alpha], gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, \
                                 pi_r_learning_rate=pi_r_learning_rate, reg_lambda_s_learning_rate=reg_lambda_s_learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
     LG.fit(xTrain, yTrain, verbos=True)

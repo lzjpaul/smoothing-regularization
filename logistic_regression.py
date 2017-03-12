@@ -24,7 +24,7 @@ class Logistic_Regression(object):
             return self.learning_rate / float(100)
 
     # calc the delta w to update w, using sgd here
-    def delta_w(self, xTrain, yTrain, index, epoch_num):
+    def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num):
         xTrain, yTrain = xTrain[index : (index + self.batch_size)], yTrain[index : (index + self.batch_size)]
 
         mu = self.sigmoid(np.matmul(xTrain, self.w))
@@ -68,7 +68,7 @@ class Logistic_Regression(object):
                 # calc current epoch
                 epoch_num = iter*self.batch_size/xTrain.shape[0]
                 # calc the delta_w to update w
-                delta_w = self.delta_w(xTrain, yTrain, index, epoch_num)
+                delta_w = self.delta_w(xTrain, yTrain, index, epoch_num, iter)
                 # update w
                 self.w += self.w_lr(epoch_num) * delta_w
 
@@ -76,9 +76,10 @@ class Logistic_Regression(object):
                 # https://www.coursera.org/learn/machine-learning/lecture/fKi0M/stochastic-gradient-descent-convergence
                 iter += 1
                 batch_iter += 1
-                if iter % 1000 == 0:
+                if iter % 10000 == 0:
                     train_loss = self.loss(xTrain, yTrain)
-                    print "train_loss %10.6f abs(train_loss - pre_train_loss) %10.8f self.eps %10.6f"%(train_loss, abs(train_loss - pre_train_loss), self.eps)
+                    print "train_loss %10.10f abs(train_loss - pre_train_loss) %10.10f self.eps %10.10f"%(train_loss, abs(train_loss - pre_train_loss), self.eps)
+                    print "self.max_iter: ", self.max_iter
                     if iter > self.max_iter or abs(train_loss - pre_train_loss) < self.eps:
                         break
                     pre_train_loss = train_loss
@@ -88,12 +89,13 @@ class Logistic_Regression(object):
                     train_accuracy = self.accuracy(self.predict(xTrain), yTrain)
                     train_loss = self.loss(xTrain, yTrain)
                     if verbos:
-                        print "iter %4d\t|\ttrain_accuracy %10.6f\t|\ttrain_loss %10.6f"%(iter, train_accuracy, train_loss)
+                        print "iter %4d\t|\ttrain_accuracy %10.6f\t|\ttrain_loss %10.10f"%(iter, train_accuracy, train_loss)
                         print "w norm %10.6f\t|\tdelta_w norm %10.6f "%(np.linalg.norm(self.w, ord=2), np.linalg.norm(self.w_lr(epoch_num) * delta_w, ord=2))
                         print "lr: ",self.w_lr(epoch_num)
                         if hasattr(self, 'pi'):
                             print "pi, reg_lambda: ", self.pi, self.reg_lambda
                             print "lr, pi_r_l, reg_lambda_s_lr: ",self.w_lr(epoch_num), self.pi_r_lr(epoch_num), self.reg_lambda_s_lr(epoch_num)
+                            print "\n"
         finally:
             self.w = self.w
 
@@ -130,7 +132,7 @@ if __name__ == '__main__':
     # load the simulation data
     xTrain, xTest, yTrain, yTest = loadData('simulator.pkl', trainPerc=0.7)
 
-    reg_lambda, learning_rate, max_iter, eps, batch_size = 10, 0.00001, 1000000, 1e-8, 500
+    reg_lambda, learning_rate, max_iter, eps, batch_size = 10, 0.00001, 1000000, 1e-10, 500
     print "\nreg_lambda: %f" % (reg_lambda)
     LG = Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
     LG.fit(xTrain, yTrain, verbos=True)
