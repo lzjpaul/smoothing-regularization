@@ -12,3 +12,6 @@ smoothing-regularization-4-gaussians-10000-1000: (10000, 1000), but eraly stoppi
 (4) adding learning rate decay
 (5) train loss for converge
 (6) only train and test split
+
+3-13
+(7) expectaion-maximization version
