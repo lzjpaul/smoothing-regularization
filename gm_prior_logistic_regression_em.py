@@ -60,7 +60,7 @@ class GM_Logistic_Regression(Logistic_Regression):
 
     def update_GM_Prior(self, epoch_num, iter_num):
         # update pi
-        self.reg_lambda = (2 * (self.a - 1) + np.sum(self.responsibility, axis=0)) / (2 * self.b + np.sum(self.reg_lambda * np.square(self.w), axis=0))
+        self.reg_lambda = (2 * (self.a - 1) + np.sum(self.responsibility, axis=0)) / (2 * self.b + np.sum(responsibility * np.square(self.w[:-1]), axis=0))
 
         # update reg_lambda
         self.pi = (np.sum(self.responsibility, axis=0) + self.alpha - 1) / (self.featureNum + self.gm_num * (self.alpha - 1))
