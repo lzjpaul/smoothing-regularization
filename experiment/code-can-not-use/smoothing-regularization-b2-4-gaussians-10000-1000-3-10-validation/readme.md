@@ -13,9 +13,7 @@ smoothing-regularization-4-gaussians-10000-1000: (10000, 1000), but eraly stoppi
 (5) train loss for converge
 (6) only train and test split
 
-3-13
-(7) expectaion-maximization version
-
-3-14
-(8) in logistic_regression.py: xTrain = np.hstack((xTrain, np.ones(shape=(self.trainNum, 1)))) the bias is on the lastttt!!!!!
-(9) in gm_prior_logistic_regression.py EM version: responsibility * np.square(self.w[:-1]
+3-11
+different from git:
+print validation information as well
+(7) reserve validation
