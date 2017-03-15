@@ -15,3 +15,6 @@ smoothing-regularization-4-gaussians-10000-1000: (10000, 1000), but eraly stoppi
 
 3-13
 (7) expectaion-maximization version
+
+3-14
+(8) in logistic_regression.py: xTrain = np.hstack((xTrain, np.ones(shape=(self.trainNum, 1)))) the bias is on the lastttt!!!!!

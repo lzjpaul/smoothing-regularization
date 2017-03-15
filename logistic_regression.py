@@ -42,7 +42,7 @@ class Logistic_Regression(object):
         self.w = np.random.normal(0, 0.01, size=(self.featureNum+1, 1))#np.zeros(shape=(self.featureNum+1, 1), dtype='float32')
 
         # adding 1s to each training examples
-        xTrain = np.hstack((np.ones(shape=(self.trainNum, 1)), xTrain))
+        xTrain = np.hstack((xTrain, np.ones(shape=(self.trainNum, 1))))
 
         # validation set
         validationNum = int(self.validation_perc*xTrain.shape[0])
@@ -112,7 +112,7 @@ class Logistic_Regression(object):
     # predict result
     def predict(self, samples):
         if samples.shape[1] != self.w.shape[0]:
-            samples = np.hstack((np.ones(shape=(samples.shape[0], 1)), samples))
+            samples = np.hstack((samples, np.ones(shape=(samples.shape[0], 1))))
         return np.matmul(samples, self.w)>0.0
 
     # calc accuracy
