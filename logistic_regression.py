@@ -37,9 +37,11 @@ class Logistic_Regression(object):
 
 
     def fit(self, xTrain, yTrain, verbos=False):
+        np.random.seed(10)
         # find the number of class and feature, allocate memory for model parameters
         self.trainNum, self.featureNum = xTrain.shape[0], xTrain.shape[1]
         self.w = np.random.normal(0, 0.01, size=(self.featureNum+1, 1))#np.zeros(shape=(self.featureNum+1, 1), dtype='float32')
+        print "self.w[:10]: ", self.w[:10]
 
         # adding 1s to each training examples
         xTrain = np.hstack((xTrain, np.ones(shape=(self.trainNum, 1))))
