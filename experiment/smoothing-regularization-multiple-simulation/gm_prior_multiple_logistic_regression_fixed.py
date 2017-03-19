@@ -155,7 +155,7 @@ if __name__ == '__main__':
         xTrain, xTest, yTrain, yTest = loadData('simulator' + str(gm_num) + '-' + str(i) + '.pkl', trainPerc=0.7)
         print "load data path: ", ('simulator' + str(gm_num) + '-' + str(i) + '.pkl')
         pi, reg_lambda, learning_rate, pi_r_learning_rate, reg_lambda_s_learning_rate, max_iter, eps, batch_size \
-            = pi_variance_array[2 * i], (1.0 / pi_variance_array[2 * i + 1]), 0.0001, 0.00001, 0.00001, 1000000, 1e-10, 500
+            = pi_variance_array[2 * i], (1.0 / pi_variance_array[2 * i + 1]), 0.0001, 0.00001, 0.00001, 2000000, 1e-10, 500
         LG = GM_Logistic_Regression(hyperpara=[a, b, alpha], gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, \
                                     pi_r_learning_rate=pi_r_learning_rate, reg_lambda_s_learning_rate=reg_lambda_s_learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
         LG.fit(xTrain, yTrain, verbos=True)

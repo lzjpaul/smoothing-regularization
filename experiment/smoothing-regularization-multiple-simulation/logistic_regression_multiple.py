@@ -199,7 +199,7 @@ if __name__ == '__main__':
         reg_lambda = (1.0 / pi_variance_array[2 * i + 1])
         reg_lambda_max = np.max((1.0 / pi_variance_array[2 * i + 1]))
         reg_lambda_min = np.min((1.0 / pi_variance_array[2 * i + 1]))
-        reg_lambda, learning_rate, max_iter, eps, batch_size = np.linspace(reg_lambda_min, reg_lambda_max, num=8), 0.0001, 10000, 1e-10, 500
+        reg_lambda, learning_rate, max_iter, eps, batch_size = np.linspace(reg_lambda_min, reg_lambda_max, num=8), 0.0001, 2000000, 1e-10, 500
         print "reg_lambda: ", reg_lambda
         for reg in reg_lambda:
             print "\nreg_lambda: %f" %(reg)
