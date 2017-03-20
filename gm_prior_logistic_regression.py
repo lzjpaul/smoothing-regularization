@@ -19,6 +19,7 @@ class GM_Logistic_Regression(Logistic_Regression):
     def __init__(self, hyperpara, gm_num, pi, reg_lambda, learning_rate=0.1, pi_r_learning_rate=0.1, reg_lambda_s_learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
         Logistic_Regression.__init__(self, reg_lambda, learning_rate, max_iter, eps, batch_size, validation_perc)
         self.a, self.b, self.alpha, self.gm_num, self.pi = hyperpara[0], hyperpara[1], hyperpara[2], gm_num, pi
+        print "self.a, self.b, self.alpha, self.gm_num, self.pi: ", self.a, self.b, self.alpha, self.gm_num, self.pi
         self.pi, self.reg_lambda = np.reshape(np.array(pi), (1, gm_num)), np.reshape(np.array(reg_lambda), (1, gm_num))
         self.pi_r, self.reg_lambda_s = np.log(self.pi), np.log(self.reg_lambda)
         print "init self.reg_lambda: ", self.reg_lambda
@@ -26,6 +27,7 @@ class GM_Logistic_Regression(Logistic_Regression):
         print "init self.reg_lambda_s: ", self.reg_lambda_s
         print "init self.pi_r: ", self.pi_r
         self.pi_r_learning_rate, self.reg_lambda_s_learning_rate = pi_r_learning_rate, reg_lambda_s_learning_rate
+        print "init self.pi_r_learning_rate, self.reg_lambda_s_learning_rate: ", self.pi_r_learning_rate, self.reg_lambda_s_learning_rate
 
     def pi_r_lr(self, epoch):
         if epoch < 100:
@@ -98,7 +100,7 @@ class GM_Logistic_Regression(Logistic_Regression):
 
     def update_GM_Prior_EM(self, epoch_num, iter_num):
         # update pi
-        self.reg_lambda = (2 * (self.a - 1) + np.sum(self.responsibility, axis=0)) / (2 * self.b + np.sum(responsibility * np.square(self.w[:-1]), axis=0))
+        self.reg_lambda = (2 * (self.a - 1) + np.sum(self.responsibility, axis=0)) / (2 * self.b + np.sum(self.responsibility * np.square(self.w[:-1]), axis=0))
 
         # update reg_lambda
         self.pi = (np.sum(self.responsibility, axis=0) + self.alpha - 1) / (self.featureNum + self.gm_num * (self.alpha - 1))
@@ -130,7 +132,7 @@ if __name__ == '__main__':
 
     # load the simulation data
     xTrain, xTest, yTrain, yTest = loadData('simulator.pkl', trainPerc=0.7)
-    
+
 
     # run gm_prior lg model
     learning_rate, pi_r_learning_rate, reg_lambda_s_learning_rate = math.pow(10, (-1 * args.wlr)), math.pow(10, (-1 * args.pirlr)), math.pow(10, (-1 * args.lambdaslr))

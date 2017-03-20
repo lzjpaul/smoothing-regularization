@@ -9,11 +9,15 @@ hyper:
 '''
 import sys
 from data_loader import *
+import argparse
+import math
 # base logistic regression class
 class Logistic_Regression(object):
     def __init__(self, reg_lambda=1, learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
         self.reg_lambda, self.learning_rate, self.max_iter = reg_lambda, learning_rate, max_iter
         self.eps, self.batch_size, self.validation_perc = eps, batch_size, validation_perc
+        print "self.reg_lambda, self.learning_rate, self.max_iter: ", self.reg_lambda, self.learning_rate, self.max_iter
+        print "self.eps, self.batch_size, self.validation_perc: ", self.eps, self.batch_size, self.validation_perc
 
     def w_lr(self, epoch):
         if epoch < 100:
