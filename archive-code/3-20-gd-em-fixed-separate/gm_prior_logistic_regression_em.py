@@ -12,8 +12,6 @@ import sys
 from logistic_regression import Logistic_Regression
 from data_loader import *
 from scipy.stats import norm as gaussian
-import argparse
-import math
 
 class GM_Logistic_Regression(Logistic_Regression):
     def __init__(self, hyperpara, gm_num, pi, reg_lambda, learning_rate=0.1, pi_r_learning_rate=0.1, reg_lambda_s_learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
@@ -45,7 +43,7 @@ class GM_Logistic_Regression(Logistic_Regression):
 
 
     # calc the delta w to update w, using gm_prior_sgd here, update pi, reg_lambda here
-    def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
+    def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num):
         xTrain, yTrain = xTrain[index: (index + self.batch_size)], yTrain[index: (index + self.batch_size)]
 
         mu = self.sigmoid(np.matmul(xTrain, self.w))
@@ -57,46 +55,10 @@ class GM_Logistic_Regression(Logistic_Regression):
         grad_w += np.vstack((reg_grad_w, np.array([0.0])))
 
         # update gm prior: pi, reg_lambda
-        # 0: fixed, 1: GD, 2: EM
-        if gm_opt_method == 0:
-            pass
-        elif gm_opt_method == 1:
-            self.update_GM_Prior_GD(epoch_num, iter_num)
-        elif gm_opt_method == 2:
-            self.update_GM_Prior_EM(epoch_num, iter_num)
-        else:
-            print "invalid gm_opt_method"
+        self.update_GM_Prior(epoch_num, iter_num)
         return -grad_w
 
-    def update_GM_Prior_GD(self, epoch_num, iter_num):
-        #update reg_lambda_s
-        delta_reg_lambda = np.sum((self.responsibility / (2.0 * self.reg_lambda) - self.responsibility * 0.5 * self.w[:-1] * self.w[:-1]), axis=0).reshape((1,-1))
-        delta_reg_lambda += (self.a - 1) / (self.reg_lambda.astype(float)) - self.b
-        delta_reg_lambda = -delta_reg_lambda
-        delta_reg_lambda_s = delta_reg_lambda * self.reg_lambda
-        self.reg_lambda_s -= self.reg_lambda_s_lr(epoch_num) * delta_reg_lambda_s
-        if iter_num % 100 == 0:
-            print "self.reg_lambda_s      , self.reg_lambda_s norm: ", self.reg_lambda_s, np.linalg.norm(self.reg_lambda_s)
-            print "lr * delta_reg_lambda_s, lr * delta_reg_lambda_s norm: ", (self.reg_lambda_s_lr(epoch_num) * delta_reg_lambda_s), np.linalg.norm(self.reg_lambda_s_lr(epoch_num) * delta_reg_lambda_s)
-            print "\n"
-        #update reg_lambda
-        self.reg_lambda = np.exp(self.reg_lambda_s)
-
-        #update pi_r
-        delta_pi = np.sum(self.responsibility / self.pi.astype(float), axis=0) + (self.alpha - 1) / self.pi.astype(float)
-        delta_pi = -delta_pi
-        delta_pi_k_j_mat = np.array([[(int(j==k)*self.pi[0,j] - self.pi[0,j] *self.pi[0,k]) for j in range(self.gm_num)] for k in range(self.gm_num)])
-        delta_pi_r = np.matmul(delta_pi, delta_pi_k_j_mat)
-        self.pi_r -= self.pi_r_lr(epoch_num) * delta_pi_r
-        if iter_num % 100 == 0:
-            print "self.pi_r      , self.pi_r norm:       ", self.pi_r, np.linalg.norm(self.pi_r)
-            print "lr * delta_pi_r, lr * delta_pi_r norm: ", (self.pi_r_lr(epoch_num) * delta_pi_r), np.linalg.norm(self.pi_r_lr(epoch_num) * delta_pi_r)
-            print "\n"
-        #update pi
-        pi_r_exp = np.exp(self.pi_r)
-        self.pi = pi_r_exp / np.sum(pi_r_exp)
-
-    def update_GM_Prior_EM(self, epoch_num, iter_num):
+    def update_GM_Prior(self, epoch_num, iter_num):
         # update pi
         self.reg_lambda = (2 * (self.a - 1) + np.sum(self.responsibility, axis=0)) / (2 * self.b + np.sum(responsibility * np.square(self.w[:-1]), axis=0))
 
@@ -120,28 +82,23 @@ class GM_Logistic_Regression(Logistic_Regression):
                % (self.a, self.b, self.alpha, self.reg_lambda, self.learning_rate, self.pi_r_learning_rate, self.reg_lambda_s_learning_rate, self.batch_size)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='')
-    parser.add_argument('-wlr', type=int, help='weight learning_rate (to the power of 10)')
-    parser.add_argument('-pirlr', type=int, help='pi_r learning_rate (to the power of 10)')
-    parser.add_argument('-lambdaslr', type=int, help='lambda_s learning_rate (to the power of 10)')
-    parser.add_argument('-maxiter', type=int, help='max_iter')
-    parser.add_argument('-gmoptmethod', type=int, help='gm optimization method: 0-fixed, 1-GD, 2-EM')
-    args = parser.parse_args()
-
     # load the simulation data
     xTrain, xTest, yTrain, yTest = loadData('simulator.pkl', trainPerc=0.7)
-    
 
     # run gm_prior lg model
-    learning_rate, pi_r_learning_rate, reg_lambda_s_learning_rate = math.pow(10, (-1 * args.wlr)), math.pow(10, (-1 * args.pirlr)), math.pow(10, (-1 * args.lambdaslr))
-    max_iter = args.maxiter
-    gm_opt_method = args.gmoptmethod
+    # a, b, alpha = 1, 10, 50
+    # pi, reg_lambda, learning_rate, max_iter, eps, batch_size = [0.25, 0.25, 0.25, 0.25], [4, 2, 1, .5], 0.00001, 4000, 1e-3, 500
+    # LG = GM_Logistic_Regression(hyperpara=[a, b, alpha], gm_num=4, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
+    # LG.fit(xTrain, yTrain, verbos=True)
+    # print "\n\nfinal accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
+    # print LG
+
     gm_num, a, b, alpha = 4, 1, 10, 50
-    pi, reg_lambda,  eps, batch_size \
-        = np.array([0.70, 0.05, 0.2, 0.05]), np.array([200, 200, 10, 1.25]), 1e-10, 500
+    pi, reg_lambda, learning_rate, pi_r_learning_rate, reg_lambda_s_learning_rate, max_iter, eps, batch_size \
+        = np.array([0.70, 0.05, 0.2, 0.05]), np.array([200, 200, 10, 1.25]), 0.00001, 0.0001, 0.0001, 1000000, 1e-10, 500
     LG = GM_Logistic_Regression(hyperpara=[a, b, alpha], gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, \
                                 pi_r_learning_rate=pi_r_learning_rate, reg_lambda_s_learning_rate=reg_lambda_s_learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
-    LG.fit(xTrain, yTrain, gm_opt_method, verbos=True)
+    LG.fit(xTrain, yTrain, verbos=True)
     print "\n\nfinal accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
     print LG
     # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)

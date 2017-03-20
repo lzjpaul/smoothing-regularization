@@ -24,7 +24,7 @@ class Logistic_Regression(object):
             return self.learning_rate / float(100)
 
     # calc the delta w to update w, using sgd here
-    def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
+    def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num):
         xTrain, yTrain = xTrain[index : (index + self.batch_size)], yTrain[index : (index + self.batch_size)]
 
         mu = self.sigmoid(np.matmul(xTrain, self.w))
@@ -36,7 +36,7 @@ class Logistic_Regression(object):
         return -grad_w
 
 
-    def fit(self, xTrain, yTrain, gm_opt_method=-1, verbos=False):
+    def fit(self, xTrain, yTrain, verbos=False):
         np.random.seed(10)
         # find the number of class and feature, allocate memory for model parameters
         self.trainNum, self.featureNum = xTrain.shape[0], xTrain.shape[1]
@@ -70,7 +70,7 @@ class Logistic_Regression(object):
                 # calc current epoch
                 epoch_num = iter*self.batch_size/xTrain.shape[0]
                 # calc the delta_w to update w
-                delta_w = self.delta_w(xTrain, yTrain, index, epoch_num, iter, gm_opt_method)
+                delta_w = self.delta_w(xTrain, yTrain, index, epoch_num, iter)
                 # update w
                 self.w += self.w_lr(epoch_num) * delta_w
 
@@ -131,19 +131,13 @@ class Logistic_Regression(object):
             % (self.reg_lambda, self.learning_rate, self.batch_size)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='')
-    parser.add_argument('-wlr', type=int, help='weight learning_rate (to the power of 10)')
-    parser.add_argument('-maxiter', type=int, help='max_iter')
-    args = parser.parse_args()
-
     # load the simulation data
     xTrain, xTest, yTrain, yTest = loadData('simulator.pkl', trainPerc=0.7)
 
-    learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
-    reg_lambda, eps, batch_size = 10, 1e-10, 500
+    reg_lambda, learning_rate, max_iter, eps, batch_size = 10, 0.00001, 1000000, 1e-10, 500
     print "\nreg_lambda: %f" % (reg_lambda)
     LG = Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
-    LG.fit(xTrain, yTrain, gm_opt_method=-1, verbos=True)
+    LG.fit(xTrain, yTrain, verbos=True)
     print "\n\nfinal accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
     print LG
 
