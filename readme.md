@@ -24,3 +24,5 @@ smoothing-regularization-4-gaussians-10000-1000: (10000, 1000), but eraly stoppi
 (10) in logistic_regression.py self.w initialization np.random.seed(10)
      the initialization of weights should be the same for different algorithms
 
+3-20
+(11) merge GM EM GD into one programme
