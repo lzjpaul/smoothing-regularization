@@ -127,6 +127,10 @@ if __name__ == '__main__':
     parser.add_argument('-pirlr', type=int, help='pi_r learning_rate (to the power of 10)')
     parser.add_argument('-lambdaslr', type=int, help='lambda_s learning_rate (to the power of 10)')
     parser.add_argument('-maxiter', type=int, help='max_iter')
+    parser.add_argument('-gmnum', type=int, help='gm_number')
+    parser.add_argument('-a', type=int, help='a')
+    parser.add_argument('-b', type=int, help='b')
+    parser.add_argument('-alpha', type=int, help='alpha')
     parser.add_argument('-gmoptmethod', type=int, help='gm optimization method: 0-fixed, 1-GD, 2-EM')
     args = parser.parse_args()
 
@@ -138,9 +142,9 @@ if __name__ == '__main__':
     learning_rate, pi_r_learning_rate, reg_lambda_s_learning_rate = math.pow(10, (-1 * args.wlr)), math.pow(10, (-1 * args.pirlr)), math.pow(10, (-1 * args.lambdaslr))
     max_iter = args.maxiter
     gm_opt_method = args.gmoptmethod
-    gm_num, a, b, alpha = 4, 1, 10, 50
+    gm_num, a, b, alpha = args.gmnum, args.a, args.b, args.alpha
     pi, reg_lambda,  eps, batch_size \
-        = np.array([0.70, 0.05, 0.2, 0.05]), np.array([200, 200, 10, 1.25]), 1e-10, 500
+        = [1.0/gm_num for _ in range(gm_num)], [_*10+1 for _ in  range(gm_num)], 1e-10, 500
     LG = GM_Logistic_Regression(hyperpara=[a, b, alpha], gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, \
                                 pi_r_learning_rate=pi_r_learning_rate, reg_lambda_s_learning_rate=reg_lambda_s_learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
     LG.fit(xTrain, yTrain, gm_opt_method, verbos=True)
