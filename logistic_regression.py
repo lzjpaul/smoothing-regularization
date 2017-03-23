@@ -1,6 +1,6 @@
 '''
-Cai Shaofeng - 2017.2
-Implementation of the Logistic Regression
+Luo Zhaojing - 2017.3
+Logistic Regression
 '''
 '''
 hyper:
@@ -11,6 +11,8 @@ import sys
 from data_loader import *
 import argparse
 import math
+from scipy.stats import norm as gaussian
+
 # base logistic regression class
 class Logistic_Regression(object):
     def __init__(self, reg_lambda=1, learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
@@ -94,10 +96,11 @@ class Logistic_Regression(object):
                     # print np.sum(np.abs(self.w))/self.featureNum, np.linalg.norm(self.w, ord=2)
                     train_accuracy = self.accuracy(self.predict(xTrain), yTrain)
                     train_loss = self.loss(xTrain, yTrain)
+                    regularization_loss = self.w_loss()
                     if verbos:
                         print "iter %4d\t|\ttrain_accuracy %10.6f\t|\ttrain_loss %10.10f"%(iter, train_accuracy, train_loss)
-                        print "w norm %10.6f\t|\tdelta_w norm %10.6f "%(np.linalg.norm(self.w, ord=2), np.linalg.norm(self.w_lr(epoch_num) * delta_w, ord=2))
-                        print "lr: ",self.w_lr(epoch_num)
+                        print "w norm %10.6f\t|\tdelta_w norm %10.6f\t|\tw_loss %10.10f"%(np.linalg.norm(self.w, ord=2), np.linalg.norm(self.w_lr(epoch_num) * delta_w, ord=2), regularization_loss)
+                        print "lr %8.6f\t|\toverall loss %10.10f"%(self.w_lr(epoch_num), (train_loss+regularization_loss))
                         if hasattr(self, 'pi'):
                             print "pi, reg_lambda: ", self.pi, self.reg_lambda
                             print "lr, pi_r_l, reg_lambda_s_lr: ",self.w_lr(epoch_num), self.pi_r_lr(epoch_num), self.reg_lambda_s_lr(epoch_num)
@@ -114,6 +117,12 @@ class Logistic_Regression(object):
         return np.sum((-yTrue * np.log(np.piecewise(mu, [mu < threshold, mu >= threshold], [threshold, lambda mu:mu])) \
                        - (1-yTrue) * np.log(np.piecewise(mu_false, [mu_false < threshold, mu_false >= threshold], [threshold, lambda mu_false:mu_false]))), axis = 0) / float(samples.shape[0])
 
+    # w loss
+    def w_loss(self):
+        responsibility = gaussian.pdf(self.w[:-1], loc=np.zeros(shape=(1, self.gm_num)), scale=1/np.sqrt(self.reg_lambda))*self.pi
+        responsibility_w = np.sum(responsibility, axis=1)
+        log_responsibility_w = -np.log(responsibility_w)
+        return np.sum(log_responsibility_w)
 
     # predict result
     def predict(self, samples):

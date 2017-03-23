@@ -26,3 +26,6 @@ smoothing-regularization-4-gaussians-10000-1000: (10000, 1000), but eraly stoppi
 
 3-20
 (11) merge GM EM GD into one programme
+
+3-23
+(12) adding w_loss (prior w)

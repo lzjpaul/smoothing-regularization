@@ -1,6 +1,6 @@
 '''
-Cai Shaofeng - 2017.2
-Implementation of the Gaussian Mixture Prior Logistic Regression
+Luo Zhaojing - 2017.3
+Gaussian Mixture(GM) Prior Logistic Regression
 '''
 
 '''
