@@ -147,10 +147,12 @@ if __name__ == '__main__':
 
     # load the simulation data
     x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
-    n_folds = 3
+    n_folds = 5
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
+        print "train_index: ", train_index
+        print "test_index: ", test_index
         xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
         # run gm_prior lg model
         learning_rate, pi_r_learning_rate, reg_lambda_s_learning_rate = math.pow(10, (-1 * args.wlr)), math.pow(10, (-1 * args.pirlr)), math.pow(10, (-1 * args.lambdaslr))
