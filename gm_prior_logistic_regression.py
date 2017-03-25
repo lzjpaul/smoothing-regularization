@@ -162,7 +162,7 @@ if __name__ == '__main__':
         LG = GM_Logistic_Regression(hyperpara=[a, b, alpha], gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, \
                                     pi_r_learning_rate=pi_r_learning_rate, reg_lambda_s_learning_rate=reg_lambda_s_learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
         LG.fit(xTrain, yTrain, gm_opt_method, verbos=True)
-        print "\n\nfinal accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
+        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest), yTest), LG.auroc(LG.predict_proba(xTest), yTest))
         print LG
         # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
         # plt.show()

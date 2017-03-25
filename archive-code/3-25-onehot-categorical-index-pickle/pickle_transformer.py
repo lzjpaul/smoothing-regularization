@@ -19,8 +19,10 @@ if __name__ == '__main__':
     parser.add_argument('-datapath', type=str, help='the dataset path, not svm')
     parser.add_argument('-labelpath', type=str, help='(optional, others are must) the label path, used in NUH data set, not svm')
     parser.add_argument('-outputpath', type=str, help='the output path')
+    parser.add_argument('-categoricalindexpath', type=str, help='(optional, others are must) the categorical index path, used in NUH data set')
     parser.add_argument('-labelcolumn', type=int, help='labelcolumn, not svm')
     parser.add_argument('-svmlight', type=int, help='svmlight or not')
+    parser.add_argument('-onehot', type=int, help='onehot or not')
     parser.add_argument('-sparsify', type=int, help='sparsify or not, not svm')
 
     args = parser.parse_args()
@@ -29,7 +31,10 @@ if __name__ == '__main__':
     fileName=args.datapath
     labelfile=args.labelpath
     print "labelfile: ", labelfile
+    categorical_index_file = args.categoricalindexpath
+    print "categorical_index_file: ", categorical_index_file
     labelCol=(-1 * args.labelcolumn)
+    onehot=(args.onehot==1)
     sparsify=(args.sparsify==1)
 
     dataset = Dataset()
@@ -46,7 +51,14 @@ if __name__ == '__main__':
         print "data shape in loader: ", data.shape
         X = data
         Y = label
-    dataset.DataGenerator(X, Y)
+    if categorical_index_file is None:
+        if onehot:
+            dataset.DataGenerator(OneHotEncoder().fit_transform(X, ), Y) if sparsify==True else dataset.DataGenerator(OneHotEncoder().fit_transform(X, ).toarray(), Y)
+        else:
+            dataset.DataGenerator(X, Y)
+    else:
+        categorical_feature_index = np.loadtxt(categorical_index_file, dtype='int32', delimiter=',')
+        dataset.DataGenerator(sparse.csr_matrix(OneHotEncoder(categorical_features=categorical_feature_index).fit_transform(X, ).toarray()), Y) if sparsify==True else dataset.DataGenerator(OneHotEncoder(categorical_features=categorical_feature_index).fit_transform(X, ).toarray(), Y)
 
     # save the generated simulator
     with open(args.outputpath, 'w') as saveFile:

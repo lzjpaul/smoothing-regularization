@@ -12,6 +12,7 @@ from data_loader import *
 import argparse
 import math
 from sklearn.cross_validation import StratifiedKFold, cross_val_score
+from sklearn.metrics import accuracy_score, roc_auc_score
 
 # base logistic regression class
 class Logistic_Regression(object):
@@ -123,9 +124,18 @@ class Logistic_Regression(object):
             samples = np.hstack((samples, np.ones(shape=(samples.shape[0], 1))))
         return np.matmul(samples, self.w)>0.0
 
+    # predict probability
+    def predict_proba(self, samples):
+        if samples.shape[1] != self.w.shape[0]:
+            samples = np.hstack((samples, np.ones(shape=(samples.shape[0], 1))))
+        return self.sigmoid(np.matmul(samples, self.w))
+
     # calc accuracy
     def accuracy(self, yPredict, yTrue):
         return np.sum(yPredict == yTrue) / float(yTrue.shape[0])
+
+    def auroc(self, yPredictProba, yTrue):
+        return roc_auc_score(yTrue, yPredictProba)
 
     # sigmoid function
     def sigmoid(self, matrix):
@@ -158,7 +168,7 @@ if __name__ == '__main__':
         print "\nreg_lambda: %f" % (reg_lambda)
         LG = Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
         LG.fit(xTrain, yTrain, gm_opt_method=-1, verbos=True)
-        print "\n\nfinal accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
+        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest), yTest), LG.auroc(LG.predict_proba(xTest), yTest))
         print LG
 
         # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
