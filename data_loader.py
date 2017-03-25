@@ -5,18 +5,18 @@ from gm_prior_simulation import Simulator
 
 
 # load training/testing data from pickles simulator object file with specified training percent
-def loadData(simulatorPath, trainPerc=0.7):
+def loadData(fileName, onehot=True, sparsify=True):
     print '\n===============================================\n'
     print 'loading data...'
-    simulator = pickle.load(open(simulatorPath, 'r'))
-    trainNum = int(simulator.sample_num * trainPerc)
-    simulator.label.resize((simulator.sample_num, 1))
-    # prepare training/testing data
-    xTrain, xTest = simulator.x[:trainNum], simulator.x[trainNum:]
-    yTrain, yTest = simulator.label[:trainNum], simulator.label[trainNum:]
-    print 'finish loading data...\ntraining data samples %d\ntesting data samples %d' %(trainNum, simulator.sample_num-trainNum)
-    print 'data dimension %d' %(simulator.dimension)
+    pklfile = pickle.load(open(fileName, 'r'))
+    X, Y = pklfile.x, pklfile.label.reshape((pklfile.sample_num, 1))
+    print 'finish loading data...\ndata samples %d' %(pklfile.sample_num)
+    print 'data dimension %d' %(pklfile.dimension)
     print '\n===============================================\n'
-
-    return xTrain, xTest, yTrain, yTest
-
+    print "X shape: ", X.shape
+    print "Y shape: ", Y.shape
+    # return X, Y
+    if onehot:
+        return (OneHotEncoder().fit_transform(X, ), Y) if sparsify==True else (OneHotEncoder().fit_transform(X, ).toarray(), Y)
+    else:
+        return X, Y

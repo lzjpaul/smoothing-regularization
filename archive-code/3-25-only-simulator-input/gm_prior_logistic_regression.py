@@ -14,7 +14,6 @@ from data_loader import *
 from scipy.stats import norm as gaussian
 import argparse
 import math
-from sklearn.cross_validation import StratifiedKFold, cross_val_score
 
 class GM_Logistic_Regression(Logistic_Regression):
     def __init__(self, hyperpara, gm_num, pi, reg_lambda, learning_rate=0.1, pi_r_learning_rate=0.1, reg_lambda_s_learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
@@ -116,12 +115,6 @@ class GM_Logistic_Regression(Logistic_Regression):
         # responsibility normalized with summation(denominator)
         self.responsibility = responsibility/(np.sum(responsibility, axis=1).reshape(self.w[:-1].shape))
 
-    # w loss
-    def w_loss(self):
-        responsibility = gaussian.pdf(self.w[:-1], loc=np.zeros(shape=(1, self.gm_num)), scale=1/np.sqrt(self.reg_lambda))*self.pi
-        responsibility_w = np.sum(responsibility, axis=1)
-        log_responsibility_w = -np.log(responsibility_w)
-        return np.sum(log_responsibility_w)
 
     # model parameter
     def __str__(self):
@@ -130,10 +123,6 @@ class GM_Logistic_Regression(Logistic_Regression):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('-datapath', type=str, help='the dataset path, not svm')
-    parser.add_argument('-onehot', type=int, help='need onehot or not')
-    parser.add_argument('-sparsify', type=int, help='need sparsify or not')
-    parser.add_argument('-batchsize', type=int, help='batchsize')
     parser.add_argument('-wlr', type=int, help='weight learning_rate (to the power of 10)')
     parser.add_argument('-pirlr', type=int, help='pi_r learning_rate (to the power of 10)')
     parser.add_argument('-lambdaslr', type=int, help='lambda_s learning_rate (to the power of 10)')
@@ -146,27 +135,24 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # load the simulation data
-    x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
-    n_folds = 3
-    for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
-        if i > 0:
-            break
-        xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
-        # run gm_prior lg model
-        learning_rate, pi_r_learning_rate, reg_lambda_s_learning_rate = math.pow(10, (-1 * args.wlr)), math.pow(10, (-1 * args.pirlr)), math.pow(10, (-1 * args.lambdaslr))
-        max_iter = args.maxiter
-        gm_opt_method = args.gmoptmethod
-        gm_num, a, b, alpha = args.gmnum, args.a, args.b, args.alpha
-        pi, reg_lambda,  eps, batch_size \
-            = [1.0/gm_num for _ in range(gm_num)], [_*10+1 for _ in  range(gm_num)], 1e-10, args.batchsize
-        LG = GM_Logistic_Regression(hyperpara=[a, b, alpha], gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, \
-                                    pi_r_learning_rate=pi_r_learning_rate, reg_lambda_s_learning_rate=reg_lambda_s_learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
-        LG.fit(xTrain, yTrain, gm_opt_method, verbos=True)
-        print "\n\nfinal accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
-        print LG
-        # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
-        # plt.show()
-        np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
+    xTrain, xTest, yTrain, yTest = loadData('simulator.pkl', trainPerc=0.7)
+
+
+    # run gm_prior lg model
+    learning_rate, pi_r_learning_rate, reg_lambda_s_learning_rate = math.pow(10, (-1 * args.wlr)), math.pow(10, (-1 * args.pirlr)), math.pow(10, (-1 * args.lambdaslr))
+    max_iter = args.maxiter
+    gm_opt_method = args.gmoptmethod
+    gm_num, a, b, alpha = args.gmnum, args.a, args.b, args.alpha
+    pi, reg_lambda,  eps, batch_size \
+        = [1.0/gm_num for _ in range(gm_num)], [_*10+1 for _ in  range(gm_num)], 1e-10, 500
+    LG = GM_Logistic_Regression(hyperpara=[a, b, alpha], gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, \
+                                pi_r_learning_rate=pi_r_learning_rate, reg_lambda_s_learning_rate=reg_lambda_s_learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
+    LG.fit(xTrain, yTrain, gm_opt_method, verbos=True)
+    print "\n\nfinal accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
+    print LG
+    # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
+    # plt.show()
+    np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
 
 # command python gm_prior_logistic_regression.py -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 30000 -gmnum 4 -a 0 -b 1 -alpha 50 -gmoptmethod 1
 '''

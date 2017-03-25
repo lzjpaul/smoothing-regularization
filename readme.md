@@ -31,3 +31,6 @@ smoothing-regularization-4-gaussians-10000-1000: (10000, 1000), but eraly stoppi
 (12) adding w_loss (prior w)
 (13) the initialization is arbitrary
 (14) a, b, alpha are parameters
+
+3-25
+(15) enrich input type

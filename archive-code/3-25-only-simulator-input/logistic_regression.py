@@ -11,7 +11,7 @@ import sys
 from data_loader import *
 import argparse
 import math
-from sklearn.cross_validation import StratifiedKFold, cross_val_score
+from scipy.stats import norm as gaussian
 
 # base logistic regression class
 class Logistic_Regression(object):
@@ -96,12 +96,12 @@ class Logistic_Regression(object):
                     # print np.sum(np.abs(self.w))/self.featureNum, np.linalg.norm(self.w, ord=2)
                     train_accuracy = self.accuracy(self.predict(xTrain), yTrain)
                     train_loss = self.loss(xTrain, yTrain)
+                    regularization_loss = self.w_loss()
                     if verbos:
                         print "iter %4d\t|\ttrain_accuracy %10.6f\t|\ttrain_loss %10.10f"%(iter, train_accuracy, train_loss)
+                        print "w norm %10.6f\t|\tdelta_w norm %10.6f\t|\tw_loss %10.10f"%(np.linalg.norm(self.w, ord=2), np.linalg.norm(self.w_lr(epoch_num) * delta_w, ord=2), regularization_loss)
+                        print "lr %8.6f\t|\toverall loss %10.10f"%(self.w_lr(epoch_num), (train_loss+regularization_loss))
                         if hasattr(self, 'pi'):
-                            regularization_loss = self.w_loss()
-                            print "w norm %10.6f\t|\tdelta_w norm %10.6f\t|\tw_loss %10.10f"%(np.linalg.norm(self.w, ord=2), np.linalg.norm(self.w_lr(epoch_num) * delta_w, ord=2), regularization_loss)
-                            print "lr %8.6f\t|\toverall loss %10.10f"%(self.w_lr(epoch_num), (train_loss+regularization_loss))
                             print "pi, reg_lambda: ", self.pi, self.reg_lambda
                             print "lr, pi_r_l, reg_lambda_s_lr: ",self.w_lr(epoch_num), self.pi_r_lr(epoch_num), self.reg_lambda_s_lr(epoch_num)
                             print "\n"
@@ -116,6 +116,13 @@ class Logistic_Regression(object):
         mu_false = (1-mu)
         return np.sum((-yTrue * np.log(np.piecewise(mu, [mu < threshold, mu >= threshold], [threshold, lambda mu:mu])) \
                        - (1-yTrue) * np.log(np.piecewise(mu_false, [mu_false < threshold, mu_false >= threshold], [threshold, lambda mu_false:mu_false]))), axis = 0) / float(samples.shape[0])
+
+    # w loss
+    def w_loss(self):
+        responsibility = gaussian.pdf(self.w[:-1], loc=np.zeros(shape=(1, self.gm_num)), scale=1/np.sqrt(self.reg_lambda))*self.pi
+        responsibility_w = np.sum(responsibility, axis=1)
+        log_responsibility_w = -np.log(responsibility_w)
+        return np.sum(log_responsibility_w)
 
     # predict result
     def predict(self, samples):
@@ -138,32 +145,24 @@ class Logistic_Regression(object):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('-datapath', type=str, help='the dataset path, not svm')
-    parser.add_argument('-onehot', type=int, help='need onehot or not')
-    parser.add_argument('-sparsify', type=int, help='need sparsify or not')
-    parser.add_argument('-batchsize', type=int, help='batchsize')
     parser.add_argument('-wlr', type=int, help='weight learning_rate (to the power of 10)')
     parser.add_argument('-maxiter', type=int, help='max_iter')
     args = parser.parse_args()
 
     # load the simulation data
-    x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
-    n_folds = 3
-    for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
-        if i > 0:
-            break
-        xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
-        learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
-        reg_lambda, eps, batch_size = 10, 1e-10, args.batchsize
-        print "\nreg_lambda: %f" % (reg_lambda)
-        LG = Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
-        LG.fit(xTrain, yTrain, gm_opt_method=-1, verbos=True)
-        print "\n\nfinal accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
-        print LG
+    xTrain, xTest, yTrain, yTest = loadData('simulator.pkl', trainPerc=0.7)
 
-        # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
-        # plt.show()
-        np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
+    learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
+    reg_lambda, eps, batch_size = 10, 1e-10, 500
+    print "\nreg_lambda: %f" % (reg_lambda)
+    LG = Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
+    LG.fit(xTrain, yTrain, gm_opt_method=-1, verbos=True)
+    print "\n\nfinal accuracy: %.6f" % (LG.accuracy(LG.predict(xTest), yTest))
+    print LG
+
+    # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
+    # plt.show()
+    np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
 
 
     # train_accuracy, test_accuracy = [], []
