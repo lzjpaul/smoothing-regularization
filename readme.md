@@ -33,4 +33,4 @@ smoothing-regularization-4-gaussians-10000-1000: (10000, 1000), but eraly stoppi
 (14) a, b, alpha are parameters
 
 3-25
-(15) enrich input type
+(15) enrich input type (pickle_transformer.py)
