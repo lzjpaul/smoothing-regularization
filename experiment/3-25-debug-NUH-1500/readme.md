@@ -37,4 +37,4 @@ smoothing-regularization-4-gaussians-10000-1000: (10000, 1000), but eraly stoppi
 
 diferent from github:
 (16)the data split affects a lotttt (because data set is small, so the performance differs a lot)
-(17)w_init = 0.1, data_grad/batch_size, decay = 0.0, lr = 0.1, lambda_vec_int = [0.5, 0.25, 0.125]
+(17)onehot is 1, w_init = 0.1, data_grad/batch_size, decay = 0.0, lr = 0.1, lambda_vec_int = [0.5, 0.25, 0.125]

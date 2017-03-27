@@ -8,7 +8,7 @@ import numpy as np
 import pickle
 import argparse
 
-class Dataset():
+class Dataset(object):
     def DataGenerator(self, x, y):
         self.sample_num, self.dimension = x.shape[0], x.shape[1]
         self.x = x

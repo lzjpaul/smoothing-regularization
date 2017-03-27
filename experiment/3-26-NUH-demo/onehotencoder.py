@@ -3,25 +3,28 @@ import numpy
 from sklearn.preprocessing import OneHotEncoder
 import sys
 
-#read data
-def readData(filename):
-    return [line.rstrip().split(',') for line in open(filename)]
+#not include ID column
 
-#read training data
-train_data = readData(sys.argv[1])  #modify here
-train_matrix = np.array(train_data[0:])[:,0:]
 
-#define model
-train_X = train_matrix[:,0:].astype(np.int)
-print "train_X shape = \n", train_X.shape
-#OneHotEncoder
-num_feature = len(train_X[0,:])
-enc = OneHotEncoder(categorical_features=range(1,16),sparse=False)  #modify here!!
-print "categorical_features = \n", range(1,16)
-enc.fit(train_X)
-train_X = enc.transform(train_X)
-train_X.astype(int)
-print "train_X shape: ", train_X.shape
-a = numpy.asarray(train_X, dtype = int)
-numpy.savetxt(sys.argv[2], a, fmt = '%d', delimiter=",")
+def onehottransformer(onehotfilename, transformfilename):
+    #define model
+    train_X = np.genfromtxt(onehotfilename, delimiter=',')[:, 1:].astype(np.int)
+    print "train_X[1000]: ", train_X[1000]
+    print "train_X shape = \n", train_X.shape
+
+    test_X = np.genfromtxt(transformfilename, delimiter=',')[:, 0:].astype(np.int)
+    print "test_X shape = \n", test_X.shape
+
+    #OneHotEncoder
+    num_feature = len(train_X[0,:])
+    enc = OneHotEncoder(categorical_features=range(0,num_feature),sparse=False)  #modify here!!
+    print "categorical_features = \n", range(0,num_feature)
+    print "num_feature: ", num_feature
+    enc.fit(train_X)
+    test_X = enc.transform(test_X)
+    test_X = test_X.astype(int)
+    print "test_X shape: ", test_X.shape
+    print "test_X[0,1]: "
+    print test_X[0:2]
+    return test_X
 #python hotencoder_arg.py NUH_DS_SOC_READMISSION_CASE_halfyear_LAB_ENGI_SUB_idxcase_demor.txt NUH_DS_SOC_READMISSION_CASE_halfyear_LAB_ENGI_SUB_idxcase_demor_onehot_arg.txt
