@@ -30,24 +30,33 @@ class Logistic_Regression(object):
         else:
             return self.learning_rate / float(100)
 
-    # calc the delta w to update w, using sgd here
-    def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
+    def likelihood_grad(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         xTrain, yTrain = xTrain[index : (index + self.batch_size)], yTrain[index : (index + self.batch_size)]
 
         mu = self.sigmoid(np.matmul(xTrain, self.w))
         # check here, no regularization over bias term # need normalization with xTrain.shape[0]/batch_size here
         grad_w = (self.trainNum/self.batch_size)*np.matmul(xTrain.T, (mu - yTrain))
+
+        return grad_w
+    # calc the delta w to update w, using sgd here
+    def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
+        grad_w = likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
         reg_grad_w = self.reg_lambda * self.w
         reg_grad_w[-1, 0] = 0.0 # bias
         grad_w += reg_grad_w
         return -grad_w
 
 
-    def fit(self, xTrain, yTrain, gm_opt_method=-1, verbos=False):
+    def fit(self, xTrain, yTrain, ishuber=False, gm_opt_method=-1, verbos=False):
         np.random.seed(10)
         # find the number of class and feature, allocate memory for model parameters
         self.trainNum, self.featureNum = xTrain.shape[0], xTrain.shape[1]
-        self.w = np.random.normal(0, 0.01, size=(self.featureNum+1, 1))#np.zeros(shape=(self.featureNum+1, 1), dtype='float32')
+        if ishuber:
+            self.w1 = np.random.normal(0, 0.01, size=(self.featureNum+1, 1))#np.zeros(shape=(self.featureNum+1, 1), dtype='float32')
+            self.w2 = np.random.normal(0, 0.01, size=(self.featureNum+1, 1))#np.zeros(shape=(self.featureNum+1, 1), dtype='float32')
+            self.w = np.add(self.w1, self.w2)
+        else:
+            self.w = np.random.normal(0, 0.01, size=(self.featureNum+1, 1))#np.zeros(shape=(self.featureNum+1, 1), dtype='float32')
         print "self.w[:10]: ", self.w[:10]
 
         # adding 1s to each training examples
@@ -76,10 +85,22 @@ class Logistic_Regression(object):
 
                 # calc current epoch
                 epoch_num = iter*self.batch_size/xTrain.shape[0]
-                # calc the delta_w to update w
-                delta_w = self.delta_w(xTrain, yTrain, index, epoch_num, iter, gm_opt_method)
-                # update w
-                self.w += self.w_lr(epoch_num) * delta_w
+                if ishuber:
+                    # calc the delta_w1 to update w1
+                    delta_w1 = self.delta_w1(xTrain, yTrain, index, epoch_num, iter, gm_opt_method)
+                    # update w1
+                    self.w1 += self.w1_lr(epoch_num) * delta_w1
+                    self.w = np.add(self.w1, self.w2)
+                    # calc the delta_w2 to update w2
+                    delta_w2 = self.delta_w2(xTrain, yTrain, index, epoch_num, iter, gm_opt_method)
+                    # update w2
+                    self.w2 += self.w2_lr(epoch_num) * delta_w2
+                    self.w = np.add(self.w1, self.w2)
+                else:
+                    # calc the delta_w to update w
+                    delta_w = self.delta_w(xTrain, yTrain, index, epoch_num, iter, gm_opt_method)
+                    # update w
+                    self.w += self.w_lr(epoch_num) * delta_w
 
                 # stop updating if converge
                 # https://www.coursera.org/learn/machine-learning/lecture/fKi0M/stochastic-gradient-descent-convergence

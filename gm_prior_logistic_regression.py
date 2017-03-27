@@ -49,11 +49,7 @@ class GM_Logistic_Regression(Logistic_Regression):
 
     # calc the delta w to update w, using gm_prior_sgd here, update pi, reg_lambda here
     def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
-        xTrain, yTrain = xTrain[index: (index + self.batch_size)], yTrain[index: (index + self.batch_size)]
-
-        mu = self.sigmoid(np.matmul(xTrain, self.w))
-        # check here, data part grad, need normalization with train_num/batch_size here
-        grad_w = (self.trainNum/self.batch_size)*np.matmul(xTrain.T, (mu - yTrain))
+        grad_w = likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
         # gaussian mixture reg term grad
         self.calcResponsibility()
         reg_grad_w = np.sum(self.responsibility*self.reg_lambda, axis=1).reshape(self.w[:-1].shape) * self.w[:-1]

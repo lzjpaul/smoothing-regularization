@@ -34,3 +34,6 @@ smoothing-regularization-4-gaussians-10000-1000: (10000, 1000), but eraly stoppi
 
 3-25
 (15) enrich input type (pickle_transformer.py)
+
+3-27
+(16) adding ealsticnet, huber, Lasso (data_grad is separated out)
