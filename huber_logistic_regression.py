@@ -13,52 +13,37 @@ import argparse
 import math
 from sklearn.cross_validation import StratifiedKFold, cross_val_score
 from sklearn.metrics import accuracy_score, roc_auc_score
+from scipy import sparse
 
 # base logistic regression class
 class Huber_Logistic_Regression(Logistic_Regression):
-    def __init__(self, reg_mu=1, reg_lambda=1, learning_rate=0.1, w1_learning_rate=0.1, w2_learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
+    def __init__(self, reg_mu=1, reg_lambda=1, learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
         Logistic_Regression.__init__(self, reg_lambda, learning_rate, max_iter, eps, batch_size, validation_perc)
         self.reg_mu = reg_mu
-        self.w1_learning_rate, self.w2_learning_rate = w1_learning_rate, w2_learning_rate
         print "self.reg_mu: ", self.reg_mu
-        print "self.w1_learning_rate, self.w2_learning_rate: ", self.w1_learning_rate, self.w2_learning_rate
-
-    def w1_lr(self, epoch):
-        if epoch < 100:
-            return self.w1_learning_rate
-        elif epoch < 150:
-            return self.w1_learning_rate / float(10)
-        else:
-            return self.w1_learning_rate / float(100)
-
-    def w2_lr(self, epoch):
-        if epoch < 100:
-            return self.w2_learning_rate
-        elif epoch < 150:
-            return self.w2_learning_rate / float(10)
-        else:
-            return self.w2_learning_rate / float(100)
 
     # calc the delta w to update w, using sgd here
     def delta_w1(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
-        grad_w1 = likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
-        reg_grad_w1 = self.reg_mu * np.sign(self.w1)
+        grad_w1 = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
+        reg_grad_w1 = self.reg_mu * np.sign(self.w1.toarray())
         reg_grad_w1[-1, 0] = 0.0 # bias
+        reg_grad_w1 = sparse.csr_matrix(reg_grad_w1)
         grad_w1 += reg_grad_w1
         return -grad_w1
 
     # calc the delta w to update w, using sgd here
     def delta_w2(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         grad_w2 = likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
-        reg_grad_w2 = self.reg_lambda * self.w2
+        reg_grad_w2 = self.reg_lambda * self.w2.toarray()
         reg_grad_w2[-1, 0] = 0.0 # bias
+        reg_grad_w2 = sparse.csr_matrix(reg_grad_w2)
         grad_w2 += reg_grad_w2
         return -grad_w2
 
     # model parameter
     def __str__(self):
-        return 'model config {\treg_mu: %.6f, reg_lambda: %.6f, lr: %.6f, w1_lr: %.6f, w2_lr: %.6f, batch_size: %5d\t}' \
-            % (self.reg_mu, self.reg_lambda, self.learning_rate, self.w1_learning_rate, self.w2_learning_rate, self.batch_size)
+        return 'model config {\treg_mu: %.6f, reg_lambda: %.6f, lr: %.6f, batch_size: %5d\t}' \
+            % (self.reg_mu, self.reg_lambda, self.learning_rate, self.batch_size)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
@@ -67,24 +52,21 @@ if __name__ == '__main__':
     parser.add_argument('-sparsify', type=int, help='need sparsify or not')
     parser.add_argument('-batchsize', type=int, help='batchsize')
     parser.add_argument('-wlr', type=int, help='weight learning_rate (to the power of 10)')
-    parser.add_argument('-w1lr', type=int, help='w1_learning_rate (to the power of 10)')
-    parser.add_argument('-w2lr', type=int, help='w2_learning_rate (to the power of 10)')
     parser.add_argument('-maxiter', type=int, help='max_iter')
     args = parser.parse_args()
 
     # load the simulation data
     x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
     n_folds = 5
-    for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
+    for i, (train_index, test_index) in enumerate(StratifiedKFold(y.toarray().reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
         xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
-        learning_rate, w1_learning_rate, w2_learning_rate, max_iter = \
-                                         math.pow(10, (-1 * args.wlr)), math.pow(10, (-1 * args.w1lr)), math.pow(10, (-1 * args.w2lr)), args.maxiter
+        learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
         reg_mu, reg_lambda, eps, batch_size = 10, 10, 1e-10, args.batchsize
         print "\nreg_lambda: %f" % (reg_lambda)
-        LG = Huber_Logistic_Regression(reg_mu, reg_lambda, learning_rate, w1_learning_rate, w2_learning_rate, max_iter, eps, batch_size)
-        LG.fit(xTrain, yTrain, gm_opt_method=-1, verbos=True)
+        LG = Huber_Logistic_Regression(reg_mu, reg_lambda, learning_rate, max_iter, eps, batch_size)
+        LG.fit(xTrain, yTrain, ishuber=True, gm_opt_method=-1, verbos=True)
         print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest), yTest), LG.auroc(LG.predict_proba(xTest), yTest))
         print LG
 

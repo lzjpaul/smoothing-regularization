@@ -37,3 +37,6 @@ smoothing-regularization-4-gaussians-10000-1000: (10000, 1000), but eraly stoppi
 
 3-27
 (16) adding ealsticnet, huber, Lasso (data_grad is separated out)
+
+3-28
+(17) sparse version + data_loader permutation + huber no w1_lr + self.likelihood_grad
