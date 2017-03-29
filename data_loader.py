@@ -16,14 +16,10 @@ def loadData(fileName, onehot=True, sparsify=True):
     print '\n===============================================\n'
     print "X shape: ", X.shape
     print "Y shape: ", Y.shape
+    print "Y[:10] before transform: ", Y[:10]
     if Y.dtype != 'bool':
         Y = (Y > 0.5)
-    # permutation
-    # np.random.seed(10)
-    # idx = np.random.permutation(X.shape[0])
-    # print "data loader permutation idx: ", idx
-    # X = X[idx]
-    # Y = Y[idx]
+    print "Y[:10] after transform: ", Y[:10]
     # return X, Y
     if onehot:
         return (OneHotEncoder().fit_transform(X, ), sparse.csr_matrix(Y)) if sparsify==True else (OneHotEncoder().fit_transform(X, ).toarray(), Y)

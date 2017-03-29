@@ -13,7 +13,6 @@ import argparse
 import math
 from sklearn.cross_validation import StratifiedKFold, cross_val_score
 from sklearn.metrics import accuracy_score, roc_auc_score
-from scipy import sparse
 
 # base logistic regression class
 class Huber_Logistic_Regression(Logistic_Regression):
@@ -25,18 +24,16 @@ class Huber_Logistic_Regression(Logistic_Regression):
     # calc the delta w to update w, using sgd here
     def delta_w1(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         grad_w1 = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
-        reg_grad_w1 = self.reg_mu * np.sign(self.w1.toarray())
+        reg_grad_w1 = self.reg_mu * np.sign(self.w1)
         reg_grad_w1[-1, 0] = 0.0 # bias
-        reg_grad_w1 = sparse.csr_matrix(reg_grad_w1)
         grad_w1 += reg_grad_w1
         return -grad_w1
 
     # calc the delta w to update w, using sgd here
     def delta_w2(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         grad_w2 = likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
-        reg_grad_w2 = self.reg_lambda * self.w2.toarray()
+        reg_grad_w2 = self.reg_lambda * self.w2
         reg_grad_w2[-1, 0] = 0.0 # bias
-        reg_grad_w2 = sparse.csr_matrix(reg_grad_w2)
         grad_w2 += reg_grad_w2
         return -grad_w2
 
@@ -58,7 +55,7 @@ if __name__ == '__main__':
     # load the simulation data
     x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
     n_folds = 5
-    for i, (train_index, test_index) in enumerate(StratifiedKFold(y.toarray().reshape(y.shape[0]), n_folds=n_folds)):
+    for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
         xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]

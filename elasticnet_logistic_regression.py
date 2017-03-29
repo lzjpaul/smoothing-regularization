@@ -13,7 +13,6 @@ import argparse
 import math
 from sklearn.cross_validation import StratifiedKFold, cross_val_score
 from sklearn.metrics import accuracy_score, roc_auc_score
-from scipy import sparse
 
 # base logistic regression class
 class ElasticNet_Logistic_Regression(Logistic_Regression):
@@ -25,10 +24,8 @@ class ElasticNet_Logistic_Regression(Logistic_Regression):
     # calc the delta w to update w, using sgd here
     def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         grad_w = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
-        w_array = self.w.toarray()
-        reg_grad_w = self.reg_lambda * self.l1_ratio * np.sign(w_array) + self.reg_lambda * (1 - self.l1_ratio) * w_array
+        reg_grad_w = self.reg_lambda * self.l1_ratio * np.sign(self.w) + self.reg_lambda * (1 - self.l1_ratio) * self.w
         reg_grad_w[-1, 0] = 0.0 # bias
-        reg_grad_w = sparse.csr_matrix(reg_grad_w)
         grad_w += reg_grad_w
         return -grad_w
 
@@ -50,7 +47,7 @@ if __name__ == '__main__':
     # load the simulation data
     x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
     n_folds = 5
-    for i, (train_index, test_index) in enumerate(StratifiedKFold(y.toarray().reshape(y.shape[0]), n_folds=n_folds)):
+    for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
         xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
