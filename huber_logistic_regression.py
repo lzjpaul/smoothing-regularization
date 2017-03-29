@@ -8,6 +8,7 @@ hyper:
 (2) threshold for train_loss
 '''
 import sys
+from logistic_regression import Logistic_Regression
 from data_loader import *
 import argparse
 import math
@@ -31,7 +32,7 @@ class Huber_Logistic_Regression(Logistic_Regression):
 
     # calc the delta w to update w, using sgd here
     def delta_w2(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
-        grad_w2 = likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
+        grad_w2 = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
         reg_grad_w2 = self.reg_lambda * self.w2
         reg_grad_w2[-1, 0] = 0.0 # bias
         grad_w2 += reg_grad_w2

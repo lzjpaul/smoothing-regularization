@@ -8,6 +8,7 @@ hyper:
 (2) threshold for train_loss
 '''
 import sys
+from logistic_regression import Logistic_Regression
 from data_loader import *
 import argparse
 import math

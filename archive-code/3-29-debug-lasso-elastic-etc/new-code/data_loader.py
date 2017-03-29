@@ -5,7 +5,6 @@ from gm_prior_simulation import Simulator
 from pickle_transformer import Dataset
 from scipy import sparse
 from sklearn.preprocessing import OneHotEncoder
-
 # load training/testing data from pickles simulator object file with specified training percent
 def loadData(fileName, onehot=True, sparsify=True):
     print '\n===============================================\n'
@@ -21,6 +20,11 @@ def loadData(fileName, onehot=True, sparsify=True):
     if Y.dtype != 'bool':
         Y = (Y > 0.5)
     print "Y[:10] after transform: ", Y[:10]
+    np.random.seed(10)
+    idx = np.random.permutation(X.shape[0])
+    print "idx: ", idx
+    X = X[idx]
+    Y = Y[idx]
     # return X, Y
     if onehot:
         return (OneHotEncoder().fit_transform(X, ), sparse.csr_matrix(Y)) if sparsify==True else (OneHotEncoder().fit_transform(X, ).toarray(), Y)

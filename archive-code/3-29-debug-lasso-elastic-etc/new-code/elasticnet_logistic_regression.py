@@ -28,6 +28,7 @@ class ElasticNet_Logistic_Regression(Logistic_Regression):
         reg_grad_w = self.reg_lambda * self.l1_ratio * np.sign(self.w) + self.reg_lambda * (1 - self.l1_ratio) * self.w
         reg_grad_w[-1, 0] = 0.0 # bias
         grad_w += reg_grad_w
+        print "regularization grad: ", np.linalg.norm(reg_grad_w)
         return -grad_w
 
     # model parameter
@@ -53,7 +54,7 @@ if __name__ == '__main__':
             break
         xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
         learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
-        l1_ratio, reg_lambda, eps, batch_size = 0.5, 10, 1e-10, args.batchsize
+        l1_ratio, reg_lambda, eps, batch_size = 0.5, 0.1, 1e-10, args.batchsize
         print "\nreg_lambda: %f" % (reg_lambda)
         LG = ElasticNet_Logistic_Regression(l1_ratio, reg_lambda, learning_rate, max_iter, eps, batch_size)
         LG.fit(xTrain, yTrain, gm_opt_method=-1, verbos=True)
