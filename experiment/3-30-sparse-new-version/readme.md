@@ -40,13 +40,3 @@ smoothing-regularization-4-gaussians-10000-1000: (10000, 1000), but eraly stoppi
 
 3-28
 (17) sparse version + data_loader permutation + huber no w1_lr + self.likelihood_grad
-
-3-29
-(18) check lasso, elasticnet, huber. etc
-18-1: import logistic_regression class
-18-2: the likelihood grad is different here (1.0/batch_size) VS (train_num/batch_size)
-18-3: np.random.norm, np.random.permutation
-18-4: huber L2: w*param instead of 2*w*param (old version of author's code is not correct)
-
-3-30
-(19) sparse version
