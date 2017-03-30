@@ -49,7 +49,4 @@ smoothing-regularization-4-gaussians-10000-1000: (10000, 1000), but eraly stoppi
 18-4: huber L2: w*param instead of 2*w*param (old version of author's code is not correct)
 
 3-30
-(19) sparse version (first version slow, second version fast)
-(20) sparse and dense combined version (in GD: responsibility*np.square(self.w)!!!) + y is NOT returned as sparse
-smoothing-regularization (dense, all checked correct, now archive-code/3-30-dense) --> smoothing-regularization-debug-sparse-dense(authority) &&  smoothing-regularization-debug-sparse-sparse(authority)(all checked, correct)
---> smoothing-regularization (dense + sparse combined, all checked correct)
+(19) sparse version

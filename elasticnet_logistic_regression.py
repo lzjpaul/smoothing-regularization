@@ -60,8 +60,9 @@ if __name__ == '__main__':
         l1_ratio, reg_lambda, eps, batch_size = 0.5, 10, 1e-10, args.batchsize
         print "\nreg_lambda: %f" % (reg_lambda)
         LG = ElasticNet_Logistic_Regression(l1_ratio, reg_lambda, learning_rate, max_iter, eps, batch_size)
-        LG.fit(xTrain, yTrain, gm_opt_method=-1, verbos=True)
-        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest), yTest), LG.auroc(LG.predict_proba(xTest), yTest))
+        LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=-1, verbos=True)
+        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
+                                                               LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest))
         print LG
 
         # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)

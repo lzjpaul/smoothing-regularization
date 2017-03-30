@@ -68,8 +68,9 @@ if __name__ == '__main__':
         reg_mu, reg_lambda, eps, batch_size = 10, 10, 1e-10, args.batchsize
         print "\nreg_lambda: %f" % (reg_lambda)
         LG = Huber_Logistic_Regression(reg_mu, reg_lambda, learning_rate, max_iter, eps, batch_size)
-        LG.fit(xTrain, yTrain, ishuber=True, gm_opt_method=-1, verbos=True)
-        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest), yTest), LG.auroc(LG.predict_proba(xTest), yTest))
+        LG.fit(xTrain, yTrain, (args.sparsify==1), ishuber=True, gm_opt_method=-1, verbos=True)
+        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
+                                                               LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest))
         print LG
 
         # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)

@@ -70,7 +70,7 @@ class GM_Logistic_Regression(Logistic_Regression):
 
     def update_GM_Prior_GD(self, epoch_num, iter_num):
         #update reg_lambda_s
-        delta_reg_lambda = np.sum((self.responsibility / (2.0 * self.reg_lambda) - self.responsibility * 0.5 * np.square(self.w[:-1])), axis=0).reshape((1,-1))
+        delta_reg_lambda = np.sum((self.responsibility / (2.0 * self.reg_lambda) - self.responsibility * 0.5 * self.w[:-1] * self.w[:-1]), axis=0).reshape((1,-1))
         delta_reg_lambda += (self.a - 1) / (self.reg_lambda.astype(float)) - self.b
         delta_reg_lambda = -delta_reg_lambda
         delta_reg_lambda_s = delta_reg_lambda * self.reg_lambda
@@ -163,9 +163,8 @@ if __name__ == '__main__':
             = [1.0/gm_num for _ in range(gm_num)], [_*10+1 for _ in  range(gm_num)], 1e-10, args.batchsize
         LG = GM_Logistic_Regression(hyperpara=[a, b, alpha], gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, \
                                     pi_r_learning_rate=pi_r_learning_rate, reg_lambda_s_learning_rate=reg_lambda_s_learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
-        LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=gm_opt_method, verbos=True)
-        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
-                                                               LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest))
+        LG.fit(xTrain, yTrain, gm_opt_method=gm_opt_method, verbos=True)
+        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest), yTest), LG.auroc(LG.predict_proba(xTest), yTest))
         print LG
         # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
         # plt.show()

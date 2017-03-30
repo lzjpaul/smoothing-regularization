@@ -25,9 +25,9 @@ def loadData(fileName, onehot=True, sparsify=True):
         print "Y[:10] after transform: ", Y[:10]
         # return X, Y
         if onehot:
-            return (OneHotEncoder().fit_transform(X, ), Y) if sparsify==True else (OneHotEncoder().fit_transform(X, ).toarray(), Y)
+            return (OneHotEncoder().fit_transform(X, ), sparse.csr_matrix(Y)) if sparsify==True else (OneHotEncoder().fit_transform(X, ).toarray(), Y)
         else:
-            return (sparse.csr_matrix(X), Y) if sparsify==True else (X, Y)
+            return (sparse.csr_matrix(X), sparse.csr_matrix(Y)) if sparsify==True else (X, Y)
     else:
         print '\n===============================================\n'
         print 'loading svm data...'
@@ -38,4 +38,4 @@ def loadData(fileName, onehot=True, sparsify=True):
         Y = (Y > 0.5)
         Y = Y.reshape((-1, 1))
         print "Y[:10] after transform: ", Y[:10]
-        return X, Y
+        return X, sparse.csr_matrix(Y)

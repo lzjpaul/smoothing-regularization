@@ -36,17 +36,16 @@ class Logistic_Regression(object):
     def likelihood_grad(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         xTrain, yTrain = xTrain[index : (index + self.batch_size)], yTrain[index : (index + self.batch_size)]
 
-        mu = self.sigmoid(xTrain.dot(self.w).toarray())
+        mu = self.sigmoid(xTrain.dot(self.w))
         # check here, no regularization over bias term # need normalization with xTrain.shape[0]/batch_size here
-        grad_w = (self.trainNum/self.batch_size)*(xTrain.T.dot(sparse.csr_matrix(mu) - yTrain))
+        grad_w = (self.trainNum/self.batch_size)*(xTrain.T.dot(mu - yTrain))
 
         return grad_w
     # calc the delta w to update w, using sgd here
     def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         grad_w = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
-        reg_grad_w = self.reg_lambda * self.w.toarray()
+        reg_grad_w = self.reg_lambda * self.w
         reg_grad_w[-1, 0] = 0.0 # bias
-        reg_grad_w = sparse.csr_matrix(reg_grad_w)
         grad_w += reg_grad_w
         return -grad_w
 
@@ -58,13 +57,10 @@ class Logistic_Regression(object):
         if ishuber:
             self.w1 = np.random.normal(0, 0.01, size=(self.featureNum+1, 1))#np.zeros(shape=(self.featureNum+1, 1), dtype='float32')
             self.w2 = np.random.normal(0, 0.01, size=(self.featureNum+1, 1))#np.zeros(shape=(self.featureNum+1, 1), dtype='float32')
-            self.w1 = sparse.csr_matrix(self.w1)
-            self.w2 = sparse.csr_matrix(self.w2)
-            self.w = self.w1 + self.w2
+            self.w = np.add(self.w1, self.w2)
         else:
             self.w = np.random.normal(0, 0.01, size=(self.featureNum+1, 1))#np.zeros(shape=(self.featureNum+1, 1), dtype='float32')
-            self.w = sparse.csr_matrix(self.w)
-        print "self.w[:10]: ", self.w.toarray()[:10]
+        print "self.w[:10]: ", self.w[:10]
 
         # adding 1s to each training examples
         xTrain = sparse.hstack([xTrain, np.ones(shape=(self.trainNum, 1))], format="csr")
@@ -97,12 +93,12 @@ class Logistic_Regression(object):
                     delta_w1 = self.delta_w1(xTrain, yTrain, index, epoch_num, iter, gm_opt_method)
                     # update w1
                     self.w1 += self.w_lr(epoch_num) * delta_w1
-                    self.w = self.w1 + self.w2
+                    self.w = np.add(self.w1, self.w2)
                     # calc the delta_w2 to update w2
                     delta_w2 = self.delta_w2(xTrain, yTrain, index, epoch_num, iter, gm_opt_method)
                     # update w2
                     self.w2 += self.w_lr(epoch_num) * delta_w2
-                    self.w = self.w1 + self.w2
+                    self.w = np.add(self.w1, self.w2)
                 else:
                     # calc the delta_w to update w
                     delta_w = self.delta_w(xTrain, yTrain, index, epoch_num, iter, gm_opt_method)
@@ -129,7 +125,7 @@ class Logistic_Regression(object):
                         print "iter %4d\t|\ttrain_accuracy %10.6f\t|\ttrain_loss %10.10f"%(iter, train_accuracy, train_loss)
                         if hasattr(self, 'pi'):
                             regularization_loss = self.w_loss()
-                            print "w norm %10.6f\t|\tdelta_w norm %10.6f\t|\tw_loss %10.10f"%(linalg.norm(self.w), linalg.norm(self.w_lr(epoch_num) * delta_w), regularization_loss)
+                            print "w norm %10.6f\t|\tdelta_w norm %10.6f\t|\tw_loss %10.10f"%(np.linalg.norm(self.w), np.linalg.norm(self.w_lr(epoch_num) * delta_w), regularization_loss)
                             print "lr %8.6f\t|\toverall loss %10.10f"%(self.w_lr(epoch_num), (train_loss+regularization_loss))
                             print "pi, reg_lambda: ", self.pi, self.reg_lambda
                             print "lr, pi_r_l, reg_lambda_s_lr: ",self.w_lr(epoch_num), self.pi_r_lr(epoch_num), self.reg_lambda_s_lr(epoch_num)
@@ -141,9 +137,8 @@ class Logistic_Regression(object):
     def loss(self, samples, yTrue):
         threshold = 1e-320
         yTrue = yTrue.astype(int)
-        mu = self.sigmoid(samples.dot(self.w).toarray())
+        mu = self.sigmoid(samples.dot(self.w))
         mu_false = (1-mu)
-        yTrue = yTrue.toarray()
         return np.sum((-yTrue * np.log(np.piecewise(mu, [mu < threshold, mu >= threshold], [threshold, lambda mu:mu])) \
                        - (1-yTrue) * np.log(np.piecewise(mu_false, [mu_false < threshold, mu_false >= threshold], [threshold, lambda mu_false:mu_false]))), axis = 0) / float(samples.shape[0])
 
@@ -151,20 +146,20 @@ class Logistic_Regression(object):
     def predict(self, samples):
         if samples.shape[1] != self.w.shape[0]:
             samples = sparse.hstack([samples, np.ones(shape=(samples.shape[0], 1))], format="csr")
-        return samples.dot(self.w).toarray()>0.0
+        return samples.dot(self.w)>0.0
 
     # predict probability
     def predict_proba(self, samples):
         if samples.shape[1] != self.w.shape[0]:
             samples = sparse.hstack([samples, np.ones(shape=(samples.shape[0], 1))], format="csr")
-        return self.sigmoid(samples.dot(self.w).toarray())
+        return self.sigmoid(samples.dot(self.w))
 
     # calc accuracy
     def accuracy(self, yPredict, yTrue):
-        return np.sum(yPredict == yTrue.toarray()) / float(yTrue.shape[0])
+        return np.sum(yPredict == yTrue) / float(yTrue.shape[0])
 
     def auroc(self, yPredictProba, yTrue):
-        return roc_auc_score(yTrue.toarray(), yPredictProba)
+        return roc_auc_score(yTrue, yPredictProba)
 
     # sigmoid function
     def sigmoid(self, matrix):
@@ -188,7 +183,7 @@ if __name__ == '__main__':
     # load the simulation data
     x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
     n_folds = 5
-    for i, (train_index, test_index) in enumerate(StratifiedKFold(y.toarray().reshape(y.shape[0]), n_folds=n_folds)):
+    for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
         start = time.time()
@@ -210,7 +205,7 @@ if __name__ == '__main__':
         print do
         elapsed = done - start
         print elapsed
-        np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w.toarray(), delimiter=',')
+        np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
 
 
     # train_accuracy, test_accuracy = [], []

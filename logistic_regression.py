@@ -13,8 +13,11 @@ import argparse
 import math
 from sklearn.cross_validation import StratifiedKFold, cross_val_score
 from sklearn.metrics import accuracy_score, roc_auc_score
+from scipy import sparse
+from scipy.sparse import linalg
 import datetime
 import time
+from sklearn.utils.extmath import safe_sparse_dot
 # base logistic regression class
 class Logistic_Regression(object):
     def __init__(self, reg_lambda=1, learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
@@ -34,9 +37,9 @@ class Logistic_Regression(object):
     def likelihood_grad(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         xTrain, yTrain = xTrain[index : (index + self.batch_size)], yTrain[index : (index + self.batch_size)]
 
-        mu = self.sigmoid(np.matmul(xTrain, self.w))
+        mu = self.sigmoid(safe_sparse_dot(xTrain, self.w, dense_output=True))
         # check here, no regularization over bias term # need normalization with xTrain.shape[0]/batch_size here
-        grad_w = (self.trainNum/self.batch_size)*np.matmul(xTrain.T, (mu - yTrain))
+        grad_w = (self.trainNum/self.batch_size)*(safe_sparse_dot(xTrain.T, (mu - yTrain), dense_output=True))
 
         return grad_w
     # calc the delta w to update w, using sgd here
@@ -48,7 +51,7 @@ class Logistic_Regression(object):
         return -grad_w
 
 
-    def fit(self, xTrain, yTrain, ishuber=False, gm_opt_method=-1, verbos=False):
+    def fit(self, xTrain, yTrain, sparsify, ishuber=False, gm_opt_method=-1, verbos=False):
         np.random.seed(10)
         # find the number of class and feature, allocate memory for model parameters
         self.trainNum, self.featureNum = xTrain.shape[0], xTrain.shape[1]
@@ -61,7 +64,10 @@ class Logistic_Regression(object):
         print "self.w[:10]: ", self.w[:10]
 
         # adding 1s to each training examples
-        xTrain = np.hstack((xTrain, np.ones(shape=(self.trainNum, 1))))
+        if sparsify:
+            xTrain = sparse.hstack([xTrain, np.ones(shape=(self.trainNum, 1))], format="csr")
+        else:
+            xTrain = np.hstack((xTrain, np.ones(shape=(self.trainNum, 1))))
 
         # validation set
         validationNum = int(self.validation_perc*xTrain.shape[0])
@@ -117,13 +123,13 @@ class Logistic_Regression(object):
                 # print useful information
                 if iter % 100 == 0:
                     # print np.sum(np.abs(self.w))/self.featureNum, np.linalg.norm(self.w, ord=2)
-                    train_accuracy = self.accuracy(self.predict(xTrain), yTrain)
+                    train_accuracy = self.accuracy(self.predict(xTrain, sparsify), yTrain)
                     train_loss = self.loss(xTrain, yTrain)
                     if verbos:
                         print "iter %4d\t|\ttrain_accuracy %10.6f\t|\ttrain_loss %10.10f"%(iter, train_accuracy, train_loss)
                         if hasattr(self, 'pi'):
                             regularization_loss = self.w_loss()
-                            print "w norm %10.6f\t|\tdelta_w norm %10.6f\t|\tw_loss %10.10f"%(np.linalg.norm(self.w, ord=2), np.linalg.norm(self.w_lr(epoch_num) * delta_w, ord=2), regularization_loss)
+                            print "w norm %10.6f\t|\tdelta_w norm %10.6f\t|\tw_loss %10.10f"%(np.linalg.norm(self.w), np.linalg.norm(self.w_lr(epoch_num) * delta_w), regularization_loss)
                             print "lr %8.6f\t|\toverall loss %10.10f"%(self.w_lr(epoch_num), (train_loss+regularization_loss))
                             print "pi, reg_lambda: ", self.pi, self.reg_lambda
                             print "lr, pi_r_l, reg_lambda_s_lr: ",self.w_lr(epoch_num), self.pi_r_lr(epoch_num), self.reg_lambda_s_lr(epoch_num)
@@ -135,22 +141,28 @@ class Logistic_Regression(object):
     def loss(self, samples, yTrue):
         threshold = 1e-320
         yTrue = yTrue.astype(int)
-        mu = self.sigmoid(np.matmul(samples, self.w))
+        mu = self.sigmoid(safe_sparse_dot(samples, self.w, dense_output=True))
         mu_false = (1-mu)
         return np.sum((-yTrue * np.log(np.piecewise(mu, [mu < threshold, mu >= threshold], [threshold, lambda mu:mu])) \
                        - (1-yTrue) * np.log(np.piecewise(mu_false, [mu_false < threshold, mu_false >= threshold], [threshold, lambda mu_false:mu_false]))), axis = 0) / float(samples.shape[0])
 
     # predict result
-    def predict(self, samples):
+    def predict(self, samples, sparsify):
         if samples.shape[1] != self.w.shape[0]:
-            samples = np.hstack((samples, np.ones(shape=(samples.shape[0], 1))))
-        return np.matmul(samples, self.w)>0.0
+            if sparsify:
+                samples = sparse.hstack([samples, np.ones(shape=(samples.shape[0], 1))], format="csr")
+            else:
+                samples = np.hstack((samples, np.ones(shape=(samples.shape[0], 1))))
+        return safe_sparse_dot(samples, self.w, dense_output=True)>0.0
 
     # predict probability
-    def predict_proba(self, samples):
+    def predict_proba(self, samples, sparsify):
         if samples.shape[1] != self.w.shape[0]:
-            samples = np.hstack((samples, np.ones(shape=(samples.shape[0], 1))))
-        return self.sigmoid(np.matmul(samples, self.w))
+            if sparsify:
+                samples = sparse.hstack([samples, np.ones(shape=(samples.shape[0], 1))], format="csr")
+            else:
+                samples = np.hstack((samples, np.ones(shape=(samples.shape[0], 1))))
+        return self.sigmoid(safe_sparse_dot(samples, self.w, dense_output=True))
 
     # calc accuracy
     def accuracy(self, yPredict, yTrue):
@@ -192,8 +204,9 @@ if __name__ == '__main__':
         reg_lambda, eps, batch_size = 0.1, 1e-10, args.batchsize
         print "\nreg_lambda: %f" % (reg_lambda)
         LG = Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
-        LG.fit(xTrain, yTrain, gm_opt_method=-1, verbos=True)
-        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest), yTest), LG.auroc(LG.predict_proba(xTest), yTest))
+        LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=-1, verbos=True)
+        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
+                                                               LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest))
         print LG
 
         # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)

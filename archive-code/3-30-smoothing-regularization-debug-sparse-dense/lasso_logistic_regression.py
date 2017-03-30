@@ -14,7 +14,6 @@ import argparse
 import math
 from sklearn.cross_validation import StratifiedKFold, cross_val_score
 from sklearn.metrics import accuracy_score, roc_auc_score
-from scipy import sparse
 import datetime
 import time
 # base logistic regression class
@@ -59,9 +58,8 @@ if __name__ == '__main__':
         reg_lambda, eps, batch_size = 10, 1e-10, args.batchsize
         print "\nreg_lambda: %f" % (reg_lambda)
         LG = Lasso_Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
-        LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=-1, verbos=True)
-        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest),\
-                                                               LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest))
+        LG.fit(xTrain, yTrain, gm_opt_method=-1, verbos=True)
+        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest), yTest), LG.auroc(LG.predict_proba(xTest), yTest))
         print LG
 
         # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
