@@ -14,8 +14,7 @@ import argparse
 import math
 from sklearn.cross_validation import StratifiedKFold, cross_val_score
 from sklearn.metrics import accuracy_score, roc_auc_score
-import datetime
-import time
+
 # base logistic regression class
 class ElasticNet_Logistic_Regression(Logistic_Regression):
     def __init__(self, l1_ratio, reg_lambda=1, learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
@@ -52,9 +51,6 @@ if __name__ == '__main__':
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
-        start = time.time()
-        st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
-        print st
         xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
         learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
         l1_ratio, reg_lambda, eps, batch_size = 0.5, 10, 1e-10, args.batchsize
@@ -66,11 +62,6 @@ if __name__ == '__main__':
 
         # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
         # plt.show()
-        done = time.time()
-        do = datetime.datetime.fromtimestamp(done).strftime('%Y-%m-%d %H:%M:%S')
-        print do
-        elapsed = done - start
-        print elapsed
         np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
 
 

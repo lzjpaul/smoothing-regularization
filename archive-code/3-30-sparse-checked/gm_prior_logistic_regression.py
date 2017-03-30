@@ -15,8 +15,7 @@ from scipy.stats import norm as gaussian
 import argparse
 import math
 from sklearn.cross_validation import StratifiedKFold, cross_val_score
-import datetime
-import time
+
 class GM_Logistic_Regression(Logistic_Regression):
     def __init__(self, hyperpara, gm_num, pi, reg_lambda, learning_rate=0.1, pi_r_learning_rate=0.1, reg_lambda_s_learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
         Logistic_Regression.__init__(self, reg_lambda, learning_rate, max_iter, eps, batch_size, validation_perc)
@@ -53,8 +52,8 @@ class GM_Logistic_Regression(Logistic_Regression):
         grad_w = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
         # gaussian mixture reg term grad
         self.calcResponsibility()
-        reg_grad_w = np.sum(self.responsibility*self.reg_lambda, axis=1).reshape(self.w[:-1].shape) * self.w[:-1]
-        grad_w += np.vstack((reg_grad_w, np.array([0.0])))
+        reg_grad_w = sparse.csr_matrix(np.sum(self.responsibility*self.reg_lambda, axis=1).reshape(self.w[:-1].shape)).multiply(self.w[:-1])
+        grad_w += sparse.vstack([reg_grad_w, np.array([0.0])], format="csr")
 
         # update gm prior: pi, reg_lambda
         # 0: fixed, 1: GD, 2: EM
@@ -70,7 +69,8 @@ class GM_Logistic_Regression(Logistic_Regression):
 
     def update_GM_Prior_GD(self, epoch_num, iter_num):
         #update reg_lambda_s
-        delta_reg_lambda = np.sum((self.responsibility / (2.0 * self.reg_lambda) - self.responsibility * 0.5 * self.w[:-1] * self.w[:-1]), axis=0).reshape((1,-1))
+        w_weight_array = self.w[:-1].toarray()
+        delta_reg_lambda = np.sum((self.responsibility / (2.0 * self.reg_lambda) - self.responsibility * 0.5 * w_weight_array * w_weight_array), axis=0).reshape((1,-1))
         delta_reg_lambda += (self.a - 1) / (self.reg_lambda.astype(float)) - self.b
         delta_reg_lambda = -delta_reg_lambda
         delta_reg_lambda_s = delta_reg_lambda * self.reg_lambda
@@ -98,7 +98,7 @@ class GM_Logistic_Regression(Logistic_Regression):
 
     def update_GM_Prior_EM(self, epoch_num, iter_num):
         # update pi
-        self.reg_lambda = (2 * (self.a - 1) + np.sum(self.responsibility, axis=0)) / (2 * self.b + np.sum(self.responsibility * np.square(self.w[:-1]), axis=0))
+        self.reg_lambda = (2 * (self.a - 1) + np.sum(self.responsibility, axis=0)) / (2 * self.b + np.sum(self.responsibility * np.square(self.w[:-1].toarray()), axis=0))
 
         # update reg_lambda
         self.pi = (np.sum(self.responsibility, axis=0) + self.alpha - 1) / (self.featureNum + self.gm_num * (self.alpha - 1))
@@ -109,13 +109,13 @@ class GM_Logistic_Regression(Logistic_Regression):
     # calc the resposibilities for pj(wi)
     def calcResponsibility(self):
         # responsibility normalized with pi
-        responsibility = gaussian.pdf(self.w[:-1], loc=np.zeros(shape=(1, self.gm_num)), scale=1/np.sqrt(self.reg_lambda))*self.pi
+        responsibility = gaussian.pdf(self.w[:-1].toarray(), loc=np.zeros(shape=(1, self.gm_num)), scale=1/np.sqrt(self.reg_lambda))*self.pi
         # responsibility normalized with summation(denominator)
         self.responsibility = responsibility/(np.sum(responsibility, axis=1).reshape(self.w[:-1].shape))
 
     # w loss
     def w_loss(self):
-        responsibility = gaussian.pdf(self.w[:-1], loc=np.zeros(shape=(1, self.gm_num)), scale=1/np.sqrt(self.reg_lambda))*self.pi
+        responsibility = gaussian.pdf(self.w[:-1].toarray(), loc=np.zeros(shape=(1, self.gm_num)), scale=1/np.sqrt(self.reg_lambda))*self.pi
         responsibility_w = np.sum(responsibility, axis=1)
         log_responsibility_w = -np.log(responsibility_w)
         return np.sum(log_responsibility_w)
@@ -145,12 +145,9 @@ if __name__ == '__main__':
     # load the simulation data
     x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
     n_folds = 5
-    for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
+    for i, (train_index, test_index) in enumerate(StratifiedKFold(y.toarray().reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
-        start = time.time()
-        st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
-        print st
         print "train_index: ", train_index
         print "test_index: ", test_index
         xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
@@ -168,12 +165,7 @@ if __name__ == '__main__':
         print LG
         # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
         # plt.show()
-        done = time.time()
-        do = datetime.datetime.fromtimestamp(done).strftime('%Y-%m-%d %H:%M:%S')
-        print do
-        elapsed = done - start
-        print elapsed
-        np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
+        np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w.toarray(), delimiter=',')
 
 # command python gm_prior_logistic_regression.py -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 30000 -gmnum 4 -a 0 -b 1 -alpha 50 -gmoptmethod 1
 '''

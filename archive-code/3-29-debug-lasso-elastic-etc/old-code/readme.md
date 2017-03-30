@@ -3,3 +3,6 @@ Example-smoothing-regularization-main-all-param-elastic-i.py: l1_ratio is splitt
 
 3-29: np.random.seed(10) should be placed before all np.random.normal, np.random.permutation ...
       huber: L2: * w instead of 2 * w
+      lr no decay
+      if i > 0: break --- not used nowwww
+      first initialize v, then w

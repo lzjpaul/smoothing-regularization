@@ -40,12 +40,3 @@ smoothing-regularization-4-gaussians-10000-1000: (10000, 1000), but eraly stoppi
 
 3-28
 (17) sparse version + data_loader permutation + huber no w1_lr + self.likelihood_grad
-
-3-29
-different from git, debug likelihood_grad, lasso, ridge ... (gm_prior_logistic_regression_check_likelihood_separate.py)
-lr not decay
-data permutation
-w_init = 0.1
-likelihood_grad is different
-gm lambda_init
-batchsize
