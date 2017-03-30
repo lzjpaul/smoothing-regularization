@@ -54,6 +54,8 @@ if __name__ == '__main__':
         start = time.time()
         st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
         print st
+        print "train_index: ", train_index
+        print "test_index: ", test_index
         xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
         learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
         reg_lambda, eps, batch_size = 10, 1e-10, args.batchsize

@@ -23,6 +23,11 @@ def loadData(fileName, onehot=True, sparsify=True):
         if Y.dtype != 'bool':
             Y = (Y > 0.5)
         print "Y[:10] after transform: ", Y[:10]
+        np.random.seed(10)
+        idx = np.random.permutation(X.shape[0])
+        print "idx: ", idx
+        X = X[idx]
+        Y = Y[idx]
         # return X, Y
         if onehot:
             return (OneHotEncoder().fit_transform(X, ), Y) if sparsify==True else (OneHotEncoder().fit_transform(X, ).toarray(), Y)
@@ -38,4 +43,10 @@ def loadData(fileName, onehot=True, sparsify=True):
         Y = (Y > 0.5)
         Y = Y.reshape((-1, 1))
         print "Y[:10] after transform: ", Y[:10]
+        np.random.seed(10)
+        idx = np.random.permutation(X.shape[0])
+        print "idx: ", idx
+        X = X[idx]
+        Y = Y[idx]
+        # return X, Y
         return X, Y

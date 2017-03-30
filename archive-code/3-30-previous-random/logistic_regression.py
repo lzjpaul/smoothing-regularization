@@ -52,15 +52,14 @@ class Logistic_Regression(object):
 
 
     def fit(self, xTrain, yTrain, sparsify, ishuber=False, gm_opt_method=-1, verbos=False):
+        np.random.seed(10)
         # find the number of class and feature, allocate memory for model parameters
         self.trainNum, self.featureNum = xTrain.shape[0], xTrain.shape[1]
         if ishuber:
-            np.random.seed(10)
             self.w1 = np.random.normal(0, 0.01, size=(self.featureNum+1, 1))#np.zeros(shape=(self.featureNum+1, 1), dtype='float32')
             self.w2 = np.random.normal(0, 0.01, size=(self.featureNum+1, 1))#np.zeros(shape=(self.featureNum+1, 1), dtype='float32')
             self.w = np.add(self.w1, self.w2)
         else:
-            np.random.seed(10)
             self.w = np.random.normal(0, 0.01, size=(self.featureNum+1, 1))#np.zeros(shape=(self.featureNum+1, 1), dtype='float32')
         print "self.w[:10]: ", self.w[:10]
 
@@ -79,6 +78,7 @@ class Logistic_Regression(object):
             iter, pre_train_loss = 0, 0.0
             # minibatch initialization
             batch_iter = 0
+            np.random.seed(10)
             while True:
                 # minibatch calculation
                 index = self.batch_size * batch_iter
@@ -199,8 +199,6 @@ if __name__ == '__main__':
         start = time.time()
         st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
         print st
-        print "train_index: ", train_index
-        print "test_index: ", test_index
         xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
         learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
         reg_lambda, eps, batch_size = 0.1, 1e-10, args.batchsize
