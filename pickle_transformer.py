@@ -20,8 +20,6 @@ if __name__ == '__main__':
     parser.add_argument('-labelpath', type=str, help='(optional, others are must) the label path, used in NUH data set, not svm')
     parser.add_argument('-outputpath', type=str, help='the output path')
     parser.add_argument('-labelcolumn', type=int, help='labelcolumn, not svm')
-    parser.add_argument('-svmlight', type=int, help='svmlight or not')
-    parser.add_argument('-sparsify', type=int, help='sparsify or not, not svm')
 
     args = parser.parse_args()
 
@@ -30,7 +28,6 @@ if __name__ == '__main__':
     labelfile=args.labelpath
     print "labelfile: ", labelfile
     labelCol=(-1 * args.labelcolumn)
-    sparsify=(args.sparsify==1)
 
     dataset = Dataset()
     if labelfile is None:
@@ -53,6 +50,8 @@ if __name__ == '__main__':
         pickle.dump(dataset, saveFile)
 
 # python pickle_transformer.py -datapath /data/zhaojing/regularization/LACE-CNN-1500/nuh_fa_readmission_case_demor_inpa_kb_ordered_output_onehot_lastcase.csv -labelpath /data/zhaojing/regularization/LACE-CNN-1500/nuh_fa_readmission_case_label.csv -outputpath LACE-CNN-1500-lastcase.pkl -labelcolumn 1 -svmlight 0 -onehot 0 -sparsify 0
+# python pickle_transformer.py -datapath /data/zhaojing/regularization/uci-dataset/uci-diabetes-readmission/diag-dim-reduction/diabetic_data_diag_low_dim_diag_3_class_categorical.csv -outputpath diabetic_data_diag_low_dim_diag_3_class_categorical.pkl -labelcolumn 1
+# python pickle_transformer.py -datapath /data/zhaojing/regularization/uci-dataset/uci-diabetes-readmission/diag-dim-reduction/diabetic_data_diag_low_dim_3_class_categorical.csv -outputpath diabetic_data_diag_low_dim_3_class_categorical.pkl -labelcolumn 1 -svmlight 0 -sparsify 0
 '''
 generated results see generated_y_vals.dta
 simulator file saved in simulator.pkl
