@@ -192,6 +192,7 @@ if __name__ == '__main__':
 
     # load the simulation data
     x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
+    print "loadData x shape: ", x.shape
     n_folds = 5
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:

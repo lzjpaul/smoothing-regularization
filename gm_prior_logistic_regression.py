@@ -122,7 +122,7 @@ class GM_Logistic_Regression(Logistic_Regression):
 
     # model parameter
     def __str__(self):
-        return 'model config {\thyper: [a-%d,b-%d,alpha-%d] reg: %s, lr: %.6f, pi_r_lr: %.6f, reg_lambda_s_lr: %.6f, batch_size: %5d\t}' \
+        return 'model config {\thyper: [a-%f,b-%f,alpha-%d] reg: %s, lr: %.6f, pi_r_lr: %.6f, reg_lambda_s_lr: %.6f, batch_size: %5d\t}' \
                % (self.a, self.b, self.alpha, self.reg_lambda, self.learning_rate, self.pi_r_learning_rate, self.reg_lambda_s_learning_rate, self.batch_size)
 
 if __name__ == '__main__':
@@ -136,14 +136,15 @@ if __name__ == '__main__':
     parser.add_argument('-lambdaslr', type=int, help='lambda_s learning_rate (to the power of 10)')
     parser.add_argument('-maxiter', type=int, help='max_iter')
     parser.add_argument('-gmnum', type=int, help='gm_number')
-    parser.add_argument('-a', type=int, help='a')
-    parser.add_argument('-b', type=int, help='b')
+    parser.add_argument('-a', type=float, help='a, type float')
+    parser.add_argument('-b', type=float, help='b, type float')
     parser.add_argument('-alpha', type=int, help='alpha')
     parser.add_argument('-gmoptmethod', type=int, help='gm optimization method: 0-fixed, 1-GD, 2-EM')
     args = parser.parse_args()
 
     # load the simulation data
     x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
+    print "loadData x shape: ", x.shape
     n_folds = 5
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
