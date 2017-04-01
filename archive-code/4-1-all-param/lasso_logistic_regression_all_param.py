@@ -1,6 +1,6 @@
 '''
 Luo Zhaojing - 2017.3
-Huber Logistic Regression
+Lasso Logistic Regression
 '''
 '''
 hyper:
@@ -14,35 +14,26 @@ import argparse
 import math
 from sklearn.cross_validation import StratifiedKFold, cross_val_score
 from sklearn.metrics import accuracy_score, roc_auc_score
+from scipy import sparse
 import datetime
 import time
 # base logistic regression class
-class Huber_Logistic_Regression(Logistic_Regression):
-    def __init__(self, reg_mu=1, reg_lambda=1, learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
+class Lasso_Logistic_Regression(Logistic_Regression):
+    def __init__(self, reg_lambda=1, learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
         Logistic_Regression.__init__(self, reg_lambda, learning_rate, max_iter, eps, batch_size, validation_perc)
-        self.reg_mu = reg_mu
-        print "self.reg_mu: ", self.reg_mu
 
     # calc the delta w to update w, using sgd here
-    def delta_w1(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
-        grad_w1 = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
-        reg_grad_w1 = self.reg_mu * np.sign(self.w1)
-        reg_grad_w1[-1, 0] = 0.0 # bias
-        grad_w1 += reg_grad_w1
-        return -grad_w1
-
-    # calc the delta w to update w, using sgd here
-    def delta_w2(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
-        grad_w2 = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
-        reg_grad_w2 = self.reg_lambda * self.w2
-        reg_grad_w2[-1, 0] = 0.0 # bias
-        grad_w2 += reg_grad_w2
-        return -grad_w2
+    def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
+        grad_w = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
+        reg_grad_w = self.reg_lambda * np.sign(self.w)
+        reg_grad_w[-1, 0] = 0.0 # bias
+        grad_w += reg_grad_w
+        return -grad_w
 
     # model parameter
     def __str__(self):
-        return 'model config {\treg_mu: %.6f, reg_lambda: %.6f, lr: %.6f, batch_size: %5d\t}' \
-            % (self.reg_mu, self.reg_lambda, self.learning_rate, self.batch_size)
+        return 'model config {\treg: %.6f, lr: %.6f, batch_size: %5d\t}' \
+            % (self.reg_lambda, self.learning_rate, self.batch_size)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
@@ -60,29 +51,31 @@ if __name__ == '__main__':
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
-        start = time.time()
-        st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
-        print st
-        print "train_index: ", train_index
-        print "test_index: ", test_index
-        xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
-        learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
-        reg_mu, reg_lambda, eps, batch_size = 100, 100, 1e-10, args.batchsize
-        print "\nreg_lambda: %f" % (reg_lambda)
-        LG = Huber_Logistic_Regression(reg_mu, reg_lambda, learning_rate, max_iter, eps, batch_size)
-        LG.fit(xTrain, yTrain, (args.sparsify==1), ishuber=True, gm_opt_method=-1, verbos=True)
-        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
+        reg_lambda = [1e-4, 1e-3, 1e-2, 1e-1, 1., 10., 100., 1000.]
+        for reg in reg_lambda:
+            start = time.time()
+            st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
+            print st
+            print "train_index: ", train_index
+            print "test_index: ", test_index
+            xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
+            learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
+            eps, batch_size = 1e-10, args.batchsize
+            print "\nreg_lambda: %f" % (reg)
+            LG = Lasso_Logistic_Regression(reg, learning_rate, max_iter, eps, batch_size)
+            LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=-1, verbos=True)
+            print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest),\
                                                                LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest))
-        print LG
+            print LG
 
-        # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
-        # plt.show()
-        done = time.time()
-        do = datetime.datetime.fromtimestamp(done).strftime('%Y-%m-%d %H:%M:%S')
-        print do
-        elapsed = done - start
-        print elapsed
-        np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
+            # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
+            # plt.show()
+            done = time.time()
+            do = datetime.datetime.fromtimestamp(done).strftime('%Y-%m-%d %H:%M:%S')
+            print do
+            elapsed = done - start
+            print elapsed
+            np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
 
 
     # train_accuracy, test_accuracy = [], []

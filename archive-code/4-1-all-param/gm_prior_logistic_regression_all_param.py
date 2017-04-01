@@ -136,9 +136,7 @@ if __name__ == '__main__':
     parser.add_argument('-lambdaslr', type=int, help='lambda_s learning_rate (to the power of 10)')
     parser.add_argument('-maxiter', type=int, help='max_iter')
     parser.add_argument('-gmnum', type=int, help='gm_number')
-    parser.add_argument('-a', type=float, help='a, type float')
-    parser.add_argument('-b', type=float, help='b, type float')
-    parser.add_argument('-alpha', type=int, help='alpha')
+    # parser.add_argument('-alpha', type=int, help='alpha')
     parser.add_argument('-gmoptmethod', type=int, help='gm optimization method: 0-fixed, 1-GD, 2-EM')
     args = parser.parse_args()
 
@@ -149,33 +147,37 @@ if __name__ == '__main__':
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
-        start = time.time()
-        st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
-        print st
-        print "train_index: ", train_index
-        print "test_index: ", test_index
-        xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
-        # run gm_prior lg model
-        learning_rate, pi_r_learning_rate, reg_lambda_s_learning_rate = math.pow(10, (-1 * args.wlr)), math.pow(10, (-1 * args.pirlr)), math.pow(10, (-1 * args.lambdaslr))
-        max_iter = args.maxiter
-        gm_opt_method = args.gmoptmethod
-        gm_num, a, b, alpha = args.gmnum, args.a, args.b, args.alpha
-        pi, reg_lambda,  eps, batch_size \
-            = [1.0/gm_num for _ in range(gm_num)], [_*10+1 for _ in  range(gm_num)], 1e-10, args.batchsize
-        LG = GM_Logistic_Regression(hyperpara=[a, b, alpha], gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, \
+        a, b, alpha = [1e-4, 0.1, 0.5, 1., 2.], [0.5, 1.], [int(np.sqrt(x.shape[1]))]
+        for alpha_val in alpha:
+            for a_val in a:
+                for b_val in b:
+                    start = time.time()
+                    st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
+                    print st
+                    print "train_index: ", train_index
+                    print "test_index: ", test_index
+                    xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
+                    # run gm_prior lg model
+                    learning_rate, pi_r_learning_rate, reg_lambda_s_learning_rate = math.pow(10, (-1 * args.wlr)), math.pow(10, (-1 * args.pirlr)), math.pow(10, (-1 * args.lambdaslr))
+                    max_iter = args.maxiter
+                    gm_opt_method = args.gmoptmethod
+                    gm_num = args.gmnum
+                    pi, reg_lambda,  eps, batch_size \
+                        = [1.0/gm_num for _ in range(gm_num)], [_*10+1 for _ in  range(gm_num)], 1e-10, args.batchsize
+                    LG = GM_Logistic_Regression(hyperpara=[a_val, b_val, alpha_val], gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, \
                                     pi_r_learning_rate=pi_r_learning_rate, reg_lambda_s_learning_rate=reg_lambda_s_learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
-        LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=gm_opt_method, verbos=True)
-        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
+                    LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=gm_opt_method, verbos=True)
+                    print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
                                                                LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest))
-        print LG
-        # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
-        # plt.show()
-        done = time.time()
-        do = datetime.datetime.fromtimestamp(done).strftime('%Y-%m-%d %H:%M:%S')
-        print do
-        elapsed = done - start
-        print elapsed
-        np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
+                    print LG
+                    # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
+                    # plt.show()
+                    done = time.time()
+                    do = datetime.datetime.fromtimestamp(done).strftime('%Y-%m-%d %H:%M:%S')
+                    print do
+                    elapsed = done - start
+                    print elapsed
+                    np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
 
 # command python gm_prior_logistic_regression.py -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 30000 -gmnum 4 -a 0 -b 1 -alpha 50 -gmoptmethod 1
 '''

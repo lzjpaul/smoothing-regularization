@@ -122,8 +122,8 @@ class GM_Logistic_Regression(Logistic_Regression):
 
     # model parameter
     def __str__(self):
-        return 'model config {\thyper: [a-%f,b-%f,alpha-%d] reg: %s, pi: %s, lr: %.6f, pi_r_lr: %.6f, reg_lambda_s_lr: %.6f, batch_size: %5d\t}' \
-               % (self.a, self.b, self.alpha, self.reg_lambda, self.pi, self.learning_rate, self.pi_r_learning_rate, self.reg_lambda_s_learning_rate, self.batch_size)
+        return 'model config {\thyper: [a-%f,b-%f,alpha-%d] reg: %s, lr: %.6f, pi_r_lr: %.6f, reg_lambda_s_lr: %.6f, batch_size: %5d\t}' \
+               % (self.a, self.b, self.alpha, self.reg_lambda, self.learning_rate, self.pi_r_learning_rate, self.reg_lambda_s_learning_rate, self.batch_size)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
