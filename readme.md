@@ -54,3 +54,10 @@ smoothing-regularization-4-gaussians-10000-1000: (10000, 1000), but eraly stoppi
 smoothing-regularization (dense, all checked correct, now archive-code/3-30-dense) --> smoothing-regularization-debug-sparse-dense(authority) &&  smoothing-regularization-debug-sparse-sparse(authority)(all checked, correct)
 --> smoothing-regularization (dense + sparse combined, all checked correct)
 (21) seed is followed by np.random.permutation(normal) + data_loader permutation once --> stratifiedKfold
+
+4-1
+(22) all-param.py
+
+4-3
+(23) special sparsity technique (gm_prior_logistic_regression_sparse.py)
+     --- if sparsify
