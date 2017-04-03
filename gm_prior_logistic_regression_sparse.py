@@ -63,32 +63,17 @@ class GM_Logistic_Regression(Logistic_Regression):
     def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         grad_w = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
         # gaussian mixture reg term grad
-        #################################
-        # self.calcResponsibility()
-        # reg_grad_w = np.sum(self.responsibility*self.reg_lambda, axis=1).reshape(self.w[:-1].shape) * self.w[:-1]
-        # grad_w += np.vstack((reg_grad_w, np.array([0.0])))
-        #################################
         # the dimemsions that have non-zero data_grad
         update_w_idx = np.nonzero(grad_w[:-1].reshape(grad_w[:-1].shape[0]))[0]
         update_w = self.w[update_w_idx]
-        print "non-zero grad_w: ", grad_w[update_w_idx]
-        print "sum(update_w): ", np.sum(grad_w[update_w_idx])
-        print "sum(grad_w[:-1]): ", np.sum(grad_w[:-1])
         self.calcPartialResponsibility(update_w)
         # RegScaled of the non_zero_grad_w update
         reg_grad_update_w = np.sum(self.partialresponsibility*self.reg_lambda, axis=1).reshape(update_w.shape) \
                               * update_w * (iter_num - self.u[update_w_idx]).reshape(update_w.shape)
-        print "self.partialresponsibility.shape: ", self.partialresponsibility.shape
-        print "self.u[update_w_idx]: ", self.u[update_w_idx]
-        print "iter_num - self.u[update_w_idx]: ", (iter_num - self.u[update_w_idx])
         reg_grad_w = np.zeros((self.featureNum+1, 1))
         reg_grad_w[update_w_idx] = reg_grad_update_w
-        print "sum(reg_grad_update_w): ", sum(reg_grad_update_w)
-        print "sum(reg_grad_w[update_w_idx]): ", sum(reg_grad_w[update_w_idx])
         grad_w += reg_grad_w
         self.u[update_w_idx] = np.full((update_w_idx.shape[0]), iter_num, dtype=int)
-        print "self.u[update_w_idx]: ", self.u[update_w_idx]
-        print "self.u.shape: ", self.u.shape
 
         if iter_num % self.gmm_update_frequency == 0:
             # update gm prior: pi, reg_lambda
@@ -156,7 +141,6 @@ class GM_Logistic_Regression(Logistic_Regression):
         partialresponsibility = gaussian.pdf(update_w, loc=np.zeros(shape=(1, self.gm_num)), scale=1/np.sqrt(self.reg_lambda))*self.pi
         # responsibility normalized with summation(denominator)
         self.partialresponsibility = partialresponsibility/(np.sum(partialresponsibility, axis=1).reshape(update_w.shape))
-        print "np.sum(self.partialresponsibility, axis=1): ", np.sum(self.partialresponsibility, axis=1)
 
     # w loss
     def w_loss(self):
