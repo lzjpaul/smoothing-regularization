@@ -1,12 +1,21 @@
 '''
 Luo Zhaojing - 2017.3
 Gaussian Mixture(GM) Prior Logistic Regression
+reference:
+https://github.com/EdwardRaff/JSAT/blob/9b914c6015b1e8643af475c287ee350043b07fd6/JSAT/src/jsat/classifiers/linear/StochasticMultinomialLogisticRegression.java
 '''
 
 '''
 hyper:
 (1) lr decay
 (2) threshold for train_loss
+'''
+'''
+batch-up regularization gradient for sparse input
+-- delta_w
+-- update_GM_Prior_GD
+-- update_GM_Prior_EM
+hyper_param_update_frequency
 '''
 import sys
 from logistic_regression import Logistic_Regression
@@ -18,10 +27,12 @@ from sklearn.cross_validation import StratifiedKFold, cross_val_score
 import datetime
 import time
 class GM_Logistic_Regression(Logistic_Regression):
-    def __init__(self, hyperpara, gm_num, pi, reg_lambda, learning_rate=0.1, pi_r_learning_rate=0.1, reg_lambda_s_learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
+    def __init__(self, hyperpara, gmm_update_frequency, gm_num, pi, reg_lambda, learning_rate=0.1, pi_r_learning_rate=0.1, reg_lambda_s_learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
         Logistic_Regression.__init__(self, reg_lambda, learning_rate, max_iter, eps, batch_size, validation_perc)
-        self.a, self.b, self.alpha, self.gm_num, self.pi = hyperpara[0], hyperpara[1], hyperpara[2], gm_num, pi
-        print "self.a, self.b, self.alpha, self.gm_num, self.pi: ", self.a, self.b, self.alpha, self.gm_num, self.pi
+        self.a, self.b, self.alpha, self.gmm_update_frequency, self.gm_num, self.pi = \
+        hyperpara[0], hyperpara[1], hyperpara[2], gmm_update_frequency, gm_num, pi
+        print "self.a, self.b, self.alpha, self.gmm_update_frequency, self.gm_num, self.pi: ", \
+                self.a, self.b, self.alpha, self.gmm_update_frequency, self.gm_num, self.pi
         self.pi, self.reg_lambda = np.reshape(np.array(pi), (1, gm_num)), np.reshape(np.array(reg_lambda), (1, gm_num))
         self.pi_r, self.reg_lambda_s = np.log(self.pi), np.log(self.reg_lambda)
         print "init self.reg_lambda: ", self.reg_lambda
@@ -52,20 +63,31 @@ class GM_Logistic_Regression(Logistic_Regression):
     def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         grad_w = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
         # gaussian mixture reg term grad
-        self.calcResponsibility()
-        reg_grad_w = np.sum(self.responsibility*self.reg_lambda, axis=1).reshape(self.w[:-1].shape) * self.w[:-1]
-        grad_w += np.vstack((reg_grad_w, np.array([0.0])))
+        # the dimemsions that have non-zero data_grad
+        update_w_idx = np.nonzero(grad_w[:-1].reshape(grad_w[:-1].shape[0]))[0]
+        update_w = self.w[update_w_idx]
+        self.calcPartialResponsibility(update_w)
+        # RegScaled of the non_zero_grad_w update
+        reg_grad_update_w = np.sum(self.partialresponsibility*self.reg_lambda, axis=1).reshape(update_w.shape) \
+                              * update_w * (iter_num - self.u[update_w_idx]).reshape(update_w.shape)
+        reg_grad_w = np.zeros((self.featureNum+1, 1))
+        reg_grad_w[update_w_idx] = reg_grad_update_w
+        grad_w += reg_grad_w
+        self.u[update_w_idx] = np.full((update_w_idx.shape[0]), iter_num, dtype=int)
 
-        # update gm prior: pi, reg_lambda
-        # 0: fixed, 1: GD, 2: EM
-        if gm_opt_method == 0:
-            pass
-        elif gm_opt_method == 1:
-            self.update_GM_Prior_GD(epoch_num, iter_num)
-        elif gm_opt_method == 2:
-            self.update_GM_Prior_EM(epoch_num, iter_num)
-        else:
-            print "invalid gm_opt_method"
+        if iter_num % self.gmm_update_frequency == 0:
+            # update gm prior: pi, reg_lambda
+            # 0: fixed, 1: GD, 2: EM
+            self.calcResponsibility()
+            if gm_opt_method == 0:
+                pass
+            elif gm_opt_method == 1:
+                self.update_GM_Prior_GD(epoch_num, iter_num)
+            elif gm_opt_method == 2:
+                self.update_GM_Prior_EM(epoch_num, iter_num)
+            else:
+                print "invalid gm_opt_method"
+
         return -grad_w
 
     def update_GM_Prior_GD(self, epoch_num, iter_num):
@@ -74,7 +96,7 @@ class GM_Logistic_Regression(Logistic_Regression):
         delta_reg_lambda += (self.a - 1) / (self.reg_lambda.astype(float)) - self.b
         delta_reg_lambda = -delta_reg_lambda
         delta_reg_lambda_s = delta_reg_lambda * self.reg_lambda
-        self.reg_lambda_s -= self.reg_lambda_s_lr(epoch_num) * delta_reg_lambda_s
+        self.reg_lambda_s -= self.gmm_update_frequency * self.reg_lambda_s_lr(epoch_num) * delta_reg_lambda_s
         if iter_num % 100 == 0:
             print "self.reg_lambda_s      , self.reg_lambda_s norm: ", self.reg_lambda_s, np.linalg.norm(self.reg_lambda_s)
             print "lr * delta_reg_lambda_s, lr * delta_reg_lambda_s norm: ", (self.reg_lambda_s_lr(epoch_num) * delta_reg_lambda_s), np.linalg.norm(self.reg_lambda_s_lr(epoch_num) * delta_reg_lambda_s)
@@ -87,7 +109,7 @@ class GM_Logistic_Regression(Logistic_Regression):
         delta_pi = -delta_pi
         delta_pi_k_j_mat = np.array([[(int(j==k)*self.pi[0,j] - self.pi[0,j] *self.pi[0,k]) for j in range(self.gm_num)] for k in range(self.gm_num)])
         delta_pi_r = np.matmul(delta_pi, delta_pi_k_j_mat)
-        self.pi_r -= self.pi_r_lr(epoch_num) * delta_pi_r
+        self.pi_r -= self.gmm_update_frequency * self.pi_r_lr(epoch_num) * delta_pi_r
         if iter_num % 100 == 0:
             print "self.pi_r      , self.pi_r norm:       ", self.pi_r, np.linalg.norm(self.pi_r)
             print "lr * delta_pi_r, lr * delta_pi_r norm: ", (self.pi_r_lr(epoch_num) * delta_pi_r), np.linalg.norm(self.pi_r_lr(epoch_num) * delta_pi_r)
@@ -113,6 +135,13 @@ class GM_Logistic_Regression(Logistic_Regression):
         # responsibility normalized with summation(denominator)
         self.responsibility = responsibility/(np.sum(responsibility, axis=1).reshape(self.w[:-1].shape))
 
+    # calc the partial resposibilities for partial non-zero likelihood dimensions pj(wi)
+    def calcPartialResponsibility(self, update_w):
+        # responsibility normalized with pi
+        partialresponsibility = gaussian.pdf(update_w, loc=np.zeros(shape=(1, self.gm_num)), scale=1/np.sqrt(self.reg_lambda))*self.pi
+        # responsibility normalized with summation(denominator)
+        self.partialresponsibility = partialresponsibility/(np.sum(partialresponsibility, axis=1).reshape(update_w.shape))
+
     # w loss
     def w_loss(self):
         responsibility = gaussian.pdf(self.w[:-1], loc=np.zeros(shape=(1, self.gm_num)), scale=1/np.sqrt(self.reg_lambda))*self.pi
@@ -135,8 +164,11 @@ if __name__ == '__main__':
     parser.add_argument('-pirlr', type=int, help='pi_r learning_rate (to the power of 10)')
     parser.add_argument('-lambdaslr', type=int, help='lambda_s learning_rate (to the power of 10)')
     parser.add_argument('-maxiter', type=int, help='max_iter')
+    parser.add_argument('-gmmuptfreq', type=int, help='gmm update frequency')
     parser.add_argument('-gmnum', type=int, help='gm_number')
-    # parser.add_argument('-alpha', type=int, help='alpha')
+    parser.add_argument('-a', type=float, help='a, type float')
+    parser.add_argument('-b', type=float, help='b, type float')
+    parser.add_argument('-alpha', type=int, help='alpha')
     parser.add_argument('-gmoptmethod', type=int, help='gm optimization method: 0-fixed, 1-GD, 2-EM')
     args = parser.parse_args()
 
@@ -147,37 +179,33 @@ if __name__ == '__main__':
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
-        a, b, alpha = [1e-4, 0.1, 0.5, 1., 2.], [0.5, 1.], [int(np.sqrt(x.shape[1]))]
-        for alpha_val in alpha:
-            for a_val in a:
-                for b_val in b:
-                    start = time.time()
-                    st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
-                    print st
-                    print "train_index: ", train_index
-                    print "test_index: ", test_index
-                    xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
-                    # run gm_prior lg model
-                    learning_rate, pi_r_learning_rate, reg_lambda_s_learning_rate = math.pow(10, (-1 * args.wlr)), math.pow(10, (-1 * args.pirlr)), math.pow(10, (-1 * args.lambdaslr))
-                    max_iter = args.maxiter
-                    gm_opt_method = args.gmoptmethod
-                    gm_num = args.gmnum
-                    pi, reg_lambda,  eps, batch_size \
-                        = [1.0/gm_num for _ in range(gm_num)], [_*10+1 for _ in  range(gm_num)], 1e-10, args.batchsize
-                    LG = GM_Logistic_Regression(hyperpara=[a_val, b_val, alpha_val], gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, \
+        start = time.time()
+        st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
+        print st
+        print "train_index: ", train_index
+        print "test_index: ", test_index
+        xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
+        # run gm_prior lg model
+        learning_rate, pi_r_learning_rate, reg_lambda_s_learning_rate = math.pow(10, (-1 * args.wlr)), math.pow(10, (-1 * args.pirlr)), math.pow(10, (-1 * args.lambdaslr))
+        max_iter = args.maxiter
+        gm_opt_method = args.gmoptmethod
+        gmm_update_frequency, gm_num, a, b, alpha = args.gmmuptfreq, args.gmnum, args.a, args.b, args.alpha
+        pi, reg_lambda,  eps, batch_size \
+            = [1.0/gm_num for _ in range(gm_num)], [_*10+1 for _ in  range(gm_num)], 1e-10, args.batchsize
+        LG = GM_Logistic_Regression(hyperpara=[a, b, alpha], gmm_update_frequency=gmm_update_frequency, gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, \
                                     pi_r_learning_rate=pi_r_learning_rate, reg_lambda_s_learning_rate=reg_lambda_s_learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
-                    LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=gm_opt_method, verbos=True)
-                    print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
+        LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=gm_opt_method, verbos=True)
+        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
                                                                LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest))
-                    print LG
-                    # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
-                    # plt.show()
-                    done = time.time()
-                    do = datetime.datetime.fromtimestamp(done).strftime('%Y-%m-%d %H:%M:%S')
-                    print do
-                    elapsed = done - start
-                    print elapsed
-                    np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
+        print LG
+        # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
+        # plt.show()
+        done = time.time()
+        do = datetime.datetime.fromtimestamp(done).strftime('%Y-%m-%d %H:%M:%S')
+        print do
+        elapsed = done - start
+        print elapsed
+        np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
 
 # command python gm_prior_logistic_regression.py -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 30000 -gmnum 4 -a 0 -b 1 -alpha 50 -gmoptmethod 1
 '''

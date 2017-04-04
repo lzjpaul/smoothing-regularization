@@ -130,6 +130,7 @@ class Logistic_Regression(object):
                     # print np.sum(np.abs(self.w))/self.featureNum, np.linalg.norm(self.w, ord=2)
                     train_accuracy = self.accuracy(self.predict(xTrain, sparsify), yTrain)
                     train_loss = self.loss(xTrain, yTrain)
+                    # print "w norm %10.6f\t|\tdelta_w norm %10.6f"%(np.linalg.norm(self.w1), np.linalg.norm(self.w_lr(epoch_num) * delta_w1))
                     if verbos:
                         print "iter %4d\t|\ttrain_accuracy %10.6f\t|\ttrain_loss %10.10f"%(iter, train_accuracy, train_loss)
                         if hasattr(self, 'pi'):
@@ -202,31 +203,29 @@ if __name__ == '__main__':
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
-        reg_lambda = [1e-4, 1e-3, 1e-2, 1e-1, 1., 10., 100., 1000.]
-        for reg in reg_lambda:
-            start = time.time()
-            st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
-            print st
-            print "train_index: ", train_index
-            print "test_index: ", test_index
-            xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
-            learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
-            eps, batch_size = 1e-10, args.batchsize
-            print "\nreg_lambda: %f" % (reg)
-            LG = Logistic_Regression(reg, learning_rate, max_iter, eps, batch_size)
-            LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=-1, verbos=True)
-            print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
+        start = time.time()
+        st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
+        print st
+        print "train_index: ", train_index
+        print "test_index: ", test_index
+        xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
+        learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
+        reg_lambda, eps, batch_size = 10, 1e-10, args.batchsize
+        print "\nreg_lambda: %f" % (reg_lambda)
+        LG = Logistic_Regression(reg_lambda, learning_rate, max_iter, eps, batch_size)
+        LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=-1, verbos=True)
+        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
                                                                LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest))
-            print LG
+        print LG
 
-            # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
-            # plt.show()
-            done = time.time()
-            do = datetime.datetime.fromtimestamp(done).strftime('%Y-%m-%d %H:%M:%S')
-            print do
-            elapsed = done - start
-            print elapsed
-            np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
+        # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
+        # plt.show()
+        done = time.time()
+        do = datetime.datetime.fromtimestamp(done).strftime('%Y-%m-%d %H:%M:%S')
+        print do
+        elapsed = done - start
+        print elapsed
+        np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
 
 
     # train_accuracy, test_accuracy = [], []

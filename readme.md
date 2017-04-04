@@ -61,3 +61,6 @@ smoothing-regularization (dense, all checked correct, now archive-code/3-30-dens
 4-3
 (23) special sparsity technique (gm_prior_logistic_regression_sparse.py)
      --- if sparsify
+4-4
+(24) sparsify + all param (gm_prior_logistic_regression_sparse_all_param.py)
+(25) all the algorithms turn to be all_param.py, copy from archive-code/all-param
