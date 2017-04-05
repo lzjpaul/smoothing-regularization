@@ -64,3 +64,6 @@ smoothing-regularization (dense, all checked correct, now archive-code/3-30-dens
 4-4
 (24) sparsify + all param (gm_prior_logistic_regression_sparse_all_param.py)
 (25) all the algorithms turn to be all_param.py, copy from archive-code/all-param
+
+4-5
+(26) delete validation set

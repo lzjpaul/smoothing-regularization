@@ -70,11 +70,6 @@ class Logistic_Regression(object):
         else:
             xTrain = np.hstack((xTrain, np.ones(shape=(self.trainNum, 1))))
 
-        # validation set
-        validationNum = int(self.validation_perc*xTrain.shape[0])
-        xVallidation, yVallidation = xTrain[:validationNum, ], yTrain[:validationNum, ]
-        xTrain, yTrain = xTrain[validationNum:, ], yTrain[validationNum:, ]
-
         try:
             iter, pre_train_loss = 0, 0.0
             # Contains the last time each feature was used
