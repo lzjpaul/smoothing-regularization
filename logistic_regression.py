@@ -116,7 +116,8 @@ class Logistic_Regression(object):
                     train_loss = self.loss(xTrain, yTrain)
                     # print "w norm %10.6f\t|\tdelta_w norm %10.6f\t"%(np.linalg.norm(self.w1), np.linalg.norm(self.w_lr(epoch_num) * delta_w1))
                     print "train_loss %10.10f abs(train_loss - pre_train_loss) %10.10f self.eps %10.10f"%(train_loss, abs(train_loss - pre_train_loss), self.eps)
-                    print "self.max_iter: ", self.max_iter
+                    if not ishuber:
+                        print "w norm %10.6f\t|\tdelta_w norm %10.6f"%(np.linalg.norm(self.w), np.linalg.norm(self.w_lr(epoch_num) * delta_w))
                     if iter > self.max_iter or abs(train_loss - pre_train_loss) < self.eps:
                         break
                     pre_train_loss = train_loss
