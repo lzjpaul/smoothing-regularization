@@ -60,7 +60,7 @@ if __name__ == '__main__':
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
-        reg_mu = [1e-2, 1e-1]
+        reg_mu = [1e-4, 1e-3, 1e-2, 1e-1]
         reg_lambda = [1e-4, 1e-3, 1e-2, 1e-1, 1., 10., 100., 1000.]
         for mu in reg_mu:
             for lambda_val in reg_lambda:
