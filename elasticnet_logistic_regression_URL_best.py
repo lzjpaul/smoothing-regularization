@@ -52,8 +52,8 @@ if __name__ == '__main__':
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
-        reg_lambda = [1e-4, 1e-3, 1e-2, 1e-1, 1., 10., 100., 1000.]
-        l1_ratio_array = [0.01 ,  0.255,  0.5  ,  0.745,  0.99]
+        reg_lambda = [1e-3]
+        l1_ratio_array = [0.255]
         for l1_ratio in l1_ratio_array:
             for reg in reg_lambda:
                 start = time.time()

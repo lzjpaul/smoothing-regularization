@@ -1,0 +1,2 @@
+python gm_prior_logistic_regression_8_6.py -datapath data/simulator8-6.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 300000 -gmnum 8 -gmoptmethod 0 | tee -a /data/zhaojing/regularization/log0407/multiple-simulation/multiple-simulation-7.log
+python gm_prior_logistic_regression_8_6.py -datapath data/simulator8-6.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 300000 -gmnum 8 -gmoptmethod 0 | tee -a /data/zhaojing/regularization/log0407/multiple-simulation/multiple-simulation-7.log

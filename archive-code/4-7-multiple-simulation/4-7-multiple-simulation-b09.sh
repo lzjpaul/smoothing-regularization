@@ -1,0 +1,2 @@
+python elasticnet_logistic_regression.py -datapath data/simulator8-6.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 4 -maxiter 50000 | tee -a /data/zhaojing/regularization/log0407/multiple-simulation/multiple-simulation-11.log
+python elasticnet_logistic_regression.py -datapath data/simulator8-6.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 4 -maxiter 50000 | tee -a /data/zhaojing/regularization/log0407/multiple-simulation/multiple-simulation-11.log

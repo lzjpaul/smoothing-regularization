@@ -67,3 +67,6 @@ smoothing-regularization (dense, all checked correct, now archive-code/3-30-dens
 
 4-5
 (26) delete validation set
+
+4-9
+(27) print test-loss
