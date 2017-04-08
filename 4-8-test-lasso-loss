@@ -1,0 +1,739 @@
+
+===============================================
+
+loading pkl data...
+finish loading data...
+data samples 10000
+data dimension 1000
+
+===============================================
+
+X shape:  (10000, 1000)
+Y shape:  (10000, 1)
+Y[:10] before transform:  [[False]
+ [False]
+ [ True]
+ [ True]
+ [ True]
+ [ True]
+ [ True]
+ [False]
+ [False]
+ [False]]
+Y[:10] after transform:  [[False]
+ [False]
+ [ True]
+ [ True]
+ [ True]
+ [ True]
+ [ True]
+ [False]
+ [False]
+ [False]]
+idx:  [ 937 9355 2293 ..., 1344 7293 1289]
+2017-04-08 22:43:52
+train_index:  [1996 1997 2000 ..., 9997 9998 9999]
+test_index:  [   0    1    2 ..., 1999 2001 2002]
+
+reg_lambda: 0.000100
+self.reg_lambda, self.learning_rate, self.max_iter:  0.0001 0.0001 50000
+self.eps, self.batch_size, self.validation_perc:  1e-10 500 0.0
+self.w[:10]:  [[  1.33158650e-02]
+ [  7.15278974e-03]
+ [ -1.54540029e-02]
+ [ -8.38384993e-05]
+ [  6.21335974e-03]
+ [ -7.20085561e-03]
+ [  2.65511586e-03]
+ [  1.08548526e-03]
+ [  4.29143093e-05]
+ [ -1.74600211e-03]]
+iter  100	|	train_accuracy   0.946000	|	train_loss 0.1589995341
+iter  200	|	train_accuracy   0.952125	|	train_loss 0.1393034037
+iter  300	|	train_accuracy   0.955375	|	train_loss 0.1276602447
+iter  400	|	train_accuracy   0.956250	|	train_loss 0.1204327786
+iter  500	|	train_accuracy   0.956500	|	train_loss 0.1203754829
+iter  600	|	train_accuracy   0.958875	|	train_loss 0.1183067677
+iter  700	|	train_accuracy   0.958875	|	train_loss 0.1159290718
+iter  800	|	train_accuracy   0.960500	|	train_loss 0.1114239232
+iter  900	|	train_accuracy   0.957000	|	train_loss 0.1133253381
+train_loss 0.1127441342 abs(train_loss - pre_train_loss) 0.1127441342 self.eps 0.0000000001
+w norm   9.933342	|	delta_w norm   0.224117
+iter 1000	|	train_accuracy   0.958125	|	train_loss 0.1127441342
+iter 1100	|	train_accuracy   0.959250	|	train_loss 0.1110537482
+iter 1200	|	train_accuracy   0.962125	|	train_loss 0.1077382957
+iter 1300	|	train_accuracy   0.960250	|	train_loss 0.1105557332
+iter 1400	|	train_accuracy   0.960125	|	train_loss 0.1100648948
+iter 1500	|	train_accuracy   0.960500	|	train_loss 0.1083190024
+iter 1600	|	train_accuracy   0.961750	|	train_loss 0.1058761554
+iter 1700	|	train_accuracy   0.962625	|	train_loss 0.1048426037
+iter 1800	|	train_accuracy   0.962750	|	train_loss 0.1045272009
+iter 1900	|	train_accuracy   0.962750	|	train_loss 0.1043812032
+train_loss 0.1042781641 abs(train_loss - pre_train_loss) 0.0084659701 self.eps 0.0000000001
+w norm  11.326186	|	delta_w norm   0.020747
+iter 2000	|	train_accuracy   0.962500	|	train_loss 0.1042781641
+iter 2100	|	train_accuracy   0.962125	|	train_loss 0.1042597020
+iter 2200	|	train_accuracy   0.962375	|	train_loss 0.1042273331
+iter 2300	|	train_accuracy   0.961250	|	train_loss 0.1041838701
+iter 2400	|	train_accuracy   0.962125	|	train_loss 0.1041118534
+iter 2500	|	train_accuracy   0.962000	|	train_loss 0.1041087441
+iter 2600	|	train_accuracy   0.961875	|	train_loss 0.1041049032
+iter 2700	|	train_accuracy   0.961750	|	train_loss 0.1041016115
+iter 2800	|	train_accuracy   0.961875	|	train_loss 0.1040977093
+iter 2900	|	train_accuracy   0.961750	|	train_loss 0.1040945031
+train_loss 0.1040913642 abs(train_loss - pre_train_loss) 0.0001867999 self.eps 0.0000000001
+w norm  11.394666	|	delta_w norm   0.001966
+iter 3000	|	train_accuracy   0.961750	|	train_loss 0.1040913642
+iter 3100	|	train_accuracy   0.961750	|	train_loss 0.1040877588
+iter 3200	|	train_accuracy   0.961875	|	train_loss 0.1040840672
+iter 3300	|	train_accuracy   0.961750	|	train_loss 0.1040811317
+iter 3400	|	train_accuracy   0.961625	|	train_loss 0.1040780859
+iter 3500	|	train_accuracy   0.961625	|	train_loss 0.1040744124
+iter 3600	|	train_accuracy   0.961750	|	train_loss 0.1040707992
+iter 3700	|	train_accuracy   0.961625	|	train_loss 0.1040679914
+iter 3800	|	train_accuracy   0.961750	|	train_loss 0.1040646980
+iter 3900	|	train_accuracy   0.961500	|	train_loss 0.1040613754
+train_loss 0.1040578323 abs(train_loss - pre_train_loss) 0.0000335319 self.eps 0.0000000001
+w norm  11.409325	|	delta_w norm   0.002118
+iter 4000	|	train_accuracy   0.961625	|	train_loss 0.1040578323
+iter 4100	|	train_accuracy   0.961875	|	train_loss 0.1040550252
+iter 4200	|	train_accuracy   0.961500	|	train_loss 0.1040519307
+iter 4300	|	train_accuracy   0.961250	|	train_loss 0.1040485924
+iter 4400	|	train_accuracy   0.961375	|	train_loss 0.1040451150
+iter 4500	|	train_accuracy   0.961500	|	train_loss 0.1040423797
+iter 4600	|	train_accuracy   0.961750	|	train_loss 0.1040392073
+iter 4700	|	train_accuracy   0.961500	|	train_loss 0.1040360207
+iter 4800	|	train_accuracy   0.961375	|	train_loss 0.1040326052
+iter 4900	|	train_accuracy   0.961375	|	train_loss 0.1040297109
+train_loss 0.1040269103 abs(train_loss - pre_train_loss) 0.0000309220 self.eps 0.0000000001
+w norm  11.423946	|	delta_w norm   0.002082
+iter 5000	|	train_accuracy   0.961625	|	train_loss 0.1040269103
+iter 5100	|	train_accuracy   0.961375	|	train_loss 0.1040237191
+iter 5200	|	train_accuracy   0.961375	|	train_loss 0.1040202795
+iter 5300	|	train_accuracy   0.961500	|	train_loss 0.1040176420
+iter 5400	|	train_accuracy   0.961375	|	train_loss 0.1040147078
+iter 5500	|	train_accuracy   0.961375	|	train_loss 0.1040117830
+iter 5600	|	train_accuracy   0.961375	|	train_loss 0.1040081151
+iter 5700	|	train_accuracy   0.961375	|	train_loss 0.1040053516
+iter 5800	|	train_accuracy   0.961500	|	train_loss 0.1040025772
+iter 5900	|	train_accuracy   0.961375	|	train_loss 0.1039994706
+train_loss 0.1039960971 abs(train_loss - pre_train_loss) 0.0000308132 self.eps 0.0000000001
+w norm  11.438495	|	delta_w norm   0.002156
+iter 6000	|	train_accuracy   0.961375	|	train_loss 0.1039960971
+iter 6100	|	train_accuracy   0.961250	|	train_loss 0.1039934232
+iter 6200	|	train_accuracy   0.961375	|	train_loss 0.1039905760
+iter 6300	|	train_accuracy   0.961375	|	train_loss 0.1039875733
+iter 6400	|	train_accuracy   0.961375	|	train_loss 0.1039842118
+iter 6500	|	train_accuracy   0.961375	|	train_loss 0.1039815735
+iter 6600	|	train_accuracy   0.961375	|	train_loss 0.1039788284
+iter 6700	|	train_accuracy   0.961375	|	train_loss 0.1039757252
+iter 6800	|	train_accuracy   0.961375	|	train_loss 0.1039724476
+iter 6900	|	train_accuracy   0.961375	|	train_loss 0.1039700415
+train_loss 0.1039672000 abs(train_loss - pre_train_loss) 0.0000288971 self.eps 0.0000000001
+w norm  11.453002	|	delta_w norm   0.002060
+iter 7000	|	train_accuracy   0.961375	|	train_loss 0.1039672000
+iter 7100	|	train_accuracy   0.961375	|	train_loss 0.1039639860
+iter 7200	|	train_accuracy   0.961375	|	train_loss 0.1039607969
+iter 7300	|	train_accuracy   0.961375	|	train_loss 0.1039583270
+iter 7400	|	train_accuracy   0.961375	|	train_loss 0.1039555008
+iter 7500	|	train_accuracy   0.961500	|	train_loss 0.1039525745
+iter 7600	|	train_accuracy   0.961375	|	train_loss 0.1039492512
+iter 7700	|	train_accuracy   0.961375	|	train_loss 0.1039466529
+iter 7800	|	train_accuracy   0.961375	|	train_loss 0.1039441202
+iter 7900	|	train_accuracy   0.961500	|	train_loss 0.1039411141
+train_loss 0.1039378034 abs(train_loss - pre_train_loss) 0.0000293966 self.eps 0.0000000001
+w norm  11.467457	|	delta_w norm   0.001924
+iter 8000	|	train_accuracy   0.961375	|	train_loss 0.1039378034
+iter 8100	|	train_accuracy   0.961375	|	train_loss 0.1039352887
+iter 8200	|	train_accuracy   0.961375	|	train_loss 0.1039325573
+iter 8300	|	train_accuracy   0.961375	|	train_loss 0.1039295987
+iter 8400	|	train_accuracy   0.961375	|	train_loss 0.1039264483
+iter 8500	|	train_accuracy   0.961375	|	train_loss 0.1039239734
+iter 8600	|	train_accuracy   0.961500	|	train_loss 0.1039213118
+iter 8700	|	train_accuracy   0.961500	|	train_loss 0.1039184084
+iter 8800	|	train_accuracy   0.961375	|	train_loss 0.1039151806
+iter 8900	|	train_accuracy   0.961375	|	train_loss 0.1039127308
+train_loss 0.1039101204 abs(train_loss - pre_train_loss) 0.0000276830 self.eps 0.0000000001
+w norm  11.481854	|	delta_w norm   0.001837
+iter 9000	|	train_accuracy   0.961500	|	train_loss 0.1039101204
+iter 9100	|	train_accuracy   0.961250	|	train_loss 0.1039071552
+iter 9200	|	train_accuracy   0.961375	|	train_loss 0.1039039955
+iter 9300	|	train_accuracy   0.961500	|	train_loss 0.1039015382
+iter 9400	|	train_accuracy   0.961375	|	train_loss 0.1038989200
+iter 9500	|	train_accuracy   0.961375	|	train_loss 0.1038959718
+iter 9600	|	train_accuracy   0.961375	|	train_loss 0.1038928872
+iter 9700	|	train_accuracy   0.961375	|	train_loss 0.1038904700
+iter 9800	|	train_accuracy   0.961500	|	train_loss 0.1038878635
+iter 9900	|	train_accuracy   0.961375	|	train_loss 0.1038849895
+train_loss 0.1038818561 abs(train_loss - pre_train_loss) 0.0000282643 self.eps 0.0000000001
+w norm  11.496200	|	delta_w norm   0.001973
+iter 10000	|	train_accuracy   0.961375	|	train_loss 0.1038818561
+iter 10100	|	train_accuracy   0.961250	|	train_loss 0.1038794682
+iter 10200	|	train_accuracy   0.961375	|	train_loss 0.1038768263
+iter 10300	|	train_accuracy   0.961375	|	train_loss 0.1038739977
+iter 10400	|	train_accuracy   0.961375	|	train_loss 0.1038708954
+iter 10500	|	train_accuracy   0.961375	|	train_loss 0.1038685030
+iter 10600	|	train_accuracy   0.961500	|	train_loss 0.1038658145
+iter 10700	|	train_accuracy   0.961500	|	train_loss 0.1038630737
+iter 10800	|	train_accuracy   0.961375	|	train_loss 0.1038600041
+iter 10900	|	train_accuracy   0.961500	|	train_loss 0.1038576472
+train_loss 0.1038550503 abs(train_loss - pre_train_loss) 0.0000268058 self.eps 0.0000000001
+w norm  11.510508	|	delta_w norm   0.002039
+iter 11000	|	train_accuracy   0.961375	|	train_loss 0.1038550503
+iter 11100	|	train_accuracy   0.961375	|	train_loss 0.1038521742
+iter 11200	|	train_accuracy   0.961375	|	train_loss 0.1038491792
+iter 11300	|	train_accuracy   0.961500	|	train_loss 0.1038468394
+iter 11400	|	train_accuracy   0.961375	|	train_loss 0.1038442480
+iter 11500	|	train_accuracy   0.961375	|	train_loss 0.1038414496
+iter 11600	|	train_accuracy   0.961375	|	train_loss 0.1038384172
+iter 11700	|	train_accuracy   0.961375	|	train_loss 0.1038360154
+iter 11800	|	train_accuracy   0.961375	|	train_loss 0.1038336576
+iter 11900	|	train_accuracy   0.961375	|	train_loss 0.1038306930
+train_loss 0.1038277178 abs(train_loss - pre_train_loss) 0.0000273325 self.eps 0.0000000001
+w norm  11.524715	|	delta_w norm   0.001932
+iter 12000	|	train_accuracy   0.961375	|	train_loss 0.1038277178
+iter 12100	|	train_accuracy   0.961500	|	train_loss 0.1038253706
+iter 12200	|	train_accuracy   0.961375	|	train_loss 0.1038228704
+iter 12300	|	train_accuracy   0.961500	|	train_loss 0.1038200070
+iter 12400	|	train_accuracy   0.961375	|	train_loss 0.1038170784
+iter 12500	|	train_accuracy   0.961375	|	train_loss 0.1038147725
+iter 12600	|	train_accuracy   0.961375	|	train_loss 0.1038122453
+iter 12700	|	train_accuracy   0.961500	|	train_loss 0.1038095243
+iter 12800	|	train_accuracy   0.961375	|	train_loss 0.1038064953
+iter 12900	|	train_accuracy   0.961375	|	train_loss 0.1038041271
+train_loss 0.1038017052 abs(train_loss - pre_train_loss) 0.0000260126 self.eps 0.0000000001
+w norm  11.538905	|	delta_w norm   0.001903
+iter 13000	|	train_accuracy   0.961375	|	train_loss 0.1038017052
+iter 13100	|	train_accuracy   0.961375	|	train_loss 0.1037990046
+iter 13200	|	train_accuracy   0.961375	|	train_loss 0.1037959690
+iter 13300	|	train_accuracy   0.961375	|	train_loss 0.1037936935
+iter 13400	|	train_accuracy   0.961500	|	train_loss 0.1037911710
+iter 13500	|	train_accuracy   0.961375	|	train_loss 0.1037884994
+iter 13600	|	train_accuracy   0.961375	|	train_loss 0.1037854975
+iter 13700	|	train_accuracy   0.961250	|	train_loss 0.1037832955
+iter 13800	|	train_accuracy   0.961375	|	train_loss 0.1037807218
+iter 13900	|	train_accuracy   0.961375	|	train_loss 0.1037780510
+train_loss 0.1037750785 abs(train_loss - pre_train_loss) 0.0000266266 self.eps 0.0000000001
+w norm  11.553000	|	delta_w norm   0.002175
+iter 14000	|	train_accuracy   0.961375	|	train_loss 0.1037750785
+iter 14100	|	train_accuracy   0.961625	|	train_loss 0.1037728189
+iter 14200	|	train_accuracy   0.961500	|	train_loss 0.1037703291
+iter 14300	|	train_accuracy   0.961375	|	train_loss 0.1037676467
+iter 14400	|	train_accuracy   0.961375	|	train_loss 0.1037647116
+iter 14500	|	train_accuracy   0.961500	|	train_loss 0.1037625732
+iter 14600	|	train_accuracy   0.961500	|	train_loss 0.1037600640
+iter 14700	|	train_accuracy   0.961500	|	train_loss 0.1037573252
+iter 14800	|	train_accuracy   0.961375	|	train_loss 0.1037543956
+iter 14900	|	train_accuracy   0.961375	|	train_loss 0.1037521986
+train_loss 0.1037498151 abs(train_loss - pre_train_loss) 0.0000252634 self.eps 0.0000000001
+w norm  11.567052	|	delta_w norm   0.001931
+iter 15000	|	train_accuracy   0.961500	|	train_loss 0.1037498151
+iter 15100	|	train_accuracy   0.961375	|	train_loss 0.1037470492
+iter 15200	|	train_accuracy   0.961375	|	train_loss 0.1037441294
+iter 15300	|	train_accuracy   0.961500	|	train_loss 0.1037420060
+iter 15400	|	train_accuracy   0.961500	|	train_loss 0.1037394916
+iter 15500	|	train_accuracy   0.961250	|	train_loss 0.1037367757
+iter 15600	|	train_accuracy   0.961375	|	train_loss 0.1037339112
+iter 15700	|	train_accuracy   0.961500	|	train_loss 0.1037317212
+iter 15800	|	train_accuracy   0.961375	|	train_loss 0.1037292341
+iter 15900	|	train_accuracy   0.961375	|	train_loss 0.1037266526
+train_loss 0.1037237412 abs(train_loss - pre_train_loss) 0.0000260740 self.eps 0.0000000001
+w norm  11.581050	|	delta_w norm   0.002007
+iter 16000	|	train_accuracy   0.961375	|	train_loss 0.1037237412
+iter 16100	|	train_accuracy   0.961375	|	train_loss 0.1037215455
+iter 16200	|	train_accuracy   0.961375	|	train_loss 0.1037190912
+iter 16300	|	train_accuracy   0.961375	|	train_loss 0.1037165246
+iter 16400	|	train_accuracy   0.961375	|	train_loss 0.1037136180
+iter 16500	|	train_accuracy   0.961500	|	train_loss 0.1037113545
+iter 16600	|	train_accuracy   0.961500	|	train_loss 0.1037090486
+iter 16700	|	train_accuracy   0.961500	|	train_loss 0.1037064178
+iter 16800	|	train_accuracy   0.961500	|	train_loss 0.1037035396
+iter 16900	|	train_accuracy   0.961375	|	train_loss 0.1037013428
+train_loss 0.1036990607 abs(train_loss - pre_train_loss) 0.0000246805 self.eps 0.0000000001
+w norm  11.594993	|	delta_w norm   0.001975
+iter 17000	|	train_accuracy   0.961375	|	train_loss 0.1036990607
+iter 17100	|	train_accuracy   0.961500	|	train_loss 0.1036964363
+iter 17200	|	train_accuracy   0.961500	|	train_loss 0.1036935065
+iter 17300	|	train_accuracy   0.961375	|	train_loss 0.1036913377
+iter 17400	|	train_accuracy   0.961500	|	train_loss 0.1036890438
+iter 17500	|	train_accuracy   0.961375	|	train_loss 0.1036863891
+iter 17600	|	train_accuracy   0.961500	|	train_loss 0.1036835177
+iter 17700	|	train_accuracy   0.961625	|	train_loss 0.1036813330
+iter 17800	|	train_accuracy   0.961625	|	train_loss 0.1036790411
+iter 17900	|	train_accuracy   0.961500	|	train_loss 0.1036764285
+train_loss 0.1036735722 abs(train_loss - pre_train_loss) 0.0000254885 self.eps 0.0000000001
+w norm  11.608867	|	delta_w norm   0.001809
+iter 18000	|	train_accuracy   0.961500	|	train_loss 0.1036735722
+iter 18100	|	train_accuracy   0.961500	|	train_loss 0.1036714141
+iter 18200	|	train_accuracy   0.961375	|	train_loss 0.1036690777
+iter 18300	|	train_accuracy   0.961375	|	train_loss 0.1036664811
+iter 18400	|	train_accuracy   0.961500	|	train_loss 0.1036636693
+iter 18500	|	train_accuracy   0.961500	|	train_loss 0.1036615966
+iter 18600	|	train_accuracy   0.961500	|	train_loss 0.1036591936
+iter 18700	|	train_accuracy   0.961250	|	train_loss 0.1036566372
+iter 18800	|	train_accuracy   0.961500	|	train_loss 0.1036538085
+iter 18900	|	train_accuracy   0.961375	|	train_loss 0.1036516727
+train_loss 0.1036493298 abs(train_loss - pre_train_loss) 0.0000242424 self.eps 0.0000000001
+w norm  11.622706	|	delta_w norm   0.002018
+iter 19000	|	train_accuracy   0.961500	|	train_loss 0.1036493298
+iter 19100	|	train_accuracy   0.961375	|	train_loss 0.1036467760
+iter 19200	|	train_accuracy   0.961500	|	train_loss 0.1036439891
+iter 19300	|	train_accuracy   0.961625	|	train_loss 0.1036419158
+iter 19400	|	train_accuracy   0.961500	|	train_loss 0.1036395061
+iter 19500	|	train_accuracy   0.961500	|	train_loss 0.1036369735
+iter 19600	|	train_accuracy   0.961500	|	train_loss 0.1036342109
+iter 19700	|	train_accuracy   0.961625	|	train_loss 0.1036321160
+iter 19800	|	train_accuracy   0.961500	|	train_loss 0.1036298690
+iter 19900	|	train_accuracy   0.961500	|	train_loss 0.1036271966
+train_loss 0.1036244735 abs(train_loss - pre_train_loss) 0.0000248564 self.eps 0.0000000001
+w norm  11.636450	|	delta_w norm   0.002039
+iter 20000	|	train_accuracy   0.961500	|	train_loss 0.1036244735
+iter 20100	|	train_accuracy   0.961375	|	train_loss 0.1036224049
+iter 20200	|	train_accuracy   0.961625	|	train_loss 0.1036201246
+iter 20300	|	train_accuracy   0.961375	|	train_loss 0.1036175622
+iter 20400	|	train_accuracy   0.961500	|	train_loss 0.1036147758
+iter 20500	|	train_accuracy   0.961375	|	train_loss 0.1036127231
+iter 20600	|	train_accuracy   0.961625	|	train_loss 0.1036104008
+iter 20700	|	train_accuracy   0.961500	|	train_loss 0.1036078555
+iter 20800	|	train_accuracy   0.961500	|	train_loss 0.1036051176
+iter 20900	|	train_accuracy   0.961500	|	train_loss 0.1036030920
+train_loss 0.1036007103 abs(train_loss - pre_train_loss) 0.0000237631 self.eps 0.0000000001
+w norm  11.650155	|	delta_w norm   0.002089
+iter 21000	|	train_accuracy   0.961750	|	train_loss 0.1036007103
+iter 21100	|	train_accuracy   0.961750	|	train_loss 0.1035982691
+iter 21200	|	train_accuracy   0.961500	|	train_loss 0.1035954975
+iter 21300	|	train_accuracy   0.961500	|	train_loss 0.1035934560
+iter 21400	|	train_accuracy   0.961625	|	train_loss 0.1035911922
+iter 21500	|	train_accuracy   0.961500	|	train_loss 0.1035887068
+iter 21600	|	train_accuracy   0.961500	|	train_loss 0.1035859165
+iter 21700	|	train_accuracy   0.961625	|	train_loss 0.1035839234
+iter 21800	|	train_accuracy   0.961500	|	train_loss 0.1035816170
+iter 21900	|	train_accuracy   0.961625	|	train_loss 0.1035790873
+train_loss 0.1035763738 abs(train_loss - pre_train_loss) 0.0000243365 self.eps 0.0000000001
+w norm  11.663802	|	delta_w norm   0.002160
+iter 22000	|	train_accuracy   0.961500	|	train_loss 0.1035763738
+iter 22100	|	train_accuracy   0.961500	|	train_loss 0.1035744010
+iter 22200	|	train_accuracy   0.961625	|	train_loss 0.1035721443
+iter 22300	|	train_accuracy   0.961500	|	train_loss 0.1035695740
+iter 22400	|	train_accuracy   0.961500	|	train_loss 0.1035668683
+iter 22500	|	train_accuracy   0.961500	|	train_loss 0.1035648931
+iter 22600	|	train_accuracy   0.961500	|	train_loss 0.1035625801
+iter 22700	|	train_accuracy   0.961500	|	train_loss 0.1035601283
+iter 22800	|	train_accuracy   0.961500	|	train_loss 0.1035573997
+iter 22900	|	train_accuracy   0.961625	|	train_loss 0.1035553872
+train_loss 0.1035531713 abs(train_loss - pre_train_loss) 0.0000232026 self.eps 0.0000000001
+w norm  11.677388	|	delta_w norm   0.001844
+iter 23000	|	train_accuracy   0.961375	|	train_loss 0.1035531713
+iter 23100	|	train_accuracy   0.961375	|	train_loss 0.1035506750
+iter 23200	|	train_accuracy   0.961500	|	train_loss 0.1035479684
+iter 23300	|	train_accuracy   0.961625	|	train_loss 0.1035459236
+iter 23400	|	train_accuracy   0.961750	|	train_loss 0.1035437584
+iter 23500	|	train_accuracy   0.961625	|	train_loss 0.1035412896
+iter 23600	|	train_accuracy   0.961625	|	train_loss 0.1035385740
+iter 23700	|	train_accuracy   0.961625	|	train_loss 0.1035365949
+iter 23800	|	train_accuracy   0.961500	|	train_loss 0.1035344624
+iter 23900	|	train_accuracy   0.961750	|	train_loss 0.1035319285
+train_loss 0.1035292154 abs(train_loss - pre_train_loss) 0.0000239559 self.eps 0.0000000001
+w norm  11.690922	|	delta_w norm   0.001741
+iter 24000	|	train_accuracy   0.961625	|	train_loss 0.1035292154
+iter 24100	|	train_accuracy   0.961875	|	train_loss 0.1035272271
+iter 24200	|	train_accuracy   0.961625	|	train_loss 0.1035250478
+iter 24300	|	train_accuracy   0.961625	|	train_loss 0.1035225791
+iter 24400	|	train_accuracy   0.961625	|	train_loss 0.1035198923
+iter 24500	|	train_accuracy   0.961625	|	train_loss 0.1035179248
+iter 24600	|	train_accuracy   0.961500	|	train_loss 0.1035156423
+iter 24700	|	train_accuracy   0.961625	|	train_loss 0.1035132648
+iter 24800	|	train_accuracy   0.961625	|	train_loss 0.1035106049
+iter 24900	|	train_accuracy   0.961625	|	train_loss 0.1035086405
+train_loss 0.1035064522 abs(train_loss - pre_train_loss) 0.0000227632 self.eps 0.0000000001
+w norm  11.704438	|	delta_w norm   0.001905
+iter 25000	|	train_accuracy   0.961500	|	train_loss 0.1035064522
+iter 25100	|	train_accuracy   0.961750	|	train_loss 0.1035040693
+iter 25200	|	train_accuracy   0.961625	|	train_loss 0.1035013530
+iter 25300	|	train_accuracy   0.961750	|	train_loss 0.1034994045
+iter 25400	|	train_accuracy   0.961750	|	train_loss 0.1034972203
+iter 25500	|	train_accuracy   0.961500	|	train_loss 0.1034948116
+iter 25600	|	train_accuracy   0.961625	|	train_loss 0.1034921355
+iter 25700	|	train_accuracy   0.961500	|	train_loss 0.1034902142
+iter 25800	|	train_accuracy   0.961500	|	train_loss 0.1034879911
+iter 25900	|	train_accuracy   0.961750	|	train_loss 0.1034855825
+train_loss 0.1034829530 abs(train_loss - pre_train_loss) 0.0000234992 self.eps 0.0000000001
+w norm  11.717815	|	delta_w norm   0.001957
+iter 26000	|	train_accuracy   0.961625	|	train_loss 0.1034829530
+iter 26100	|	train_accuracy   0.961750	|	train_loss 0.1034810733
+iter 26200	|	train_accuracy   0.961625	|	train_loss 0.1034788209
+iter 26300	|	train_accuracy   0.961625	|	train_loss 0.1034764329
+iter 26400	|	train_accuracy   0.961625	|	train_loss 0.1034738045
+iter 26500	|	train_accuracy   0.961875	|	train_loss 0.1034718622
+iter 26600	|	train_accuracy   0.961750	|	train_loss 0.1034696966
+iter 26700	|	train_accuracy   0.961875	|	train_loss 0.1034672978
+iter 26800	|	train_accuracy   0.961625	|	train_loss 0.1034646902
+iter 26900	|	train_accuracy   0.961625	|	train_loss 0.1034628185
+train_loss 0.1034606773 abs(train_loss - pre_train_loss) 0.0000222757 self.eps 0.0000000001
+w norm  11.731205	|	delta_w norm   0.001593
+iter 27000	|	train_accuracy   0.961750	|	train_loss 0.1034606773
+iter 27100	|	train_accuracy   0.961875	|	train_loss 0.1034582547
+iter 27200	|	train_accuracy   0.961625	|	train_loss 0.1034556095
+iter 27300	|	train_accuracy   0.961750	|	train_loss 0.1034536976
+iter 27400	|	train_accuracy   0.962000	|	train_loss 0.1034515851
+iter 27500	|	train_accuracy   0.961750	|	train_loss 0.1034491572
+iter 27600	|	train_accuracy   0.961625	|	train_loss 0.1034465626
+iter 27700	|	train_accuracy   0.961625	|	train_loss 0.1034446372
+iter 27800	|	train_accuracy   0.961625	|	train_loss 0.1034424948
+iter 27900	|	train_accuracy   0.962000	|	train_loss 0.1034401755
+train_loss 0.1034375491 abs(train_loss - pre_train_loss) 0.0000231282 self.eps 0.0000000001
+w norm  11.744480	|	delta_w norm   0.001935
+iter 28000	|	train_accuracy   0.961750	|	train_loss 0.1034375491
+iter 28100	|	train_accuracy   0.961750	|	train_loss 0.1034356259
+iter 28200	|	train_accuracy   0.961750	|	train_loss 0.1034335178
+iter 28300	|	train_accuracy   0.961875	|	train_loss 0.1034311528
+iter 28400	|	train_accuracy   0.961750	|	train_loss 0.1034285682
+iter 28500	|	train_accuracy   0.961750	|	train_loss 0.1034266770
+iter 28600	|	train_accuracy   0.961625	|	train_loss 0.1034245965
+iter 28700	|	train_accuracy   0.962000	|	train_loss 0.1034222237
+iter 28800	|	train_accuracy   0.961750	|	train_loss 0.1034196201
+iter 28900	|	train_accuracy   0.962000	|	train_loss 0.1034177158
+train_loss 0.1034156349 abs(train_loss - pre_train_loss) 0.0000219142 self.eps 0.0000000001
+w norm  11.757749	|	delta_w norm   0.001830
+iter 29000	|	train_accuracy   0.961750	|	train_loss 0.1034156349
+iter 29100	|	train_accuracy   0.961625	|	train_loss 0.1034132972
+iter 29200	|	train_accuracy   0.961750	|	train_loss 0.1034107041
+iter 29300	|	train_accuracy   0.961750	|	train_loss 0.1034088454
+iter 29400	|	train_accuracy   0.961625	|	train_loss 0.1034066967
+iter 29500	|	train_accuracy   0.961750	|	train_loss 0.1034044032
+iter 29600	|	train_accuracy   0.961750	|	train_loss 0.1034018204
+iter 29700	|	train_accuracy   0.961750	|	train_loss 0.1034000192
+iter 29800	|	train_accuracy   0.961750	|	train_loss 0.1033978904
+iter 29900	|	train_accuracy   0.961625	|	train_loss 0.1033955373
+train_loss 0.1033929690 abs(train_loss - pre_train_loss) 0.0000226660 self.eps 0.0000000001
+w norm  11.770922	|	delta_w norm   0.001823
+iter 30000	|	train_accuracy   0.961750	|	train_loss 0.1033929690
+iter 30100	|	train_accuracy   0.961875	|	train_loss 0.1033911565
+iter 30200	|	train_accuracy   0.962000	|	train_loss 0.1033890478
+iter 30300	|	train_accuracy   0.961875	|	train_loss 0.1033867330
+iter 30400	|	train_accuracy   0.961750	|	train_loss 0.1033841495
+iter 30500	|	train_accuracy   0.962000	|	train_loss 0.1033822595
+iter 30600	|	train_accuracy   0.961875	|	train_loss 0.1033802833
+iter 30700	|	train_accuracy   0.961875	|	train_loss 0.1033779531
+iter 30800	|	train_accuracy   0.961875	|	train_loss 0.1033753616
+iter 30900	|	train_accuracy   0.962000	|	train_loss 0.1033734934
+train_loss 0.1033714453 abs(train_loss - pre_train_loss) 0.0000215236 self.eps 0.0000000001
+w norm  11.784054	|	delta_w norm   0.001891
+iter 31000	|	train_accuracy   0.961625	|	train_loss 0.1033714453
+iter 31100	|	train_accuracy   0.961875	|	train_loss 0.1033691493
+iter 31200	|	train_accuracy   0.961875	|	train_loss 0.1033666051
+iter 31300	|	train_accuracy   0.961875	|	train_loss 0.1033647981
+iter 31400	|	train_accuracy   0.962000	|	train_loss 0.1033627596
+iter 31500	|	train_accuracy   0.961875	|	train_loss 0.1033604107
+iter 31600	|	train_accuracy   0.962000	|	train_loss 0.1033578802
+iter 31700	|	train_accuracy   0.961750	|	train_loss 0.1033561068
+iter 31800	|	train_accuracy   0.961750	|	train_loss 0.1033540308
+iter 31900	|	train_accuracy   0.961875	|	train_loss 0.1033516767
+train_loss 0.1033491862 abs(train_loss - pre_train_loss) 0.0000222591 self.eps 0.0000000001
+w norm  11.797142	|	delta_w norm   0.001958
+iter 32000	|	train_accuracy   0.962000	|	train_loss 0.1033491862
+iter 32100	|	train_accuracy   0.962000	|	train_loss 0.1033474326
+iter 32200	|	train_accuracy   0.961875	|	train_loss 0.1033453453
+iter 32300	|	train_accuracy   0.961875	|	train_loss 0.1033430491
+iter 32400	|	train_accuracy   0.962000	|	train_loss 0.1033405230
+iter 32500	|	train_accuracy   0.961750	|	train_loss 0.1033386996
+iter 32600	|	train_accuracy   0.962000	|	train_loss 0.1033367600
+iter 32700	|	train_accuracy   0.961750	|	train_loss 0.1033343989
+iter 32800	|	train_accuracy   0.962000	|	train_loss 0.1033318904
+iter 32900	|	train_accuracy   0.961750	|	train_loss 0.1033301374
+train_loss 0.1033280496 abs(train_loss - pre_train_loss) 0.0000211367 self.eps 0.0000000001
+w norm  11.810178	|	delta_w norm   0.001886
+iter 33000	|	train_accuracy   0.961750	|	train_loss 0.1033280496
+iter 33100	|	train_accuracy   0.961750	|	train_loss 0.1033258257
+iter 33200	|	train_accuracy   0.962000	|	train_loss 0.1033232879
+iter 33300	|	train_accuracy   0.961875	|	train_loss 0.1033214564
+iter 33400	|	train_accuracy   0.961750	|	train_loss 0.1033195391
+iter 33500	|	train_accuracy   0.961750	|	train_loss 0.1033172141
+iter 33600	|	train_accuracy   0.962000	|	train_loss 0.1033147155
+iter 33700	|	train_accuracy   0.962000	|	train_loss 0.1033129334
+iter 33800	|	train_accuracy   0.962000	|	train_loss 0.1033108321
+iter 33900	|	train_accuracy   0.962000	|	train_loss 0.1033086368
+train_loss 0.1033061733 abs(train_loss - pre_train_loss) 0.0000218763 self.eps 0.0000000001
+w norm  11.823143	|	delta_w norm   0.001855
+iter 34000	|	train_accuracy   0.962000	|	train_loss 0.1033061733
+iter 34100	|	train_accuracy   0.962000	|	train_loss 0.1033044009
+iter 34200	|	train_accuracy   0.961875	|	train_loss 0.1033024278
+iter 34300	|	train_accuracy   0.962000	|	train_loss 0.1033001142
+iter 34400	|	train_accuracy   0.962000	|	train_loss 0.1032976609
+iter 34500	|	train_accuracy   0.962000	|	train_loss 0.1032958796
+iter 34600	|	train_accuracy   0.961750	|	train_loss 0.1032939368
+iter 34700	|	train_accuracy   0.961875	|	train_loss 0.1032916455
+iter 34800	|	train_accuracy   0.962000	|	train_loss 0.1032891782
+iter 34900	|	train_accuracy   0.962000	|	train_loss 0.1032874052
+train_loss 0.1032853915 abs(train_loss - pre_train_loss) 0.0000207818 self.eps 0.0000000001
+w norm  11.836066	|	delta_w norm   0.001634
+iter 35000	|	train_accuracy   0.961875	|	train_loss 0.1032853915
+iter 35100	|	train_accuracy   0.961875	|	train_loss 0.1032831785
+iter 35200	|	train_accuracy   0.962000	|	train_loss 0.1032807251
+iter 35300	|	train_accuracy   0.962000	|	train_loss 0.1032790264
+iter 35400	|	train_accuracy   0.961875	|	train_loss 0.1032770012
+iter 35500	|	train_accuracy   0.961875	|	train_loss 0.1032747561
+iter 35600	|	train_accuracy   0.962000	|	train_loss 0.1032723009
+iter 35700	|	train_accuracy   0.961875	|	train_loss 0.1032706012
+iter 35800	|	train_accuracy   0.962000	|	train_loss 0.1032685289
+iter 35900	|	train_accuracy   0.961750	|	train_loss 0.1032662791
+train_loss 0.1032639063 abs(train_loss - pre_train_loss) 0.0000214852 self.eps 0.0000000001
+w norm  11.848929	|	delta_w norm   0.001964
+iter 36000	|	train_accuracy   0.962000	|	train_loss 0.1032639063
+iter 36100	|	train_accuracy   0.962000	|	train_loss 0.1032621563
+iter 36200	|	train_accuracy   0.962000	|	train_loss 0.1032601682
+iter 36300	|	train_accuracy   0.961750	|	train_loss 0.1032579759
+iter 36400	|	train_accuracy   0.962000	|	train_loss 0.1032555402
+iter 36500	|	train_accuracy   0.962000	|	train_loss 0.1032537746
+iter 36600	|	train_accuracy   0.962000	|	train_loss 0.1032518260
+iter 36700	|	train_accuracy   0.962000	|	train_loss 0.1032495971
+iter 36800	|	train_accuracy   0.962000	|	train_loss 0.1032472037
+iter 36900	|	train_accuracy   0.962125	|	train_loss 0.1032455105
+train_loss 0.1032435534 abs(train_loss - pre_train_loss) 0.0000203528 self.eps 0.0000000001
+w norm  11.861713	|	delta_w norm   0.001634
+iter 37000	|	train_accuracy   0.961875	|	train_loss 0.1032435534
+iter 37100	|	train_accuracy   0.962000	|	train_loss 0.1032412875
+iter 37200	|	train_accuracy   0.962000	|	train_loss 0.1032388952
+iter 37300	|	train_accuracy   0.962000	|	train_loss 0.1032371432
+iter 37400	|	train_accuracy   0.961875	|	train_loss 0.1032352671
+iter 37500	|	train_accuracy   0.962000	|	train_loss 0.1032330205
+iter 37600	|	train_accuracy   0.962000	|	train_loss 0.1032306148
+iter 37700	|	train_accuracy   0.962000	|	train_loss 0.1032289326
+iter 37800	|	train_accuracy   0.961875	|	train_loss 0.1032269695
+iter 37900	|	train_accuracy   0.961875	|	train_loss 0.1032247944
+train_loss 0.1032223637 abs(train_loss - pre_train_loss) 0.0000211897 self.eps 0.0000000001
+w norm  11.874501	|	delta_w norm   0.001929
+iter 38000	|	train_accuracy   0.962000	|	train_loss 0.1032223637
+iter 38100	|	train_accuracy   0.962000	|	train_loss 0.1032206667
+iter 38200	|	train_accuracy   0.961750	|	train_loss 0.1032186894
+iter 38300	|	train_accuracy   0.961875	|	train_loss 0.1032165537
+iter 38400	|	train_accuracy   0.962000	|	train_loss 0.1032141404
+iter 38500	|	train_accuracy   0.962000	|	train_loss 0.1032123689
+iter 38600	|	train_accuracy   0.962000	|	train_loss 0.1032105432
+iter 38700	|	train_accuracy   0.961750	|	train_loss 0.1032083079
+iter 38800	|	train_accuracy   0.962000	|	train_loss 0.1032059451
+iter 38900	|	train_accuracy   0.962000	|	train_loss 0.1032042610
+train_loss 0.1032023195 abs(train_loss - pre_train_loss) 0.0000200442 self.eps 0.0000000001
+w norm  11.887189	|	delta_w norm   0.001867
+iter 39000	|	train_accuracy   0.961750	|	train_loss 0.1032023195
+iter 39100	|	train_accuracy   0.962000	|	train_loss 0.1032001572
+iter 39200	|	train_accuracy   0.962000	|	train_loss 0.1031977778
+iter 39300	|	train_accuracy   0.962000	|	train_loss 0.1031961338
+iter 39400	|	train_accuracy   0.962000	|	train_loss 0.1031942334
+iter 39500	|	train_accuracy   0.962000	|	train_loss 0.1031920046
+iter 39600	|	train_accuracy   0.962000	|	train_loss 0.1031896380
+iter 39700	|	train_accuracy   0.961875	|	train_loss 0.1031879431
+iter 39800	|	train_accuracy   0.962000	|	train_loss 0.1031860933
+iter 39900	|	train_accuracy   0.961875	|	train_loss 0.1031838661
+train_loss 0.1031815261 abs(train_loss - pre_train_loss) 0.0000207934 self.eps 0.0000000001
+w norm  11.899863	|	delta_w norm   0.001903
+iter 40000	|	train_accuracy   0.962000	|	train_loss 0.1031815261
+iter 40100	|	train_accuracy   0.962125	|	train_loss 0.1031798030
+iter 40200	|	train_accuracy   0.961875	|	train_loss 0.1031780567
+iter 40300	|	train_accuracy   0.962000	|	train_loss 0.1031758081
+iter 40400	|	train_accuracy   0.962000	|	train_loss 0.1031734413
+iter 40500	|	train_accuracy   0.962000	|	train_loss 0.1031717529
+iter 40600	|	train_accuracy   0.962000	|	train_loss 0.1031698782
+iter 40700	|	train_accuracy   0.962125	|	train_loss 0.1031677647
+iter 40800	|	train_accuracy   0.962000	|	train_loss 0.1031653842
+iter 40900	|	train_accuracy   0.962000	|	train_loss 0.1031637430
+train_loss 0.1031618274 abs(train_loss - pre_train_loss) 0.0000196987 self.eps 0.0000000001
+w norm  11.912468	|	delta_w norm   0.001911
+iter 41000	|	train_accuracy   0.962125	|	train_loss 0.1031618274
+iter 41100	|	train_accuracy   0.962000	|	train_loss 0.1031597743
+iter 41200	|	train_accuracy   0.962000	|	train_loss 0.1031573537
+iter 41300	|	train_accuracy   0.962000	|	train_loss 0.1031557464
+iter 41400	|	train_accuracy   0.962000	|	train_loss 0.1031538835
+iter 41500	|	train_accuracy   0.962000	|	train_loss 0.1031517333
+iter 41600	|	train_accuracy   0.962000	|	train_loss 0.1031493507
+iter 41700	|	train_accuracy   0.962125	|	train_loss 0.1031477053
+iter 41800	|	train_accuracy   0.961875	|	train_loss 0.1031458649
+iter 41900	|	train_accuracy   0.962125	|	train_loss 0.1031436821
+train_loss 0.1031413741 abs(train_loss - pre_train_loss) 0.0000204533 self.eps 0.0000000001
+w norm  11.925017	|	delta_w norm   0.001914
+iter 42000	|	train_accuracy   0.962000	|	train_loss 0.1031413741
+iter 42100	|	train_accuracy   0.962000	|	train_loss 0.1031397325
+iter 42200	|	train_accuracy   0.962000	|	train_loss 0.1031378048
+iter 42300	|	train_accuracy   0.961875	|	train_loss 0.1031357758
+iter 42400	|	train_accuracy   0.962000	|	train_loss 0.1031334245
+iter 42500	|	train_accuracy   0.962000	|	train_loss 0.1031318267
+iter 42600	|	train_accuracy   0.962000	|	train_loss 0.1031299132
+iter 42700	|	train_accuracy   0.962000	|	train_loss 0.1031278150
+iter 42800	|	train_accuracy   0.962000	|	train_loss 0.1031255016
+iter 42900	|	train_accuracy   0.961875	|	train_loss 0.1031238939
+train_loss 0.1031219689 abs(train_loss - pre_train_loss) 0.0000194051 self.eps 0.0000000001
+w norm  11.937521	|	delta_w norm   0.001707
+iter 43000	|	train_accuracy   0.962000	|	train_loss 0.1031219689
+iter 43100	|	train_accuracy   0.962000	|	train_loss 0.1031199588
+iter 43200	|	train_accuracy   0.962000	|	train_loss 0.1031176045
+iter 43300	|	train_accuracy   0.962000	|	train_loss 0.1031160183
+iter 43400	|	train_accuracy   0.962000	|	train_loss 0.1031141849
+iter 43500	|	train_accuracy   0.962000	|	train_loss 0.1031120817
+iter 43600	|	train_accuracy   0.962000	|	train_loss 0.1031097343
+iter 43700	|	train_accuracy   0.962000	|	train_loss 0.1031080645
+iter 43800	|	train_accuracy   0.962000	|	train_loss 0.1031062400
+iter 43900	|	train_accuracy   0.962000	|	train_loss 0.1031041922
+train_loss 0.1031018904 abs(train_loss - pre_train_loss) 0.0000200785 self.eps 0.0000000001
+w norm  11.949966	|	delta_w norm   0.002015
+iter 44000	|	train_accuracy   0.962000	|	train_loss 0.1031018904
+iter 44100	|	train_accuracy   0.962250	|	train_loss 0.1031002242
+iter 44200	|	train_accuracy   0.962125	|	train_loss 0.1030984148
+iter 44300	|	train_accuracy   0.962125	|	train_loss 0.1030963625
+iter 44400	|	train_accuracy   0.962000	|	train_loss 0.1030940722
+iter 44500	|	train_accuracy   0.962000	|	train_loss 0.1030924371
+iter 44600	|	train_accuracy   0.961875	|	train_loss 0.1030906283
+iter 44700	|	train_accuracy   0.962125	|	train_loss 0.1030885591
+iter 44800	|	train_accuracy   0.962125	|	train_loss 0.1030862801
+iter 44900	|	train_accuracy   0.962125	|	train_loss 0.1030846265
+train_loss 0.1030828245 abs(train_loss - pre_train_loss) 0.0000190659 self.eps 0.0000000001
+w norm  11.962343	|	delta_w norm   0.002180
+iter 45000	|	train_accuracy   0.962250	|	train_loss 0.1030828245
+iter 45100	|	train_accuracy   0.962125	|	train_loss 0.1030807953
+iter 45200	|	train_accuracy   0.962125	|	train_loss 0.1030785138
+iter 45300	|	train_accuracy   0.962250	|	train_loss 0.1030768324
+iter 45400	|	train_accuracy   0.962000	|	train_loss 0.1030750247
+iter 45500	|	train_accuracy   0.962000	|	train_loss 0.1030730332
+iter 45600	|	train_accuracy   0.962125	|	train_loss 0.1030707732
+iter 45700	|	train_accuracy   0.962125	|	train_loss 0.1030691640
+iter 45800	|	train_accuracy   0.962250	|	train_loss 0.1030673339
+iter 45900	|	train_accuracy   0.962000	|	train_loss 0.1030653260
+train_loss 0.1030630581 abs(train_loss - pre_train_loss) 0.0000197664 self.eps 0.0000000001
+w norm  11.974713	|	delta_w norm   0.002003
+iter 46000	|	train_accuracy   0.962125	|	train_loss 0.1030630581
+iter 46100	|	train_accuracy   0.962000	|	train_loss 0.1030615006
+iter 46200	|	train_accuracy   0.961750	|	train_loss 0.1030596996
+iter 46300	|	train_accuracy   0.962000	|	train_loss 0.1030576807
+iter 46400	|	train_accuracy   0.962125	|	train_loss 0.1030553686
+iter 46500	|	train_accuracy   0.962250	|	train_loss 0.1030538187
+iter 46600	|	train_accuracy   0.962000	|	train_loss 0.1030519598
+iter 46700	|	train_accuracy   0.962250	|	train_loss 0.1030499651
+iter 46800	|	train_accuracy   0.962125	|	train_loss 0.1030477040
+iter 46900	|	train_accuracy   0.962125	|	train_loss 0.1030461822
+train_loss 0.1030443537 abs(train_loss - pre_train_loss) 0.0000187044 self.eps 0.0000000001
+w norm  11.987018	|	delta_w norm   0.001737
+iter 47000	|	train_accuracy   0.962250	|	train_loss 0.1030443537
+iter 47100	|	train_accuracy   0.962000	|	train_loss 0.1030423636
+iter 47200	|	train_accuracy   0.962125	|	train_loss 0.1030400644
+iter 47300	|	train_accuracy   0.962000	|	train_loss 0.1030385144
+iter 47400	|	train_accuracy   0.962125	|	train_loss 0.1030367081
+iter 47500	|	train_accuracy   0.962125	|	train_loss 0.1030347405
+iter 47600	|	train_accuracy   0.962125	|	train_loss 0.1030324499
+iter 47700	|	train_accuracy   0.962125	|	train_loss 0.1030308797
+iter 47800	|	train_accuracy   0.962125	|	train_loss 0.1030291187
+iter 47900	|	train_accuracy   0.962125	|	train_loss 0.1030271439
+train_loss 0.1030248600 abs(train_loss - pre_train_loss) 0.0000194938 self.eps 0.0000000001
+w norm  11.999262	|	delta_w norm   0.001665
+iter 48000	|	train_accuracy   0.962125	|	train_loss 0.1030248600
+iter 48100	|	train_accuracy   0.962250	|	train_loss 0.1030233367
+iter 48200	|	train_accuracy   0.962000	|	train_loss 0.1030215214
+iter 48300	|	train_accuracy   0.962125	|	train_loss 0.1030195588
+iter 48400	|	train_accuracy   0.962250	|	train_loss 0.1030172954
+iter 48500	|	train_accuracy   0.962125	|	train_loss 0.1030157602
+iter 48600	|	train_accuracy   0.962125	|	train_loss 0.1030139716
+iter 48700	|	train_accuracy   0.962125	|	train_loss 0.1030120318
+iter 48800	|	train_accuracy   0.962250	|	train_loss 0.1030097551
+iter 48900	|	train_accuracy   0.962125	|	train_loss 0.1030082526
+train_loss 0.1030064696 abs(train_loss - pre_train_loss) 0.0000183903 self.eps 0.0000000001
+w norm  12.011441	|	delta_w norm   0.001725
+iter 49000	|	train_accuracy   0.962250	|	train_loss 0.1030064696
+iter 49100	|	train_accuracy   0.962250	|	train_loss 0.1030044817
+iter 49200	|	train_accuracy   0.962250	|	train_loss 0.1030022400
+iter 49300	|	train_accuracy   0.962125	|	train_loss 0.1030007156
+iter 49400	|	train_accuracy   0.962250	|	train_loss 0.1029990300
+iter 49500	|	train_accuracy   0.962125	|	train_loss 0.1029970254
+iter 49600	|	train_accuracy   0.962250	|	train_loss 0.1029947484
+iter 49700	|	train_accuracy   0.962375	|	train_loss 0.1029932241
+iter 49800	|	train_accuracy   0.962250	|	train_loss 0.1029915317
+iter 49900	|	train_accuracy   0.962250	|	train_loss 0.1029895088
+train_loss 0.1029872816 abs(train_loss - pre_train_loss) 0.0000191881 self.eps 0.0000000001
+w norm  12.023613	|	delta_w norm   0.001867
+iter 50000	|	train_accuracy   0.962250	|	train_loss 0.1029872816
+iter 50100	|	train_accuracy   0.962250	|	train_loss 0.1029857307
+iter 50200	|	train_accuracy   0.962125	|	train_loss 0.1029840477
+iter 50300	|	train_accuracy   0.962250	|	train_loss 0.1029820670
+iter 50400	|	train_accuracy   0.962250	|	train_loss 0.1029798395
+iter 50500	|	train_accuracy   0.962125	|	train_loss 0.1029783238
+iter 50600	|	train_accuracy   0.962000	|	train_loss 0.1029765593
+iter 50700	|	train_accuracy   0.962000	|	train_loss 0.1029745983
+iter 50800	|	train_accuracy   0.962250	|	train_loss 0.1029724208
+iter 50900	|	train_accuracy   0.962125	|	train_loss 0.1029709203
+train_loss 0.1029691853 abs(train_loss - pre_train_loss) 0.0000180963 self.eps 0.0000000001
+w norm  12.035721	|	delta_w norm   0.001557
+in metrics.ranking.py: y_score norm:  30.3327057038
+in metrics.ranking.py: y_score shape:  (2000, 1)
+
+
+final accuracy: 0.876500	|	final auc: 0.957553	|	test loss: 0.398968
+model config {	reg: 0.000100, lr: 0.000100, batch_size:   500	}
+2017-04-08 22:45:39
+106.559688091
+2017-04-08 22:45:39
+train_index:  [1996 1997 2000 ..., 9997 9998 9999]
+test_index:  [   0    1    2 ..., 1999 2001 2002]
+
+reg_lambda: 0.001000
+self.reg_lambda, self.learning_rate, self.max_iter:  0.001 0.0001 50000
+self.eps, self.batch_size, self.validation_perc:  1e-10 500 0.0
+self.w[:10]:  [[  1.33158650e-02]
+ [  7.15278974e-03]
+ [ -1.54540029e-02]
+ [ -8.38384993e-05]
+ [  6.21335974e-03]
+ [ -7.20085561e-03]
+ [  2.65511586e-03]
+ [  1.08548526e-03]
+ [  4.29143093e-05]
+ [ -1.74600211e-03]]
+iter  100	|	train_accuracy   0.946000	|	train_loss 0.1590012581
+iter  200	|	train_accuracy   0.952125	|	train_loss 0.1393053070
+iter  300	|	train_accuracy   0.955375	|	train_loss 0.1276624339
+iter  400	|	train_accuracy   0.956250	|	train_loss 0.1204351038
+iter  500	|	train_accuracy   0.956500	|	train_loss 0.1203780038
+iter  600	|	train_accuracy   0.958875	|	train_loss 0.1183093074
+iter  700	|	train_accuracy   0.958875	|	train_loss 0.1159316338
+iter  800	|	train_accuracy   0.960500	|	train_loss 0.1114265077
+iter  900	|	train_accuracy   0.957000	|	train_loss 0.1133281242
+train_loss 0.1127469330 abs(train_loss - pre_train_loss) 0.1127469330 self.eps 0.0000000001
+w norm   9.932505	|	delta_w norm   0.224121
+iter 1000	|	train_accuracy   0.958125	|	train_loss 0.1127469330
+iter 1100	|	train_accuracy   0.959250	|	train_loss 0.1110565054
+iter 1200	|	train_accuracy   0.962000	|	train_loss 0.1077409979
+iter 1300	|	train_accuracy   0.960250	|	train_loss 0.1105586022
+iter 1400	|	train_accuracy   0.960125	|	train_loss 0.1100678692
+iter 1500	|	train_accuracy   0.960500	|	train_loss 0.1083217886
+iter 1600	|	train_accuracy   0.961750	|	train_loss 0.1058788826
+iter 1700	|	train_accuracy   0.962625	|	train_loss 0.1048452285
+iter 1800	|	train_accuracy   0.962750	|	train_loss 0.1045298052
+iter 1900	|	train_accuracy   0.962750	|	train_loss 0.1043838152
+train_loss 0.1042807760 abs(train_loss - pre_train_loss) 0.0084661570 self.eps 0.0000000001
+w norm  11.324826	|	delta_w norm   0.020747
+iter 2000	|	train_accuracy   0.962500	|	train_loss 0.1042807760
+iter 2100	|	train_accuracy   0.962125	|	train_loss 0.1042623241
+iter 2200	|	train_accuracy   0.962375	|	train_loss 0.1042299596
+iter 2300	|	train_accuracy   0.961125	|	train_loss 0.1041864990
+iter 2400	|	train_accuracy   0.962125	|	train_loss 0.1041144845
+iter 2500	|	train_accuracy   0.961875	|	train_loss 0.1041113758
+iter 2600	|	train_accuracy   0.961875	|	train_loss 0.1041075359
+iter 2700	|	train_accuracy   0.961750	|	train_loss 0.1041042441
+iter 2800	|	train_accuracy   0.961875	|	train_loss 0.1041003422
+iter 2900	|	train_accuracy   0.961750	|	train_loss 0.1040971364
+train_loss 0.1040939988 abs(train_loss - pre_train_loss) 0.0001867772 self.eps 0.0000000001
+w norm  11.393266	|	delta_w norm   0.001966
+iter 3000	|	train_accuracy   0.961750	|	train_loss 0.1040939988
+iter 3100	|	train_accuracy   0.961750	|	train_loss 0.1040903928
+iter 3200	|	train_accuracy   0.961875	|	train_loss 0.1040867019
+iter 3300	|	train_accuracy   0.961750	|	train_loss 0.1040837666
+iter 3400	|	train_accuracy   0.961625	|	train_loss 0.1040807220
+iter 3500	|	train_accuracy   0.961625	|	train_loss 0.1040770489
+iter 3600	|	train_accuracy   0.961750	|	train_loss 0.1040734358
+iter 3700	|	train_accuracy   0.961625	|	train_loss 0.1040706286
+iter 3800	|	train_accuracy   0.961750	|	train_loss 0.1040673355
+iter 3900	|	train_accuracy   0.961500	|	train_loss 0.1040640132
+train_loss 0.1040604707 abs(train_loss - pre_train_loss) 0.0000335281 self.eps 0.0000000001
+w norm  11.407916	|	delta_w norm   0.002118
+iter 4000	|	train_accuracy   0.961625	|	train_loss 0.1040604707
+iter 4100	|	train_accuracy   0.961875	|	train_loss 0.1040576642
+iter 4200	|	train_accuracy   0.961500	|	train_loss 0.1040545700
+iter 4300	|	train_accuracy   0.961250	|	train_loss 0.1040512318
+iter 4400	|	train_accuracy   0.961375	|	train_loss 0.1040477552
+iter 4500	|	
