@@ -176,7 +176,7 @@ if __name__ == '__main__':
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
-        a, b, alpha = [100., 1000.], [2000., 10000., 100000.], [int(np.sqrt(x.shape[1]))]
+        a, b, alpha = [100., 1000., 0.1, 1.], [2000., 10000., 100000.], [int(np.sqrt(x.shape[1]))]
         for alpha_val in alpha:
             for a_val in a:
                 for b_val in b:
