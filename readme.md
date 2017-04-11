@@ -64,9 +64,22 @@ smoothing-regularization (dense, all checked correct, now archive-code/3-30-dens
 4-4
 (24) sparsify + all param (gm_prior_logistic_regression_sparse_all_param.py)
 (25) all the algorithms turn to be all_param.py, copy from archive-code/all-param
+script:
+
+04-02-all-param.sh: a and b choose according to [1e-4, 0.1, 0.5, 1., 2.], [0.5, 1.]
+because this is the best for simulator.pkl(a, b not tuned for NUH-1500 and uci-diabetes!!)
+4-4-URL.sh: URL data set, a and b choose according to [1e-4, 0.1, 0.5, 1., 2.], [0.5, 1.], not tuned!!
 
 4-5
 (26) delete validation set
 
 4-9
 (27) print test-loss
+4-8-test-loss.sh: the same as 04-02-all-param.sh and 4-4-URL.sh, but this time print test loss (URL data set using the best param found in 04-02 and 4-4 using accuracy, because only have 8 machines)
+
+##############up till now, a and b are only tuned for simulator.pkl#############################
+
+4-10
+0410-healthcare-a-b.sh: tune a, b for NUH-1500, uci-diabetes
+and
+0410-simulator-gmm-lr.sh: tunelambda_s_lr and pi_r_lr for simulator.pkl (choose the a, b according to best test loss)
