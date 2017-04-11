@@ -75,7 +75,7 @@ because this is the best for simulator.pkl(a, b not tuned for NUH-1500 and uci-d
 
 4-9
 (27) print test-loss
-4-8-test-loss.sh: the same as 04-02-all-param.sh and 4-4-URL.sh, but this time print test loss (URL data set using the best param found in 04-02 and 4-4 using accuracy, because only have 8 machines)
+4-8-test-loss.sh: the same as 04-02-all-param.sh and 4-4-URL.sh, but this time print test loss (URL data set using the best params suggested by SF/JY because only have 8 machines)
 
 ##############up till now, a and b are only tuned for simulator.pkl#############################
 
@@ -83,3 +83,9 @@ because this is the best for simulator.pkl(a, b not tuned for NUH-1500 and uci-d
 0410-healthcare-a-b.sh: tune a, b for NUH-1500, uci-diabetes
 and
 0410-simulator-gmm-lr.sh: tunelambda_s_lr and pi_r_lr for simulator.pkl (choose the a, b according to best test loss)
+
+4-11
+!!!URL: for sparse implementation, update pi and lambda (iter < 100 or iter % 100 == 0)
+pirlr, lambdaslr: only 1e-8 works
+4-8-test-loss-new-URL.sh: copy 4-8-test-loss.sh but lambda_s lr and pi_r lr is 1e-8 only
+4-11-test-loss-EM.sh: copy 0410-healthcare-a-b.sh and 4-8-test-loss-new-URL.sh, but the gmoptmethod is 2 (EM)

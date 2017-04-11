@@ -75,7 +75,7 @@ class GM_Logistic_Regression(Logistic_Regression):
         grad_w += reg_grad_w
         self.u[update_w_idx] = np.full((update_w_idx.shape[0]), iter_num, dtype=int)
 
-        if iter_num % self.gmm_update_frequency == 0:
+        if iter_num < 100 or iter_num % self.gmm_update_frequency == 0:
             # update gm prior: pi, reg_lambda
             # 0: fixed, 1: GD, 2: EM
             self.calcResponsibility()
