@@ -76,6 +76,8 @@ class Logistic_Regression(object):
             if sparsify:
                 self.u = (np.zeros(self.featureNum) - np.ones(self.featureNum)).astype(int)
                 print "self.u: ", self.u
+                if hasattr(self, 'pi'):
+                    self.gm_prior_u = -1
             # minibatch initialization
             batch_iter = 0
             while True:
