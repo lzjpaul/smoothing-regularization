@@ -127,6 +127,7 @@ class GM_Logistic_Regression(Logistic_Regression):
         # update reg_lambda
         self.pi = (np.sum(self.responsibility, axis=0) + self.alpha - 1) / (self.featureNum + self.gm_num * (self.alpha - 1))
 
+        self.gm_prior_u = iter_num
         # print 'reg_lambda', self.reg_lambda
         # print 'pi:', self.pi
 

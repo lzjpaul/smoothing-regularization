@@ -75,7 +75,7 @@ class GM_Logistic_Regression(Logistic_Regression):
         grad_w += reg_grad_w
         self.u[update_w_idx] = np.full((update_w_idx.shape[0]), iter_num, dtype=int)
 
-        if iter_num % self.gmm_update_frequency == 0:
+        if iter_num < 100 or iter_num % self.gmm_update_frequency == 0:
             # update gm prior: pi, reg_lambda
             # 0: fixed, 1: GD, 2: EM
             self.calcResponsibility()
@@ -96,7 +96,7 @@ class GM_Logistic_Regression(Logistic_Regression):
         delta_reg_lambda += (self.a - 1) / (self.reg_lambda.astype(float)) - self.b
         delta_reg_lambda = -delta_reg_lambda
         delta_reg_lambda_s = delta_reg_lambda * self.reg_lambda
-        self.reg_lambda_s -= self.gmm_update_frequency * self.reg_lambda_s_lr(epoch_num) * delta_reg_lambda_s
+        self.reg_lambda_s -= (iter_num - self.gm_prior_u) * self.reg_lambda_s_lr(epoch_num) * delta_reg_lambda_s
         if iter_num % 100 == 0:
             print "self.reg_lambda_s      , self.reg_lambda_s norm: ", self.reg_lambda_s, np.linalg.norm(self.reg_lambda_s)
             print "lr * delta_reg_lambda_s, lr * delta_reg_lambda_s norm: ", (self.reg_lambda_s_lr(epoch_num) * delta_reg_lambda_s), np.linalg.norm(self.reg_lambda_s_lr(epoch_num) * delta_reg_lambda_s)
@@ -109,7 +109,7 @@ class GM_Logistic_Regression(Logistic_Regression):
         delta_pi = -delta_pi
         delta_pi_k_j_mat = np.array([[(int(j==k)*self.pi[0,j] - self.pi[0,j] *self.pi[0,k]) for j in range(self.gm_num)] for k in range(self.gm_num)])
         delta_pi_r = np.matmul(delta_pi, delta_pi_k_j_mat)
-        self.pi_r -= self.gmm_update_frequency * self.pi_r_lr(epoch_num) * delta_pi_r
+        self.pi_r -= (iter_num - self.gm_prior_u) * self.pi_r_lr(epoch_num) * delta_pi_r
         if iter_num % 100 == 0:
             print "self.pi_r      , self.pi_r norm:       ", self.pi_r, np.linalg.norm(self.pi_r)
             print "lr * delta_pi_r, lr * delta_pi_r norm: ", (self.pi_r_lr(epoch_num) * delta_pi_r), np.linalg.norm(self.pi_r_lr(epoch_num) * delta_pi_r)
@@ -118,6 +118,8 @@ class GM_Logistic_Regression(Logistic_Regression):
         pi_r_exp = np.exp(self.pi_r)
         self.pi = pi_r_exp / np.sum(pi_r_exp)
 
+        self.gm_prior_u = iter_num
+
     def update_GM_Prior_EM(self, epoch_num, iter_num):
         # update pi
         self.reg_lambda = (2 * (self.a - 1) + np.sum(self.responsibility, axis=0)) / (2 * self.b + np.sum(self.responsibility * np.square(self.w[:-1]), axis=0))
@@ -125,6 +127,7 @@ class GM_Logistic_Regression(Logistic_Regression):
         # update reg_lambda
         self.pi = (np.sum(self.responsibility, axis=0) + self.alpha - 1) / (self.featureNum + self.gm_num * (self.alpha - 1))
 
+        self.gm_prior_u = iter_num
         # print 'reg_lambda', self.reg_lambda
         # print 'pi:', self.pi
 

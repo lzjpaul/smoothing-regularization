@@ -89,3 +89,6 @@ and
 pirlr, lambdaslr: only 1e-8 works
 4-8-test-loss-new-URL.sh: copy 4-8-test-loss.sh but lambda_s lr and pi_r lr is 1e-8 only
 4-11-test-loss-EM.sh: copy 0410-healthcare-a-b.sh and 4-8-test-loss-new-URL.sh, but the gmoptmethod is 2 (EM)
+
+4-12
+for gmm-hyper sparse update, should use (iter_num - self.gm_prior_u) to update
