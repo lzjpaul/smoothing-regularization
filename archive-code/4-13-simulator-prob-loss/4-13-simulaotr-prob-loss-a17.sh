@@ -1,0 +1,2 @@
+python huber_logistic_regression.py -datapath data/simulator.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 4 -maxiter 100000 | tee -a /data/zhaojing/regularization/log0413/simulator-prob-loss/simulator-prob-loss-12.log
+python huber_logistic_regression.py -datapath data/simulator.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 4 -maxiter 100000 | tee -a /data/zhaojing/regularization/log0413/simulator-prob-loss/simulator-prob-loss-12.log
