@@ -157,20 +157,6 @@ class Logistic_Regression(object):
         return np.sum((-yTrue * np.log(np.piecewise(mu, [mu < threshold, mu >= threshold], [threshold, lambda mu:mu])) \
                        - (1-yTrue) * np.log(np.piecewise(mu_false, [mu_false < threshold, mu_false >= threshold], [threshold, lambda mu_false:mu_false]))), axis = 0) / float(samples.shape[0])
 
-    # probability loss
-    def probloss(self, samples, yvals, sparsify):
-        if samples.shape[1] != self.w.shape[0]:
-            if sparsify:
-                samples = sparse.hstack([samples, np.ones(shape=(samples.shape[0], 1))], format="csr")
-            else:
-                samples = np.hstack((samples, np.ones(shape=(samples.shape[0], 1))))
-        threshold = 1e-320
-        mu = self.sigmoid(safe_sparse_dot(samples, self.w, dense_output=True))
-        mu_false = (1-mu)
-        return np.sum((-yvals * np.log(np.piecewise(mu, [mu < threshold, mu >= threshold], [threshold, lambda mu:mu])) \
-                       - (1-yvals) * np.log(np.piecewise(mu_false, [mu_false < threshold, mu_false >= threshold], [threshold, lambda mu_false:mu_false]))), axis = 0) / float(samples.shape[0])
-
-
     # predict result
     def predict(self, samples, sparsify):
         if samples.shape[1] != self.w.shape[0]:
@@ -217,31 +203,27 @@ if __name__ == '__main__':
 
     # load the simulation data
     x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
-    yvals = np.genfromtxt('generated_y_vals.dta', delimiter = ',')[:, 1].reshape(-1,1)
     print "loadData x shape: ", x.shape
-    print "yvals shape: ", yvals.shape
     n_folds = 5
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
-        reg_lambda = [1e-4, 1e-3, 1e-2, 1e-1, 1., 10., 100., 1000.]
+        reg_lambda = [1e-3, 1e-2, 1e-1, 1., 10.]
         for reg in reg_lambda:
             start = time.time()
             st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
             print st
-            train_index = range(0, 10000)
-            test_index = range(10000, 50000)
             print "train_index: ", train_index
             print "test_index: ", test_index
-            xTrain, yTrain, xTest, yTest, yvalsTest = x[train_index], y[train_index], x[test_index], y[test_index], yvals[test_index]
+            xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
             learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
             eps, batch_size = 1e-10, args.batchsize
             print "\nreg_lambda: %f" % (reg)
             LG = Logistic_Regression(reg, learning_rate, max_iter, eps, batch_size)
             LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=-1, verbos=True)
             if not np.isnan(np.linalg.norm(LG.w)):
-                print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f\t|\ttest loss: %6f\t|\tprob test loss: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
-                    LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest), LG.loss(xTest, yTest, (args.sparsify==1)), LG.probloss(xTest, yvalsTest, (args.sparsify==1)))
+                print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f\t|\ttest loss: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
+                                                               LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest), LG.loss(xTest, yTest, (args.sparsify==1)))
             print LG
 
             # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
