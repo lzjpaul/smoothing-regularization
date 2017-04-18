@@ -54,7 +54,7 @@ if __name__ == '__main__':
     parser.add_argument('-maxiter', type=int, help='max_iter')
     args = parser.parse_args()
 
-    # load the simulation data
+    # load the permutated data
     x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
     n_folds = 5
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
@@ -62,7 +62,7 @@ if __name__ == '__main__':
             break
         reg_mu = [1e-4, 1e-3, 1e-2, 1e-1, 1., 10., 100., 1000.]
         reg_lambda = [1e-4, 1e-3, 1e-2, 1e-1, 1., 10., 100., 1000.]
-        for mu in reg_mu:
+        for mu_val in reg_mu:
             for lambda_val in reg_lambda:
                 start = time.time()
                 st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
@@ -72,9 +72,9 @@ if __name__ == '__main__':
                 xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
                 learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
                 eps, batch_size = 1e-10, args.batchsize
-                print "\nreg_mu: %f" % (mu)
+                print "\nreg_mu: %f" % (mu_val)
                 print "\nreg_lambda: %f" % (lambda_val)
-                LG = Huber_Logistic_Regression(mu, lambda_val, learning_rate, max_iter, eps, batch_size)
+                LG = Huber_Logistic_Regression(mu_val, lambda_val, learning_rate, max_iter, eps, batch_size)
                 LG.fit(xTrain, yTrain, (args.sparsify==1), ishuber=True, gm_opt_method=-1, verbos=True)
                 if not np.isnan(np.linalg.norm(LG.w)):
                     print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f\t|\ttest loss: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \

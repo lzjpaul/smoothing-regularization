@@ -45,8 +45,8 @@ if __name__ == '__main__':
     parser.add_argument('-maxiter', type=int, help='max_iter')
     args = parser.parse_args()
 
-    # load the permutated data
-    x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
+    # load the simulation data
+    x, y, yvals = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
     n_folds = 5
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
@@ -56,17 +56,19 @@ if __name__ == '__main__':
             start = time.time()
             st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
             print st
-            print "train_index: ", train_index
-            print "test_index: ", test_index
-            xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
+            train_index = range(0, 10000)
+            test_index = range(10000, 50000)
+            # print "train_index: ", train_index
+            # print "test_index: ", test_index
+            xTrain, yTrain, xTest, yTest, yvalsTest = x[train_index], y[train_index], x[test_index], y[test_index], yvals[test_index]
             learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
             eps, batch_size = 1e-10, args.batchsize
             print "\nreg_lambda: %f" % (reg)
             LG = Lasso_Logistic_Regression(reg, learning_rate, max_iter, eps, batch_size)
             LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=-1, verbos=True)
             if not np.isnan(np.linalg.norm(LG.w)):
-                print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f\t|\ttest loss: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
-                                                               LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest), LG.loss(xTest, yTest, (args.sparsify==1)))
+                print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f\t|\ttest loss: %6f\t|\tprob test loss: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
+                    LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest), LG.loss(xTest, yTest, (args.sparsify==1)), LG.probloss(xTest, yvalsTest, (args.sparsify==1)))
             print LG
 
             # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)

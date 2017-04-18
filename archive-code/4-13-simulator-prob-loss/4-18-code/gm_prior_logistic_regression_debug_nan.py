@@ -7,6 +7,7 @@ Gaussian Mixture(GM) Prior Logistic Regression
 hyper:
 (1) lr decay
 (2) threshold for train_loss
+(3) print "pi and lambda"
 '''
 import sys
 from logistic_regression import Logistic_Regression
@@ -99,12 +100,15 @@ class GM_Logistic_Regression(Logistic_Regression):
     def update_GM_Prior_EM(self, epoch_num, iter_num):
         # update pi
         self.reg_lambda = (2 * (self.a - 1) + np.sum(self.responsibility, axis=0)) / (2 * self.b + np.sum(self.responsibility * np.square(self.w[:-1]), axis=0))
-
+        print "np.sum(self.responsibility, axis=0): ", np.sum(self.responsibility, axis=0)
+        print "np.sum(self.responsibility * np.square(self.w[:-1]), axis=0): ", np.sum(self.responsibility * np.square(self.w[:-1]), axis=0)
+        print "self.a: ", self.a
+        print "self.b: ", self.b
         # update reg_lambda
         self.pi = (np.sum(self.responsibility, axis=0) + self.alpha - 1) / (self.featureNum + self.gm_num * (self.alpha - 1))
 
-        # print 'reg_lambda', self.reg_lambda
-        # print 'pi:', self.pi
+        print 'reg_lambda', self.reg_lambda
+        print 'pi:', self.pi
 
     # calc the resposibilities for pj(wi)
     def calcResponsibility(self):
@@ -140,23 +144,25 @@ if __name__ == '__main__':
     parser.add_argument('-gmoptmethod', type=int, help='gm optimization method: 0-fixed, 1-GD, 2-EM')
     args = parser.parse_args()
 
-    # load the permutated data
-    x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
+    # load the simulation data
+    x, y, yvals = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
     print "loadData x shape: ", x.shape
     n_folds = 5
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
-        a, b, alpha = [1e-4, 0.1, 0.5, 1., 2.], [0.5, 1.], [int(np.sqrt(x.shape[1]))]
+        a, b, alpha = [1e-2], [1000.], [int(np.sqrt(x.shape[1]))]
         for alpha_val in alpha:
             for a_val in a:
                 for b_val in b:
                     start = time.time()
                     st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
                     print st
-                    print "train_index: ", train_index
-                    print "test_index: ", test_index
-                    xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
+                    train_index = range(0, 10000)
+                    test_index = range(10000, 50000)
+                    # print "train_index: ", train_index
+                    # print "test_index: ", test_index
+                    xTrain, yTrain, xTest, yTest, yvalsTest = x[train_index], y[train_index], x[test_index], y[test_index], yvals[test_index]
                     # run gm_prior lg model
                     learning_rate, pi_r_learning_rate, reg_lambda_s_learning_rate = math.pow(10, (-1 * args.wlr)), math.pow(10, (-1 * args.pirlr)), math.pow(10, (-1 * args.lambdaslr))
                     max_iter = args.maxiter
@@ -168,8 +174,8 @@ if __name__ == '__main__':
                                     pi_r_learning_rate=pi_r_learning_rate, reg_lambda_s_learning_rate=reg_lambda_s_learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
                     LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=gm_opt_method, verbos=True)
                     if not np.isnan(np.linalg.norm(LG.w)):
-                        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f\t|\ttest loss: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
-                                                               LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest), LG.loss(xTest, yTest, (args.sparsify==1)))
+                        print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f\t|\ttest loss: %6f\t|\tprob test loss: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
+                            LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest), LG.loss(xTest, yTest, (args.sparsify==1)), LG.probloss(xTest, yvalsTest, (args.sparsify==1)))
                     print LG
                     # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
                     # plt.show()

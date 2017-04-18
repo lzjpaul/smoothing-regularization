@@ -1,6 +1,6 @@
 '''
 Luo Zhaojing - 2017.3
-Lasso Logistic Regression
+ElasticNet Logistic Regression
 '''
 '''
 hyper:
@@ -14,26 +14,27 @@ import argparse
 import math
 from sklearn.cross_validation import StratifiedKFold, cross_val_score
 from sklearn.metrics import accuracy_score, roc_auc_score
-from scipy import sparse
 import datetime
 import time
 # base logistic regression class
-class Lasso_Logistic_Regression(Logistic_Regression):
-    def __init__(self, reg_lambda=1, learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
+class ElasticNet_Logistic_Regression(Logistic_Regression):
+    def __init__(self, l1_ratio, reg_lambda=1, learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
         Logistic_Regression.__init__(self, reg_lambda, learning_rate, max_iter, eps, batch_size, validation_perc)
+        self.l1_ratio = l1_ratio
+        print "self.l1_ratio: ", self.l1_ratio
 
     # calc the delta w to update w, using sgd here
     def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         grad_w = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
-        reg_grad_w = self.reg_lambda * np.sign(self.w)
+        reg_grad_w = self.reg_lambda * self.l1_ratio * np.sign(self.w) + self.reg_lambda * (1 - self.l1_ratio) * self.w
         reg_grad_w[-1, 0] = 0.0 # bias
         grad_w += reg_grad_w
         return -grad_w
 
     # model parameter
     def __str__(self):
-        return 'model config {\treg: %.6f, lr: %.6f, batch_size: %5d\t}' \
-            % (self.reg_lambda, self.learning_rate, self.batch_size)
+        return 'model config {\tl1_ratio: %.6f, reg: %.6f, lr: %.6f, batch_size: %5d\t}' \
+            % (self.l1_ratio, self.reg_lambda, self.learning_rate, self.batch_size)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
@@ -45,38 +46,41 @@ if __name__ == '__main__':
     parser.add_argument('-maxiter', type=int, help='max_iter')
     args = parser.parse_args()
 
-    # load the permutated data
-    x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
+    # load the simulation data
+    x, y, yvals = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
     n_folds = 5
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
         reg_lambda = [1e-4, 1e-3, 1e-2, 1e-1, 1., 10., 100., 1000.]
-        for reg in reg_lambda:
-            start = time.time()
-            st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
-            print st
-            print "train_index: ", train_index
-            print "test_index: ", test_index
-            xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
-            learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
-            eps, batch_size = 1e-10, args.batchsize
-            print "\nreg_lambda: %f" % (reg)
-            LG = Lasso_Logistic_Regression(reg, learning_rate, max_iter, eps, batch_size)
-            LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=-1, verbos=True)
-            if not np.isnan(np.linalg.norm(LG.w)):
-                print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f\t|\ttest loss: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
-                                                               LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest), LG.loss(xTest, yTest, (args.sparsify==1)))
-            print LG
+        l1_ratio_array = [0.01 ,  0.255,  0.5  ,  0.745,  0.99]
+        for l1_ratio in l1_ratio_array:
+            for reg in reg_lambda:
+                start = time.time()
+                st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
+                print st
+                train_index = range(0, 10000)
+                test_index = range(10000, 50000)
+                xTrain, yTrain, xTest, yTest, yvalsTest = x[train_index], y[train_index], x[test_index], y[test_index], yvals[test_index]
+                learning_rate, max_iter = math.pow(10, (-1 * args.wlr)), args.maxiter
+                eps, batch_size = 1e-10, args.batchsize
+                print "\nl1_ratio: %f" % (l1_ratio)
+                print "\nreg_lambda: %f" % (reg)
+                LG = ElasticNet_Logistic_Regression(l1_ratio, reg, learning_rate, max_iter, eps, batch_size)
+                LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=-1, verbos=True)
+                if not np.isnan(np.linalg.norm(LG.w)):
+                    print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f\t|\ttest loss: %6f\t|\tprob test loss: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
+                        LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest), LG.loss(xTest, yTest, (args.sparsify==1)), LG.probloss(xTest, yvalsTest, (args.sparsify==1)))
+                print LG
 
-            # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
-            # plt.show()
-            done = time.time()
-            do = datetime.datetime.fromtimestamp(done).strftime('%Y-%m-%d %H:%M:%S')
-            print do
-            elapsed = done - start
-            print elapsed
-            np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
+                # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
+                # plt.show()
+                done = time.time()
+                do = datetime.datetime.fromtimestamp(done).strftime('%Y-%m-%d %H:%M:%S')
+                print do
+                elapsed = done - start
+                print elapsed
+                np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
 
 
     # train_accuracy, test_accuracy = [], []

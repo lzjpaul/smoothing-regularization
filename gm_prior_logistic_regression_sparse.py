@@ -172,7 +172,7 @@ if __name__ == '__main__':
     parser.add_argument('-gmoptmethod', type=int, help='gm optimization method: 0-fixed, 1-GD, 2-EM')
     args = parser.parse_args()
 
-    # load the simulation data
+    # load the permutated data
     x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
     print "loadData x shape: ", x.shape
     n_folds = 5
