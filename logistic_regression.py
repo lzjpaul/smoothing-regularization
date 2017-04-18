@@ -120,6 +120,10 @@ class Logistic_Regression(object):
                     print "train_loss %10.10f abs(train_loss - pre_train_loss) %10.10f self.eps %10.10f"%(train_loss, abs(train_loss - pre_train_loss), self.eps)
                     if not ishuber:
                         print "w norm %10.6f\t|\tdelta_w norm %10.6f"%(np.linalg.norm(self.w), np.linalg.norm(self.w_lr(epoch_num) * delta_w))
+                    else:
+                        print "w1 norm %10.6f\t|\tdelta_w1 norm %10.6f"%(np.linalg.norm(self.w1), np.linalg.norm(self.w_lr(epoch_num) * delta_w1))
+                        print "w2 norm %10.6f\t|\tdelta_w2 norm %10.6f"%(np.linalg.norm(self.w2), np.linalg.norm(self.w_lr(epoch_num) * delta_w2))
+                        print "w norm %10.6f"%(np.linalg.norm(self.w))
                     if iter > self.max_iter or abs(train_loss - pre_train_loss) < self.eps:
                         break
                     pre_train_loss = train_loss
@@ -201,7 +205,7 @@ if __name__ == '__main__':
     parser.add_argument('-maxiter', type=int, help='max_iter')
     args = parser.parse_args()
 
-    # load the simulation data
+    # load the permutated data
     x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
     print "loadData x shape: ", x.shape
     n_folds = 5
