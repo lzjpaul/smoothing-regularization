@@ -166,7 +166,7 @@ if __name__ == '__main__':
                         = [1.0/gm_num for _ in range(gm_num)], [_*10+1 for _ in  range(gm_num)], 1e-10, args.batchsize
                     LG = GM_Logistic_Regression(hyperpara=[a_val, b_val, alpha_val], gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, \
                                     pi_r_learning_rate=pi_r_learning_rate, reg_lambda_s_learning_rate=reg_lambda_s_learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
-                    LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=gm_opt_method, verbos=True)
+                    LG.fit(xTrain, yTrain, xTest, yTest, (args.sparsify==1), gm_opt_method=gm_opt_method, verbos=True)
                     if not np.isnan(np.linalg.norm(LG.w)):
                         print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f\t|\ttest loss: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
                                                                LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest), LG.loss(xTest, yTest, (args.sparsify==1)))

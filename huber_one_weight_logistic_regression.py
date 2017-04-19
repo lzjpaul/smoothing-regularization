@@ -26,7 +26,7 @@ class Huber_One_Weight_Logistic_Regression(Logistic_Regression):
     # calc the delta w to update w, using sgd here
     def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         grad_w = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
-        w_array = self.w
+        w_array = np.copy(self.w)
         threshold = (self.reg_mu)/(self.reg_lambda*2.0)
         reg_grad_w = np.piecewise(w_array, [np.absolute(w_array) < threshold, np.absolute(w_array) >= threshold], \
                                   [lambda w_array: 2*self.reg_lambda*w_array, lambda w_array: self.reg_mu*np.sign(w_array)]).reshape((-1, 1))
@@ -70,7 +70,7 @@ if __name__ == '__main__':
                 print "\nreg_mu: %f" % (mu_val)
                 print "\nreg_lambda: %f" % (lambda_val)
                 LG = Huber_One_Weight_Logistic_Regression(mu_val, lambda_val, learning_rate, max_iter, eps, batch_size)
-                LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=-1, verbos=True)
+                LG.fit(xTrain, yTrain, xTest, yTest, (args.sparsify==1), gm_opt_method=-1, verbos=True)
                 if not np.isnan(np.linalg.norm(LG.w)):
                     print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f\t|\ttest loss: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
                                                                LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest), LG.loss(xTest, yTest, (args.sparsify==1)))
@@ -117,4 +117,24 @@ if __name__ == '__main__':
 >>> np.piecewise(w, [np.absolute(w) < threshold, np.absolute(w) >= threshold], [lambda w: 2*lambda_val*w, lambda w: mu_val*np.sign(w)])
 array([ 0.0006,  0.0008,  0.001 ,  0.001 ,  0.001 ,  0.001 ])
 >>>
+
+>>> reg_mu = 0.01
+>>> reg_lambda = 0.001
+>>> threshold = (reg_mu)/(reg_lambda*2.0)
+>>> threshold
+5.0
+>>> w_array = np.array([2., -3., 4., -5., -6., 7., -8.]).astype(float)
+>>> w_array = w_array.reshape((-1,1))
+>>> w_array.shape
+(7, 1)
+>>> np.piecewise(w_array, [np.absolute(w_array) < threshold, np.absolute(w_array) >= threshold], [lambda w_array: 2*reg_lambda*w_array, lambda w_array: reg_mu*np.sign(w_array)])
+array([[ 0.004],
+    [-0.006],
+   [ 0.008],
+   [-0.01 ],
+   [-0.01 ],
+   [ 0.01 ],
+   [-0.01 ]])
+>>>
+
 '''

@@ -63,7 +63,7 @@ if __name__ == '__main__':
             eps, batch_size = 1e-10, args.batchsize
             print "\nreg_lambda: %f" % (reg)
             LG = Lasso_Logistic_Regression(reg, learning_rate, max_iter, eps, batch_size)
-            LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=-1, verbos=True)
+            LG.fit(xTrain, yTrain, xTest, yTest, (args.sparsify==1), gm_opt_method=-1, verbos=True)
             if not np.isnan(np.linalg.norm(LG.w)):
                 print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f\t|\ttest loss: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
                                                                LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest), LG.loss(xTest, yTest, (args.sparsify==1)))

@@ -179,7 +179,7 @@ if __name__ == '__main__':
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
-        a, b, alpha = [1e-4, 0.1, 1., 2., 10., 100., 1000.], [2000., 10000., 100000.], [int(np.sqrt(x.shape[1]))]
+        a, b, alpha = [1000.], [500000000.], [50000.]
         for alpha_val in alpha:
             for a_val in a:
                 for b_val in b:
@@ -198,7 +198,7 @@ if __name__ == '__main__':
                         = [1.0/gm_num for _ in range(gm_num)], [_*10+1 for _ in  range(gm_num)], 1e-10, args.batchsize
                     LG = GM_Logistic_Regression(hyperpara=[a_val, b_val, alpha_val], gmm_update_frequency=gmm_update_frequency, gm_num=gm_num, pi=pi, reg_lambda=reg_lambda, learning_rate=learning_rate, \
                                                 pi_r_learning_rate=pi_r_learning_rate, reg_lambda_s_learning_rate=reg_lambda_s_learning_rate, max_iter=max_iter, eps=eps, batch_size=batch_size)
-                    LG.fit(xTrain, yTrain, (args.sparsify==1), gm_opt_method=gm_opt_method, verbos=True)
+                    LG.fit(xTrain, yTrain, xTest, yTest, (args.sparsify==1), gm_opt_method=gm_opt_method, verbos=True)
                     if not np.isnan(np.linalg.norm(LG.w)):
                         print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f\t|\ttest loss: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
                                                                LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest), LG.loss(xTest, yTest, (args.sparsify==1)))

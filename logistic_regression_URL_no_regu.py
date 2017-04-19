@@ -39,7 +39,6 @@ class Logistic_Regression(object):
 
         mu = self.sigmoid(safe_sparse_dot(xTrain, self.w, dense_output=True))
         # check here, no regularization over bias term # need normalization with xTrain.shape[0]/batch_size here
-        # print "trainNum: ", self.trainNum
         grad_w = (self.trainNum/self.batch_size)*(safe_sparse_dot(xTrain.T, (mu - yTrain), dense_output=True))
 
         return grad_w
@@ -52,7 +51,7 @@ class Logistic_Regression(object):
         return -grad_w
 
 
-    def fit(self, xTrain, yTrain, xTest, yTest, sparsify, ishuber=False, gm_opt_method=-1, verbos=False):
+    def fit(self, xTrain, yTrain, sparsify, ishuber=False, gm_opt_method=-1, verbos=False):
         # find the number of class and feature, allocate memory for model parameters
         self.trainNum, self.featureNum = xTrain.shape[0], xTrain.shape[1]
         if ishuber:
@@ -77,8 +76,6 @@ class Logistic_Regression(object):
             if sparsify:
                 self.u = (np.zeros(self.featureNum) - np.ones(self.featureNum)).astype(int)
                 print "self.u: ", self.u
-                if hasattr(self, 'pi'):
-                    self.gm_prior_u = -1
             # minibatch initialization
             batch_iter = 0
             while True:
@@ -116,19 +113,11 @@ class Logistic_Regression(object):
                 iter += 1
                 batch_iter += 1
                 if iter % 1000 == 0:
-                    # print test metrics -- not allowed
-                    print "\n\ntest accuracy: %.6f\t|\ttest auc: %6f\t|\ttest loss: %6f" % (self.accuracy(self.predict(xTest, (args.sparsify==1)), yTest), \
-                                                               self.auroc(self.predict_proba(xTest, (args.sparsify==1)), yTest), self.loss(xTest, yTest, (args.sparsify==1)))
-                    # print test metrics -- not allowed
                     train_loss = self.loss(xTrain, yTrain, sparsify)
                     # print "w norm %10.6f\t|\tdelta_w norm %10.6f\t"%(np.linalg.norm(self.w1), np.linalg.norm(self.w_lr(epoch_num) * delta_w1))
                     print "train_loss %10.10f abs(train_loss - pre_train_loss) %10.10f self.eps %10.10f"%(train_loss, abs(train_loss - pre_train_loss), self.eps)
                     if not ishuber:
                         print "w norm %10.6f\t|\tdelta_w norm %10.6f"%(np.linalg.norm(self.w), np.linalg.norm(self.w_lr(epoch_num) * delta_w))
-                    else:
-                        print "w1 norm %10.6f\t|\tdelta_w1 norm %10.6f"%(np.linalg.norm(self.w1), np.linalg.norm(self.w_lr(epoch_num) * delta_w1))
-                        print "w2 norm %10.6f\t|\tdelta_w2 norm %10.6f"%(np.linalg.norm(self.w2), np.linalg.norm(self.w_lr(epoch_num) * delta_w2))
-                        print "w norm %10.6f"%(np.linalg.norm(self.w))
                     if iter > self.max_iter or abs(train_loss - pre_train_loss) < self.eps:
                         break
                     pre_train_loss = train_loss
@@ -210,14 +199,14 @@ if __name__ == '__main__':
     parser.add_argument('-maxiter', type=int, help='max_iter')
     args = parser.parse_args()
 
-    # load the permutated data
+    # load the simulation data
     x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
     print "loadData x shape: ", x.shape
     n_folds = 5
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
         if i > 0:
             break
-        reg_lambda = [1e-4, 1e-3, 1e-2, 1e-1, 1., 10., 100., 1000.]
+        reg_lambda = [0.0]
         for reg in reg_lambda:
             start = time.time()
             st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')

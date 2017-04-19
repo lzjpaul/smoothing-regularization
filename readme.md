@@ -92,3 +92,6 @@ pirlr, lambdaslr: only 1e-8 works
 
 4-12
 for gmm-hyper sparse update, should use (iter_num - self.gm_prior_u) to update
+
+4-19
+adding test data into fit -- not allowed
