@@ -117,8 +117,8 @@ class Logistic_Regression(object):
                 batch_iter += 1
                 if iter % 1000 == 0:
                     # print test metrics -- not allowed
-                    print "\n\ntest accuracy: %.6f\t|\ttest auc: %6f\t|\ttest loss: %6f" % (self.accuracy(self.predict(xTest, (args.sparsify==1)), yTest), \
-                                                               self.auroc(self.predict_proba(xTest, (args.sparsify==1)), yTest), self.loss(xTest, yTest, (args.sparsify==1)))
+                    print "\n\ntest accuracy: %.6f\t|\ttest auc: %6f\t|\ttest loss: %6f" % (self.accuracy(self.predict(xTest, sparsify), yTest), \
+                                                               self.auroc(self.predict_proba(xTest, sparsify), yTest), self.loss(xTest, yTest, sparsify))
                     # print test metrics -- not allowed
                     train_loss = self.loss(xTrain, yTrain, sparsify)
                     # print "w norm %10.6f\t|\tdelta_w norm %10.6f\t"%(np.linalg.norm(self.w1), np.linalg.norm(self.w_lr(epoch_num) * delta_w1))
