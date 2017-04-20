@@ -1,0 +1,1 @@
+python logistic_regression.py -datapath data/LACE-CNN-1500-lastcase.pkl -onehot 0 -sparsify 0 -batchsize 50 -wlr 3 -maxiter 50000 | tee -a /data/zhaojing/regularization/log0415/test-loss-1e-3/test-loss-1e-3-2

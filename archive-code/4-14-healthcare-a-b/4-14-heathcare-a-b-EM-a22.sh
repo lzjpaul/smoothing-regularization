@@ -1,0 +1,2 @@
+python gm_prior_logistic_regression_a_b_all.py -datapath data/LACE-CNN-1500-lastcase.pkl -onehot 0 -sparsify 0 -batchsize 50 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 50000 -gmnum 3 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0414/healthcare-a-b-EM/healthcare-a-b-EM-5.log
+python gm_prior_logistic_regression_a_b_all.py -datapath data/LACE-CNN-1500-lastcase.pkl -onehot 0 -sparsify 0 -batchsize 50 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 50000 -gmnum 3 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0414/healthcare-a-b-EM/healthcare-a-b-EM-5.log
