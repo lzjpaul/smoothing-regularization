@@ -19,7 +19,7 @@ hyper_param_update_frequency
 '''
 import sys
 from logistic_regression import Logistic_Regression
-from data_loader import *
+from data_loader_URL_complete import *
 from scipy.stats import norm as gaussian
 import argparse
 import math
