@@ -35,11 +35,11 @@ def loadData(fileName, onehot=True, sparsify=True):
             return (sparse.csr_matrix(X), Y) if sparsify==True else (X, Y)
     else:
         print '\n===============================================\n'
-        print 'loading svm data...'
+        print 'loading partial svm data...'
         data = load_svmlight_file(fileName)
         X, Y = data[0], data[1]
-        print "svmlight X shape: ", X.shape
-        print "svmlight Y shape: ", Y.shape
+        # print "svmlight X shape: ", X.shape
+        # print "svmlight Y shape: ", Y.shape
         Y = (Y > 0.5)
         Y = Y.reshape((-1, 1))
         print "Y[:10] after transform: ", Y[:10]
@@ -48,5 +48,8 @@ def loadData(fileName, onehot=True, sparsify=True):
         print "idx: ", idx
         X = X[idx]
         Y = Y[idx]
-        # return X, Y
-        return X, Y
+        # return partial X, Y
+        partial_perc = 0.1
+        partialNum = int(partial_perc*X.shape[0])
+        print "partialNum: ", partialNum
+        return X[:partialNum, ], Y[:partialNum, ]

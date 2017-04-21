@@ -95,3 +95,7 @@ for gmm-hyper sparse update, should use (iter_num - self.gm_prior_u) to update
 
 4-19
 adding test data into fit -- not allowed
+
+4-20
+URL: only 1/10 data
+_complete_URL_best.py: using data_loader_URL_complete
