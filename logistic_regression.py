@@ -234,10 +234,10 @@ if __name__ == '__main__':
             if not np.isnan(np.linalg.norm(LG.w)):
                 print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f\t|\ttest loss: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
                                                                LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest), LG.loss(xTest, yTest, (args.sparsify==1)))
+                accuracy_df.loc[i, (str(reg))] = LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest)
+                auc_df.loc[i, (str(reg))] = LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest)
+                loss_df.loc[i, (str(reg))] = (LG.loss(xTest, yTest, (args.sparsify==1)) * xTest.shape[0])
             print LG
-            accuracy_df.loc[i, (str(reg))] = LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest)
-            auc_df.loc[i, (str(reg))] = LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest)
-            loss_df.loc[i, (str(reg))] = (LG.loss(xTest, yTest, (args.sparsify==1)) * xTest.shape[0])
 
             # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
             # plt.show()

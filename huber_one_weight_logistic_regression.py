@@ -16,6 +16,7 @@ from sklearn.cross_validation import StratifiedKFold, cross_val_score
 from sklearn.metrics import accuracy_score, roc_auc_score
 import datetime
 import time
+import pandas
 # base logistic regression class
 class Huber_One_Weight_Logistic_Regression(Logistic_Regression):
     def __init__(self, reg_mu=1, reg_lambda=1, learning_rate=0.1, max_iter=1000, eps=1e-4, batch_size=-1, validation_perc=0.0):
@@ -52,9 +53,10 @@ if __name__ == '__main__':
     # load the permutated data
     x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
     n_folds = 5
+    accuracy_df = pandas.DataFrame()
+    auc_df = pandas.DataFrame()
+    loss_df = pandas.DataFrame()
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
-        if i > 0:
-            break
         reg_mu = [1e-4, 1e-3, 1e-2, 1e-1, 1., 10., 100., 1000.]
         reg_lambda = [1e-4, 1e-3, 1e-2, 1e-1, 1., 10., 100., 1000.]
         for mu_val in reg_mu:
@@ -74,6 +76,9 @@ if __name__ == '__main__':
                 if not np.isnan(np.linalg.norm(LG.w)):
                     print "\n\nfinal accuracy: %.6f\t|\tfinal auc: %6f\t|\ttest loss: %6f" % (LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest), \
                                                                LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest), LG.loss(xTest, yTest, (args.sparsify==1)))
+                    accuracy_df.loc[i, (str(mu_val) + ',' + str(lambda_val))] = LG.accuracy(LG.predict(xTest, (args.sparsify==1)), yTest)
+                    auc_df.loc[i, (str(mu_val) + ',' + str(lambda_val))] = LG.auroc(LG.predict_proba(xTest, (args.sparsify==1)), yTest)
+                    loss_df.loc[i, (str(mu_val) + ',' + str(lambda_val))] = (LG.loss(xTest, yTest, (args.sparsify==1)) * xTest.shape[0])
                 print LG
 
                 # plt.hist(LG.w, bins=50, normed=1, color='g', alpha=0.75)
@@ -85,7 +90,62 @@ if __name__ == '__main__':
                 print elapsed
                 np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
 
+    print accuracy_df
+    pandas.options.display.float_format = '{:,.6f}'.format
+    print accuracy_df.values
+    print "\n\naccuracy pandas results\n\n"
+    print "mean: ", accuracy_df.mean().values
+    print "std: ", accuracy_df.std().values
+    print "max mean index: ", accuracy_df.mean().idxmax()
+    print "max mean: ", accuracy_df.mean().max()
+    print "max mean std: ", accuracy_df.std().loc[accuracy_df.mean().idxmax()]
+    print("accuracy best parameter %0.6f (+/-%0.06f)"
+                          % (accuracy_df.mean().max(), accuracy_df.std().loc[accuracy_df.mean().idxmax()]))
+    # print "max mean std: ", result_df.loc['Std'].loc[result_df['Mean'].idxmax()]
+    print "best each subsample: \n", accuracy_df.max(axis=1)
+    print "best each subsample index: \n", accuracy_df.idxmax(axis=1)
+    print "mean of each subsample best: ", accuracy_df.max(axis=1).mean()
+    print "std of each subsample best: ", accuracy_df.max(axis=1).std()
+    print("accuracy best subsample %0.6f (+/-%0.06f)"
+                          % (accuracy_df.max(axis=1).mean(), accuracy_df.max(axis=1).std()))
 
+    print auc_df
+    pandas.options.display.float_format = '{:,.6f}'.format
+    print auc_df.values
+    print "\n\nauc pandas results\n\n"
+    print "mean: ", auc_df.mean().values
+    print "std: ", auc_df.std().values
+    print "max mean index: ", auc_df.mean().idxmax()
+    print "max mean: ", auc_df.mean().max()
+    print "max mean std: ", auc_df.std().loc[auc_df.mean().idxmax()]
+    print("auc best parameter %0.6f (+/-%0.06f)"
+                          % (auc_df.mean().max(), auc_df.std().loc[auc_df.mean().idxmax()]))
+    # print "max mean std: ", result_df.loc['Std'].loc[result_df['Mean'].idxmax()]
+    print "best each subsample: \n", auc_df.max(axis=1)
+    print "best each subsample index: \n", auc_df.idxmax(axis=1)
+    print "mean of each subsample best: ", auc_df.max(axis=1).mean()
+    print "std of each subsample best: ", auc_df.max(axis=1).std()
+    print("auc best subsample %0.6f (+/-%0.06f)"
+                          % (auc_df.max(axis=1).mean(), auc_df.max(axis=1).std()))
+
+    print loss_df
+    pandas.options.display.float_format = '{:,.6f}'.format
+    print loss_df.values
+    print "\n\nloss pandas results\n\n"
+    print "mean: ", loss_df.mean().values
+    print "std: ", loss_df.std().values
+    print "min mean index: ", loss_df.mean().idxmin()
+    print "min mean: ", loss_df.mean().min()
+    print "min mean std: ", loss_df.std().loc[loss_df.mean().idxmin()]
+    print("loss best parameter %0.6f (+/-%0.06f)"
+                          % (loss_df.mean().min(), loss_df.std().loc[loss_df.mean().idxmin()]))
+    # print "min mean std: ", result_df.loc['Std'].loc[result_df['Mean'].idxmin()]
+    print "best each subsample: \n", loss_df.min(axis=1)
+    print "best each subsample index: \n", loss_df.idxmin(axis=1)
+    print "mean of each subsample best: ", loss_df.min(axis=1).mean()
+    print "std of each subsample best: ", loss_df.min(axis=1).std()
+    print("loss best subsample %0.6f (+/-%0.06f)"
+                          % (loss_df.min(axis=1).mean(), loss_df.min(axis=1).std()))
     # train_accuracy, test_accuracy = [], []
     # #create logistic regression class
     # reg_lambda, learning_rate, max_iter, eps, batch_size = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000], 0.00001, 5000, 1e-3, 500
