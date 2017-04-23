@@ -1,0 +1,3 @@
+python huber_one_weight_logistic_regression_2.py -datapath data/NUH-LAB-DIAG-DEMOR.pkl -onehot 0 -sparsify 0 -batchsize 100 -wlr 4 -maxiter 140000 | tee -a /data/zhaojing/regularization/log0423/small-data-set/small-data-set-64
+python huber_one_weight_logistic_regression_3.py -datapath data/NUH-LAB-DIAG-DEMOR.pkl -onehot 0 -sparsify 0 -batchsize 100 -wlr 4 -maxiter 140000 | tee -a /data/zhaojing/regularization/log0423/small-data-set/small-data-set-65
+python huber_one_weight_logistic_regression_4.py -datapath data/NUH-LAB-DIAG-DEMOR.pkl -onehot 0 -sparsify 0 -batchsize 100 -wlr 4 -maxiter 140000 | tee -a /data/zhaojing/regularization/log0423/small-data-set/small-data-set-66

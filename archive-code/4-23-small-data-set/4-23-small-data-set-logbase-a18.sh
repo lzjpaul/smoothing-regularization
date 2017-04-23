@@ -1,0 +1,2 @@
+python huber_one_weight_logistic_regression_1.py -datapath data/diabetic_data_diag_low_dim_2_class_categorical.pkl -onehot 1 -sparsify 0 -batchsize 500 -wlr 6 -maxiter 500000 | tee -a /data/zhaojing/regularization/log0423/small-data-set/small-data-set-81
+python huber_one_weight_logistic_regression_2.py -datapath data/diabetic_data_diag_low_dim_2_class_categorical.pkl -onehot 1 -sparsify 0 -batchsize 500 -wlr 6 -maxiter 500000 | tee -a /data/zhaojing/regularization/log0423/small-data-set/small-data-set-82

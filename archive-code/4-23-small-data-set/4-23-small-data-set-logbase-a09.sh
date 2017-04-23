@@ -1,0 +1,2 @@
+python elasticnet_logistic_regression_1.py -datapath data/NUH-DIAG-DEMOR.pkl -onehot 0 -sparsify 0 -batchsize 100 -wlr 4 -maxiter 140000 | tee -a /data/zhaojing/regularization/log0423/small-data-set/small-data-set-41
+python elasticnet_logistic_regression_2.py -datapath data/NUH-DIAG-DEMOR.pkl -onehot 0 -sparsify 0 -batchsize 100 -wlr 4 -maxiter 140000 | tee -a /data/zhaojing/regularization/log0423/small-data-set/small-data-set-42

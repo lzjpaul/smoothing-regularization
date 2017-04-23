@@ -1,0 +1,6 @@
+python logistic_regression.py -datapath data/house-votes-84.pkl -onehot 1 -sparsify 0 -batchsize 20 -wlr 3 -maxiter 50000 | tee -a /data/zhaojing/regularization/log0423/small-data-set/small-data-set-4
+python logistic_regression.py -datapath data/LACE-CNN-1500-lastcase.pkl -onehot 0 -sparsify 0 -batchsize 50 -wlr 4 -maxiter 50000 | tee -a /data/zhaojing/regularization/log0423/small-data-set/small-data-set-10
+python logistic_regression.py -datapath data/NUH-DIAG.pkl -onehot 0 -sparsify 0 -batchsize 100 -wlr 4 -maxiter 140000 | tee -a /data/zhaojing/regularization/log0423/small-data-set/small-data-set-22
+python logistic_regression.py -datapath data/NUH-DIAG-DEMOR.pkl -onehot 0 -sparsify 0 -batchsize 100 -wlr 4 -maxiter 140000 | tee -a /data/zhaojing/regularization/log0423/small-data-set/small-data-set-40
+python logistic_regression.py -datapath data/NUH-LAB-DIAG-DEMOR.pkl -onehot 0 -sparsify 0 -batchsize 100 -wlr 4 -maxiter 140000 | tee -a /data/zhaojing/regularization/log0423/small-data-set/small-data-set-58
+python logistic_regression.py -datapath data/diabetic_data_diag_low_dim_2_class_categorical.pkl -onehot 1 -sparsify 0 -batchsize 500 -wlr 6 -maxiter 500000 | tee -a /data/zhaojing/regularization/log0423/small-data-set/small-data-set-76
