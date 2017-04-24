@@ -49,7 +49,7 @@ def loadData(fileName, onehot=True, sparsify=True):
         X = X[idx]
         Y = Y[idx]
         # return partial X, Y
-        partial_perc = 0.1
+        partial_perc = 0.5
         partialNum = int(partial_perc*X.shape[0])
         print "partialNum: ", partialNum
         return X[:partialNum, ], Y[:partialNum, ]

@@ -27,6 +27,7 @@ if __name__ == '__main__':
     fileName=args.datapath
     labelfile=args.labelpath
     print "labelfile: ", labelfile
+    print "#########!!Attention: only load as int values###########"
     labelCol=(-1 * args.labelcolumn)
 
     dataset = Dataset()
@@ -35,12 +36,14 @@ if __name__ == '__main__':
         data = np.loadtxt(fileName, dtype='int32', delimiter=',')
         X, Y = data[:, xrange(data.shape[1]-1) if labelCol==-1 else xrange(1, data.shape[1])], data[:, labelCol]
         print "X shape in loader: ", X.shape
+        print "#########!!Attention: only load as int values###########"
         #print type(OneHotEncoder().fit_transform(X))
     else:
         #print "label file is not none"
         data = np.loadtxt(fileName, dtype='int32', delimiter=',')
         label = np.loadtxt(labelfile, dtype='int32', delimiter=',')
         print "data shape in loader: ", data.shape
+        print "#########!!Attention: only load as int values###########"
         X = data
         Y = label
     dataset.DataGenerator(X, Y)
@@ -48,10 +51,23 @@ if __name__ == '__main__':
     # save the generated simulator
     with open(args.outputpath, 'w') as saveFile:
         pickle.dump(dataset, saveFile)
-
-# python pickle_transformer.py -datapath /data/zhaojing/regularization/LACE-CNN-1500/nuh_fa_readmission_case_demor_inpa_kb_ordered_output_onehot_lastcase.csv -labelpath /data/zhaojing/regularization/LACE-CNN-1500/nuh_fa_readmission_case_label.csv -outputpath LACE-CNN-1500-lastcase.pkl -labelcolumn 1 -svmlight 0 -onehot 0 -sparsify 0
-# python pickle_transformer.py -datapath /data/zhaojing/regularization/uci-dataset/uci-diabetes-readmission/diag-dim-reduction/diabetic_data_diag_low_dim_diag_3_class_categorical.csv -outputpath diabetic_data_diag_low_dim_diag_3_class_categorical.pkl -labelcolumn 1
-# python pickle_transformer.py -datapath /data/zhaojing/regularization/uci-dataset/uci-diabetes-readmission/diag-dim-reduction/diabetic_data_diag_low_dim_3_class_categorical.csv -outputpath diabetic_data_diag_low_dim_3_class_categorical.pkl -labelcolumn 1 -svmlight 0 -sparsify 0
+'''
+python pickle_transformer.py -datapath /data/zhaojing/regularization/LACE-CNN-1500/nuh_fa_readmission_case_demor_inpa_kb_ordered_output_onehot_lastcase.csv -labelpath /data/zhaojing/regularization/LACE-CNN-1500/nuh_fa_readmission_case_label.csv -outputpath LACE-CNN-1500-lastcase.pkl -labelcolumn 1 -svmlight 0 -onehot 0 -sparsify 0
+python pickle_transformer.py -datapath /data/zhaojing/regularization/uci-dataset/uci-diabetes-readmission/diag-dim-reduction/diabetic_data_diag_low_dim_diag_3_class_categorical.csv -outputpath diabetic_data_diag_low_dim_diag_3_class_categorical.pkl -labelcolumn 1
+python pickle_transformer.py -datapath /data/zhaojing/regularization/uci-dataset/uci-diabetes-readmission/diag-dim-reduction/diabetic_data_diag_low_dim_3_class_categorical.csv -outputpath diabetic_data_diag_low_dim_3_class_categorical.pkl -labelcolumn 1 -svmlight 0 -sparsify 0
+python pickle_transformer.py -datapath /data/zhaojing/regularization/intersect/NUH_DS_SOC_READMISSION_CASE_DIAG_LAB_ENGI_SUB_idxcase_DIAG_INTERSECT.txt -labelpath /data/zhaojing/regularization/intersect/NUH_DS_SOC_READMISSION_CASE_LAB_idxcase_label_INTERSECT.txt -outputpath data/NUH-DIAG.pkl -labelcolumn 1
+labelfile:  /data/zhaojing/regularization/intersect/NUH_DS_SOC_READMISSION_CASE_LAB_idxcase_label_INTERSECT.txt
+data shape in loader:  (7237, 527)
+[singa@logbase smoothing-regularization]$ python pickle_transformer.py -datapath /data/zhaojing/regularization/intersect/concat/check-regularization/NUH_DS_SOC_READMISSION_CASE_DIAG_LAB_ENGI_SUB_idxcase_DIAG_demor_onehot_INTERSECT.txt -labelpath /data/zhaojing/regularization/intersect/NUH_DS_SOC_READMISSION_CASE_LAB_idxcase_label_INTERSECT.txt -outputpath data/NUH-DIAG-DEMOR.pkl -labelcolumn 1
+labelfile:  /data/zhaojing/regularization/intersect/NUH_DS_SOC_READMISSION_CASE_LAB_idxcase_label_INTERSECT.txt
+data shape in loader:  (7237, 564)
+[singa@logbase smoothing-regularization]$ python pickle_transformer.py -datapath /data/zhaojing/regularization/intersect/concat/check-regularization/NUH_DS_SOC_READMISSION_CASE_DIAG_LAB_ENGI_SUB_idxcase_first_and_last_DIAG_demor_onehot_INTERSECT.txt -labelpath /data/zhaojing/regularization/intersect/NUH_DS_SOC_READMISSION_CASE_LAB_idxcase_label_INTERSECT.txt -outputpath data/NUH-LAB-DIAG-DEMOR.pkl -labelcolumn 1
+labelfile:  /data/zhaojing/regularization/intersect/NUH_DS_SOC_READMISSION_CASE_LAB_idxcase_label_INTERSECT.txt
+data shape in loader:  (7237, 820)
+[singa@logbase smoothing-regularization]$ python pickle_transformer.py -datapath /data/zhaojing/regularization/uci-dataset/congression/house-votes-84.categorical.data -outputpath data/house-votes-84.pkl -labelcolumn 0
+labelfile:  None
+X shape in loader:  (435, 16)
+'''
 '''
 generated results see generated_y_vals.dta
 simulator file saved in simulator.pkl
