@@ -1,0 +1,2 @@
+python huber_one_weight_logistic_regression_svm_3.py -datapath /data/zhaojing/regularization/webspam/webspam_train_50000.svm -onehot 0 -sparsify 1 -batchsize 500 -wlr 5 -maxiter 9000 | tee -a /data/zhaojing/regularization/log0424/webspam/webspam-10
+python huber_one_weight_logistic_regression_svm_4.py -datapath /data/zhaojing/regularization/webspam/webspam_train_50000.svm -onehot 0 -sparsify 1 -batchsize 500 -wlr 5 -maxiter 9000 | tee -a /data/zhaojing/regularization/log0424/webspam/webspam-11
