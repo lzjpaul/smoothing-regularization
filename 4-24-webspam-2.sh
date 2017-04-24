@@ -1,0 +1,3 @@
+python elasticnet_logistic_regression_svm_1.py -datapath /data0/zhaojing/regularization/webspam/webspam_train_50000.svm -onehot 0 -sparsify 1 -batchsize 500 -wlr 5 -maxiter 9000 | tee -a /data0/zhaojing/regularization/log0424/webspam/webspam-3
+python elasticnet_logistic_regression_svm_2.py -datapath /data0/zhaojing/regularization/webspam/webspam_train_50000.svm -onehot 0 -sparsify 1 -batchsize 500 -wlr 5 -maxiter 9000 | tee -a /data0/zhaojing/regularization/log0424/webspam/webspam-4
+python elasticnet_logistic_regression_svm_3.py -datapath /data0/zhaojing/regularization/webspam/webspam_train_50000.svm -onehot 0 -sparsify 1 -batchsize 500 -wlr 5 -maxiter 9000 | tee -a /data0/zhaojing/regularization/log0424/webspam/webspam-5
