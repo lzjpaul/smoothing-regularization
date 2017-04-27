@@ -1,0 +1,1 @@
+python huber_one_weight_logistic_regression_2.py -datapath /data/zhaojing/regularization/uci-dataset/medium_size/Gisette/gisette_train_valid.svm -onehot 0 -sparsify 1 -batchsize 300 -wlr 5 -maxiter 250000 | tee -a /data/zhaojing/regularization/log0425/medium-size/medium-size-38
