@@ -62,6 +62,9 @@ if __name__ == '__main__':
     auc_df = pandas.DataFrame()
     loss_df = pandas.DataFrame()
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
+        if i > 0:
+            break
+        print "subsample i: ", i
         reg_mu = [1e-4, 1e-3, 1e-2, 1e-1, 1., 10., 100., 1000.]
         reg_lambda = [1e-4, 1e-3, 1e-2, 1e-1, 1., 10., 100., 1000.]
         for mu_val in reg_mu:

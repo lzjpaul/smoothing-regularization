@@ -28,9 +28,9 @@ class Logistic_Regression(object):
         print "self.eps, self.batch_size, self.validation_perc: ", self.eps, self.batch_size, self.validation_perc
 
     def w_lr(self, epoch):
-        if epoch < 100:
+        if epoch < 300:
             return self.learning_rate
-        elif epoch < 150:
+        elif epoch < 450:
             return self.learning_rate / float(10)
         else:
             return self.learning_rate / float(100)
@@ -218,6 +218,9 @@ if __name__ == '__main__':
     auc_df = pandas.DataFrame()
     loss_df = pandas.DataFrame()
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
+        if i > 0:
+            break
+        print "subsample i: ", i
         reg_lambda = [1e-4, 1e-3, 1e-2, 1e-1, 1., 10., 100., 1000.]
         for reg in reg_lambda:
             start = time.time()
