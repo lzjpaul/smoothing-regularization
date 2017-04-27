@@ -44,17 +44,17 @@ class GM_Logistic_Regression(Logistic_Regression):
         print "init self.pi_r_learning_rate, self.reg_lambda_s_learning_rate: ", self.pi_r_learning_rate, self.reg_lambda_s_learning_rate
 
     def pi_r_lr(self, epoch):
-        if epoch < 100:
+        if epoch < 300:
             return self.pi_r_learning_rate
-        elif epoch < 150:
+        elif epoch < 450:
             return self.pi_r_learning_rate / float(10)
         else:
             return self.pi_r_learning_rate / float(100)
 
     def reg_lambda_s_lr(self, epoch):
-        if epoch < 100:
+        if epoch < 300:
             return self.reg_lambda_s_learning_rate
-        elif epoch < 150:
+        elif epoch < 450:
             return self.reg_lambda_s_learning_rate / float(10)
         else:
             return self.reg_lambda_s_learning_rate / float(100)
@@ -111,7 +111,7 @@ class GM_Logistic_Regression(Logistic_Regression):
         delta_pi_k_j_mat = np.array([[(int(j==k)*self.pi[0,j] - self.pi[0,j] *self.pi[0,k]) for j in range(self.gm_num)] for k in range(self.gm_num)])
         delta_pi_r = np.matmul(delta_pi, delta_pi_k_j_mat)
         self.pi_r -= (iter_num - self.gm_prior_u) * self.pi_r_lr(epoch_num) * delta_pi_r
-        if iter_num % 100 == 0:
+        if iter_num % 100 == 0 or iter_num < 100:
             print "self.pi_r      , self.pi_r norm:       ", self.pi_r, np.linalg.norm(self.pi_r)
             print "lr * delta_pi_r, lr * delta_pi_r norm: ", (self.pi_r_lr(epoch_num) * delta_pi_r), np.linalg.norm(self.pi_r_lr(epoch_num) * delta_pi_r)
             print "\n"
@@ -124,7 +124,9 @@ class GM_Logistic_Regression(Logistic_Regression):
     def update_GM_Prior_EM(self, epoch_num, iter_num):
         # update pi
         self.reg_lambda = (2 * (self.a - 1) + np.sum(self.responsibility, axis=0)) / (2 * self.b + np.sum(self.responsibility * np.square(self.w[:-1]), axis=0))
-
+        if iter_num % 100 == 0 or iter_num < 100:
+            print "np.sum(self.responsibility, axis=0): ", np.sum(self.responsibility, axis=0)
+            print "np.sum(self.responsibility * np.square(self.w[:-1]), axis=0): ", np.sum(self.responsibility * np.square(self.w[:-1]), axis=0)
         # update reg_lambda
         self.pi = (np.sum(self.responsibility, axis=0) + self.alpha - 1) / (self.featureNum + self.gm_num * (self.alpha - 1))
 
@@ -181,10 +183,16 @@ if __name__ == '__main__':
     auc_df = pandas.DataFrame()
     loss_df = pandas.DataFrame()
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
-        a, b, alpha = [2., 5., 10., 30., 50., 100., 500., 1000.], [1e-3, 0.05, 1., 5., 10., 50., 100., 1000.], [int(np.sqrt(x.shape[1]))]
+        if i > 0:
+            break
+        print "subsample i: ", i
+        fea_num = x.shape[1]
+        b, alpha = [(fea_num * 10000.), (fea_num * 1000.), (fea_num * 100.), (fea_num * 10.), (fea_num * 1.), (fea_num * 1e-1), (fea_num * 1e-2), (fea_num * 1e-3)], \
+                   [fea_num**(0.9), fea_num**(0.7), fea_num**(0.5), fea_num**(0.3)]
         for alpha_val in alpha:
-            for a_val in a:
-                for b_val in b:
+            for b_val in b:
+                a = [(1. + b_val * 1e-1), (1. + b_val * 1e-2), (1. + b_val * 1e-3)]
+                for a_val in a:
                     start = time.time()
                     st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
                     print st
