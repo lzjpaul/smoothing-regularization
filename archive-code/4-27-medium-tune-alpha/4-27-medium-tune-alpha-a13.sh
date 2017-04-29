@@ -1,0 +1,1 @@
+python gm_prior_logistic_regression_sparse_alpha_4_b_2.py -datapath /data/zhaojing/regularization/uci-dataset/medium_size/Farm_Ads/farm-ads-vect -onehot 0 -sparsify 1 -batchsize 200 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 250000 -gmmuptfreq 50 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0427/medium-tune-alpha/medium-tune-alpha-8

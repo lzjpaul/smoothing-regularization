@@ -1,0 +1,1 @@
+python gm_prior_logistic_regression_sparse_alpha_1_b_1.py -datapath /data/zhaojing/regularization/uci-dataset/medium_size/Gisette/gisette_train_valid.svm -onehot 0 -sparsify 1 -batchsize 300 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 250000 -gmmuptfreq 50 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0427/medium-tune-alpha/medium-tune-alpha-17
