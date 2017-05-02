@@ -33,20 +33,22 @@ class GM_Logistic_Regression(Logistic_Regression):
         print "init self.pi_r_learning_rate, self.reg_lambda_s_learning_rate: ", self.pi_r_learning_rate, self.reg_lambda_s_learning_rate
 
     def pi_r_lr(self, epoch):
-        if epoch < 300:
-            return self.pi_r_learning_rate
-        elif epoch < 450:
-            return self.pi_r_learning_rate / float(10)
-        else:
-            return self.pi_r_learning_rate / float(100)
+        #if epoch < 1000:
+        #    return self.pi_r_learning_rate
+        #elif epoch < 1500:
+        #    return self.pi_r_learning_rate / float(10)
+        #else:
+        #    return self.pi_r_learning_rate / float(100)
+        return self.pi_r_learning_rate
 
     def reg_lambda_s_lr(self, epoch):
-        if epoch < 300:
-            return self.reg_lambda_s_learning_rate
-        elif epoch < 450:
-            return self.reg_lambda_s_learning_rate / float(10)
-        else:
-            return self.reg_lambda_s_learning_rate / float(100)
+        #if epoch < 1000:
+        #    return self.reg_lambda_s_learning_rate
+        #elif epoch < 1500:
+        #    return self.reg_lambda_s_learning_rate / float(10)
+        #else:
+        #    return self.reg_lambda_s_learning_rate / float(100)
+        return self.reg_lambda_s_learning_rate
 
 
     # calc the delta w to update w, using gm_prior_sgd here, update pi, reg_lambda here

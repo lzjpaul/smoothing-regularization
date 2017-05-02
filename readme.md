@@ -106,3 +106,10 @@ subsamples
 
 4-24
 svm.py: only run 1 time and then break
+
+4-25
+learning rate: 300 epochs change a magnitude
+grid for gmm prior
+
+5-2
+learning scheme (fixed first)

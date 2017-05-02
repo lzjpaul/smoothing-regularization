@@ -28,12 +28,10 @@ class Logistic_Regression(object):
         print "self.eps, self.batch_size, self.validation_perc: ", self.eps, self.batch_size, self.validation_perc
 
     def w_lr(self, epoch):
-        if epoch < 300:
-            return self.learning_rate
-        elif epoch < 450:
-            return self.learning_rate / float(10)
-        else:
-            return self.learning_rate / float(100)
+        #lr_decay = 0.01
+        #lr_decay_epoch = 20
+        #return self.learning_rate * np.power((1-lr_decay),epoch/float(lr_decay_epoch))
+        return self.learning_rate
 
     def likelihood_grad(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         xTrain, yTrain = xTrain[index : (index + self.batch_size)], yTrain[index : (index + self.batch_size)]
