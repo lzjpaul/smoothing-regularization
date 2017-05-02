@@ -48,6 +48,7 @@ if __name__ == '__main__':
 
     # load the permutated data
     x, y = loadData(args.datapath, onehot=(args.onehot==1), sparsify=(args.sparsify==1))
+    print "x shape: ", x.shape
     n_folds = 5
     accuracy_df = pandas.DataFrame()
     auc_df = pandas.DataFrame()

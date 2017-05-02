@@ -27,23 +27,24 @@ if __name__ == '__main__':
     fileName=args.datapath
     labelfile=args.labelpath
     print "labelfile: ", labelfile
-    print "#########!!Attention: only load as int values###########"
+    print "#########!!Attention: only load as float values###########"
     labelCol=(-1 * args.labelcolumn)
 
     dataset = Dataset()
     if labelfile is None:
         #print "label file is none"
-        data = np.loadtxt(fileName, dtype='int32', delimiter=',')
+        data = np.loadtxt(fileName, dtype='float64', delimiter=',')
         X, Y = data[:, xrange(data.shape[1]-1) if labelCol==-1 else xrange(1, data.shape[1])], data[:, labelCol]
+        Y = Y.astype(int)
         print "X shape in loader: ", X.shape
-        print "#########!!Attention: only load as int values###########"
+        print "#########!!Attention: load as float values###########"
         #print type(OneHotEncoder().fit_transform(X))
     else:
         #print "label file is not none"
-        data = np.loadtxt(fileName, dtype='int32', delimiter=',')
+        data = np.loadtxt(fileName, dtype='float64', delimiter=',')
         label = np.loadtxt(labelfile, dtype='int32', delimiter=',')
         print "data shape in loader: ", data.shape
-        print "#########!!Attention: only load as int values###########"
+        print "#########!!Attention: only load as float values###########"
         X = data
         Y = label
     dataset.DataGenerator(X, Y)
@@ -64,7 +65,7 @@ data shape in loader:  (7237, 564)
 [singa@logbase smoothing-regularization]$ python pickle_transformer.py -datapath /data/zhaojing/regularization/intersect/concat/check-regularization/NUH_DS_SOC_READMISSION_CASE_DIAG_LAB_ENGI_SUB_idxcase_first_and_last_DIAG_demor_onehot_INTERSECT.txt -labelpath /data/zhaojing/regularization/intersect/NUH_DS_SOC_READMISSION_CASE_LAB_idxcase_label_INTERSECT.txt -outputpath data/NUH-LAB-DIAG-DEMOR.pkl -labelcolumn 1
 labelfile:  /data/zhaojing/regularization/intersect/NUH_DS_SOC_READMISSION_CASE_LAB_idxcase_label_INTERSECT.txt
 data shape in loader:  (7237, 820)
-[singa@logbase smoothing-regularization]$ python pickle_transformer.py -datapath /data/zhaojing/regularization/uci-dataset/congression/house-votes-84.categorical.data -outputpath data/house-votes-84.pkl -labelcolumn 0
+python pickle_transformer.py -datapath /data/zhaojing/regularization/uci-dataset/congression/house-votes-84.categorical.data -outputpath data/house-votes-84.pkl -labelcolumn 0
 labelfile:  None
 X shape in loader:  (435, 16)
 '''

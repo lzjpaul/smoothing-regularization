@@ -30,7 +30,7 @@ def loadData(fileName, onehot=True, sparsify=True):
         Y = Y[idx]
         # return X, Y
         if onehot:
-            return (OneHotEncoder().fit_transform(X, ), Y) if sparsify==True else (OneHotEncoder().fit_transform(X, ).toarray(), Y)
+            return (OneHotEncoder().fit_transform(X.astype(int), ), Y) if sparsify==True else (OneHotEncoder().fit_transform(X.astype(int), ).toarray(), Y)
         else:
             return (sparse.csr_matrix(X), Y) if sparsify==True else (X, Y)
     else:
