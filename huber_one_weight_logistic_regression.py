@@ -31,6 +31,9 @@ class Huber_One_Weight_Logistic_Regression(Logistic_Regression):
         threshold = (self.reg_mu)/(self.reg_lambda*2.0)
         reg_grad_w = np.piecewise(w_array, [np.absolute(w_array) < threshold, np.absolute(w_array) >= threshold], \
                                   [lambda w_array: 2*self.reg_lambda*w_array, lambda w_array: self.reg_mu*np.sign(w_array)]).reshape((-1, 1))
+        if iter_num < 100 or iter_num % 100 ==0:
+            print "grad_w norm: ", np.linalg.norm(grad_w)
+            print "reg_grad_w norm: ", np.linalg.norm(reg_grad_w)
         reg_grad_w[-1, 0] = 0.0 # bias
         grad_w += reg_grad_w
         return -grad_w

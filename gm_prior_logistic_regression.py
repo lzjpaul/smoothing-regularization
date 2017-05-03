@@ -57,6 +57,9 @@ class GM_Logistic_Regression(Logistic_Regression):
         # gaussian mixture reg term grad
         self.calcResponsibility()
         reg_grad_w = np.sum(self.responsibility*self.reg_lambda, axis=1).reshape(self.w[:-1].shape) * self.w[:-1]
+        if iter_num < 100 or iter_num % 100 ==0:
+            print "grad_w norm: ", np.linalg.norm(grad_w)
+            print "reg_grad_w norm: ", np.linalg.norm(reg_grad_w)
         grad_w += np.vstack((reg_grad_w, np.array([0.0])))
 
         # update gm prior: pi, reg_lambda

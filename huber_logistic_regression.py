@@ -28,6 +28,9 @@ class Huber_Logistic_Regression(Logistic_Regression):
     def delta_w1(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         grad_w1 = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
         reg_grad_w1 = self.reg_mu * np.sign(self.w1)
+        if iter_num < 100 or iter_num % 100 ==0:
+            print "grad_w1 norm: ", np.linalg.norm(grad_w1)
+            print "reg_grad_w1 norm: ", np.linalg.norm(reg_grad_w1)
         reg_grad_w1[-1, 0] = 0.0 # bias
         grad_w1 += reg_grad_w1
         return -grad_w1
@@ -36,6 +39,9 @@ class Huber_Logistic_Regression(Logistic_Regression):
     def delta_w2(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         grad_w2 = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
         reg_grad_w2 = self.reg_lambda * self.w2
+        if iter_num < 100 or iter_num % 100 ==0:
+            print "grad_w2 norm: ", np.linalg.norm(grad_w2)
+            print "reg_grad_w2 norm: ", np.linalg.norm(reg_grad_w2)
         reg_grad_w2[-1, 0] = 0.0 # bias
         grad_w2 += reg_grad_w2
         return -grad_w2

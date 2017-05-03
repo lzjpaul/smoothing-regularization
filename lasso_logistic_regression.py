@@ -27,6 +27,9 @@ class Lasso_Logistic_Regression(Logistic_Regression):
     def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         grad_w = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
         reg_grad_w = self.reg_lambda * np.sign(self.w)
+        if iter_num < 100 or iter_num % 100 ==0:
+            print "grad_w norm: ", np.linalg.norm(grad_w)
+            print "reg_grad_w norm: ", np.linalg.norm(reg_grad_w)
         reg_grad_w[-1, 0] = 0.0 # bias
         grad_w += reg_grad_w
         return -grad_w

@@ -75,6 +75,9 @@ class GM_Logistic_Regression(Logistic_Regression):
                               * update_w * (iter_num - self.u[update_w_idx]).reshape(update_w.shape)
         reg_grad_w = np.zeros((self.featureNum+1, 1))
         reg_grad_w[update_w_idx] = reg_grad_update_w
+        if iter_num < 100 or iter_num % 100 ==0:
+            print "grad_w norm: ", np.linalg.norm(grad_w)
+            print "reg_grad_w norm: ", np.linalg.norm(reg_grad_w)
         grad_w += reg_grad_w
         self.u[update_w_idx] = np.full((update_w_idx.shape[0]), iter_num, dtype=int)
 
