@@ -1,0 +1,1 @@
+python gm_prior_logistic_regression_NUH_1500_5_fold.py -datapath data/LACE-CNN-1500-lastcase.pkl -onehot 0 -sparsify 0 -batchsize 50 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0508/fine-tune-small/fine-tune-small-5

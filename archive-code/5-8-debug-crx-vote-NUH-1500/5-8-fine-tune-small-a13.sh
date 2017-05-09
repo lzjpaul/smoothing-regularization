@@ -1,0 +1,1 @@
+python huber_one_weight_logistic_regression_5_fold.py -datapath data/house-votes-84-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -maxiter 120000 | tee -a /data/zhaojing/regularization/log0508/fine-tune-small/fine-tune-small-14
