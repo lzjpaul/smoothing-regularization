@@ -1,0 +1,1 @@
+python huber_one_weight_logistic_regression_5_fold.py -datapath data/diabetic_data_diag_low_dim_2_class_categorical.pkl -onehot 1 -sparsify 0 -batchsize 500 -wlr 6 -maxiter 120000 | tee -a /data/zhaojing/regularization/log0514/fine-tune-five/fine-tune-five-24

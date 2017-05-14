@@ -1,0 +1,1 @@
+python gm_prior_logistic_regression_tune_small_data_5_fold_2.py -datapath data/crx_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 360000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0510/fine-tune-small-four/fine-tune-small-four-12
