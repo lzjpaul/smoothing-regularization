@@ -1,0 +1,4 @@
+python lasso_logistic_regression_5_fold.py -datapath data/ionosphere_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -maxiter 120000 | tee -a /data/zhaojing/regularization/log0509/fine-tune-small-two/fine-tune-small-two-67
+python logistic_regression_5_fold.py -datapath data/ionosphere_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -maxiter 120000 | tee -a /data/zhaojing/regularization/log0509/fine-tune-small-two/fine-tune-small-two-68
+python elasticnet_logistic_regression_5_fold.py -datapath data/ionosphere_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -maxiter 120000 | tee -a /data/zhaojing/regularization/log0509/fine-tune-small-two/fine-tune-small-two-69
+python huber_one_weight_logistic_regression_5_fold.py -datapath data/ionosphere_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -maxiter 120000 | tee -a /data/zhaojing/regularization/log0509/fine-tune-small-two/fine-tune-small-two-70
