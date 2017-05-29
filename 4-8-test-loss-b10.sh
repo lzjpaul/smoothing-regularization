@@ -1,2 +1,0 @@
-python gm_prior_logistic_regression.py -datapath data/diabetic_data_diag_low_dim_2_class_categorical.pkl -onehot 1 -sparsify 0 -batchsize 500 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 1000000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0408/test-loss/test-loss-14
-python gm_prior_logistic_regression.py -datapath data/diabetic_data_diag_low_dim_2_class_categorical.pkl -onehot 1 -sparsify 0 -batchsize 500 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 1000000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0408/test-loss/test-loss-14

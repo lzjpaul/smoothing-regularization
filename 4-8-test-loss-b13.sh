@@ -1,2 +1,0 @@
-python elasticnet_logistic_regression.py -datapath data/diabetic_data_diag_low_dim_2_class_categorical.pkl -onehot 1 -sparsify 0 -batchsize 500 -wlr 4 -maxiter 300000 | tee -a /data/zhaojing/regularization/log0408/test-loss/test-loss-17
-python elasticnet_logistic_regression.py -datapath data/diabetic_data_diag_low_dim_2_class_categorical.pkl -onehot 1 -sparsify 0 -batchsize 500 -wlr 4 -maxiter 300000 | tee -a /data/zhaojing/regularization/log0408/test-loss/test-loss-17

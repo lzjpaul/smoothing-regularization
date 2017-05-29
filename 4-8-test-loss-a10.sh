@@ -1,2 +1,0 @@
-python elasticnet_logistic_regression.py -datapath data/LACE-CNN-1500-lastcase.pkl -onehot 0 -sparsify 0 -batchsize 50 -wlr 4 -maxiter 30000 | tee -a /data/zhaojing/regularization/log0408/test-loss/test-loss-5
-python elasticnet_logistic_regression.py -datapath data/LACE-CNN-1500-lastcase.pkl -onehot 0 -sparsify 0 -batchsize 50 -wlr 4 -maxiter 30000 | tee -a /data/zhaojing/regularization/log0408/test-loss/test-loss-5

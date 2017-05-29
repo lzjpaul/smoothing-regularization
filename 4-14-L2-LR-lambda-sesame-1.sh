@@ -1,1 +1,0 @@
-python logistic_regression_URL_L2_1.py -datapath /data/zhaojing/regularization/url-dataset/url_svmlight_merge/Day_0_120.svm -onehot 0 -sparsify 1 -batchsize 500 -wlr 6 -maxiter 50000 | tee -a /data/zhaojing/regularization/log0414/L2-LR-lambda/L2-LR-lambda-1.log

@@ -1,1 +1,0 @@
-python huber_one_weight_logistic_regression_1.py -datapath /data/zhaojing/regularization/url-dataset/url_svmlight_merge/Day_0_120.svm -onehot 0 -sparsify 1 -batchsize 500 -wlr 6 -maxiter 50000 | tee -a /data/zhaojing/regularization/log0419/L2-lambda-huber-one-weight/L2-lambda-huber-one-weight-5.log
