@@ -1,0 +1,1 @@
+python gm_prior_logistic_regression_tune_small_data_5_fold_2_2.py -datapath data/LACE-CNN-1500-severity-lastcase.pkl -onehot 0 -sparsify 0 -batchsize 50 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 150000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0625/NUH-CNN-severity/NUH-CNN-severity-4.log
