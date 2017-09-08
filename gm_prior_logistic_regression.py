@@ -156,15 +156,17 @@ if __name__ == '__main__':
     auc_df = pandas.DataFrame()
     loss_df = pandas.DataFrame()
     for i, (train_index, test_index) in enumerate(StratifiedKFold(y.reshape(y.shape[0]), n_folds=n_folds)):
-        if i > 0:
-            break
+        # if i > 0:
+        #     break
         print "subsample i: ", i
         fea_num = x.shape[1]
-        b, alpha = [(fea_num * 10000.), (fea_num * 1000.), (fea_num * 100.), (fea_num * 10.), (fea_num * 1.), (fea_num * 1e-1), (fea_num * 1e-2), (fea_num * 1e-3)], \
+        b, alpha = [(fea_num * 0.0001), (fea_num * 0.0002), (fea_num * 0.0005), (fea_num * 0.001), (fea_num * 0.002), (fea_num * 0.005), (fea_num * 0.01),\
+                    (fea_num * 0.02), (fea_num * 0.05), (fea_num * 0.1), (fea_num * 0.2), (fea_num * 0.5), (fea_num * 1.), (fea_num * 2.), (fea_num * 5.),\
+                    (fea_num * 10.)],\
                    [fea_num**(0.9), fea_num**(0.7), fea_num**(0.5), fea_num**(0.3)]
         for alpha_val in alpha:
             for b_val in b:
-                a = [(1. + b_val * 1e-1), (1. + b_val * 1e-2), (1. + b_val * 1e-3)]
+                a = [(1. + b_val * 1e-1), (1. + b_val * 1e-2)]
                 for a_val in a:
                     start = time.time()
                     st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
