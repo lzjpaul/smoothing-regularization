@@ -1,0 +1,93 @@
+#5-8:  LR not decreasing + converge + LR is 1e-2 scale, bigger L2 (vote 84 is smaller LR: 1e-3 scale)
+#5-8 yes
+python gm_prior_logistic_regression.py -datapath data/LACE-CNN-1500-lastcase.pkl -onehot 0 -sparsify 0 -batchsize 50 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-1.log
+python gm_prior_logistic_regression_origin_hyper_scale.py -datapath data/LACE-CNN-1500-lastcase.pkl -onehot 0 -sparsify 0 -batchsize 50 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-2.log
+python gm_prior_logistic_regression_2_time_lambda.py -datapath data/LACE-CNN-1500-lastcase.pkl -onehot 0 -sparsify 0 -batchsize 50 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-3.log
+python gm_prior_logistic_regression_2_time_lambda_origin_hyper_scale.py -datapath data/LACE-CNN-1500-lastcase.pkl -onehot 0 -sparsify 0 -batchsize 50 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-4.log
+
+#5-8 yes
+python gm_prior_logistic_regression.py -datapath data/crx_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-5.log
+python gm_prior_logistic_regression_origin_hyper_scale.py -datapath data/crx_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-6.log
+python gm_prior_logistic_regression_2_time_lambda.py -datapath data/crx_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-7.log
+python gm_prior_logistic_regression_2_time_lambda_origin_hyper_scale.py -datapath data/crx_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-8.log
+
+#5-8 yes
+python gm_prior_logistic_regression.py -datapath data/house-votes-84-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-9.log
+python gm_prior_logistic_regression_origin_hyper_scale.py -datapath data/house-votes-84-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-10.log
+python gm_prior_logistic_regression_2_time_lambda.py -datapath data/house-votes-84-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-11.log
+python gm_prior_logistic_regression_2_time_lambda_origin_hyper_scale.py -datapath data/house-votes-84-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-12.log
+
+#5-9:  LR is 1e-3 scale, smaller L2
+#5-9 yes
+python gm_prior_logistic_regression.py -datapath data/breast-cancer-wisconsin-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-13.log
+python gm_prior_logistic_regression_origin_hyper_scale.py -datapath data/breast-cancer-wisconsin-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-14.log
+python gm_prior_logistic_regression_2_time_lambda.py -datapath data/breast-cancer-wisconsin-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-15.log
+python gm_prior_logistic_regression_2_time_lambda_origin_hyper_scale.py -datapath data/breast-cancer-wisconsin-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-16.log
+
+#5-9 yes
+python gm_prior_logistic_regression.py -datapath data/wdbc_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-17.log
+python gm_prior_logistic_regression_origin_hyper_scale.py -datapath data/wdbc_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-18.log
+python gm_prior_logistic_regression_2_time_lambda.py -datapath data/wdbc_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-19.log
+python gm_prior_logistic_regression_2_time_lambda_origin_hyper_scale.py -datapath data/wdbc_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-20.log
+
+#5-9 yes
+python gm_prior_logistic_regression.py -datapath data/wpbc_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-21.log
+python gm_prior_logistic_regression_origin_hyper_scale.py -datapath data/wpbc_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-22.log
+python gm_prior_logistic_regression_2_time_lambda.py -datapath data/wpbc_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-23.log
+python gm_prior_logistic_regression_2_time_lambda_origin_hyper_scale.py -datapath data/wpbc_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-24.log
+
+#5-9 yes
+python gm_prior_logistic_regression.py -datapath data/pop_failures_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-25.log
+python gm_prior_logistic_regression_origin_hyper_scale.py -datapath data/pop_failures_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-26.log
+python gm_prior_logistic_regression_2_time_lambda.py -datapath data/pop_failures_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-27.log
+python gm_prior_logistic_regression_2_time_lambda_origin_hyper_scale.py -datapath data/pop_failures_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-28.log
+
+#5-9 yes
+python gm_prior_logistic_regression.py -datapath data/sonar-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-29.log
+python gm_prior_logistic_regression_origin_hyper_scale.py -datapath data/sonar-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-30.log
+python gm_prior_logistic_regression_2_time_lambda.py -datapath data/sonar-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-31.log
+python gm_prior_logistic_regression_2_time_lambda_origin_hyper_scale.py -datapath data/sonar-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-32.log
+
+#5-10 iter = 36000
+python gm_prior_logistic_regression.py -datapath data/bands_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 360000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-33.log
+python gm_prior_logistic_regression_origin_hyper_scale.py -datapath data/bands_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 360000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-34.log
+python gm_prior_logistic_regression_2_time_lambda.py -datapath data/bands_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 360000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-35.log
+python gm_prior_logistic_regression_2_time_lambda_origin_hyper_scale.py -datapath data/bands_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 360000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-36.log
+
+#5-9 try
+python gm_prior_logistic_regression.py -datapath data/bands_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-37.log
+python gm_prior_logistic_regression_origin_hyper_scale.py -datapath data/bands_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-38.log
+python gm_prior_logistic_regression_2_time_lambda.py -datapath data/bands_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-39.log
+python gm_prior_logistic_regression_2_time_lambda_origin_hyper_scale.py -datapath data/bands_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-40.log
+
+#5-9 yes
+python gm_prior_logistic_regression.py -datapath data/glass_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-41.log
+python gm_prior_logistic_regression_origin_hyper_scale.py -datapath data/glass_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-42.log
+python gm_prior_logistic_regression_2_time_lambda.py -datapath data/glass_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-43.log
+python gm_prior_logistic_regression_2_time_lambda_origin_hyper_scale.py -datapath data/glass_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-44.log
+
+#5-9 yes
+python gm_prior_logistic_regression.py -datapath data/hepatitis_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-45.log
+python gm_prior_logistic_regression_origin_hyper_scale.py -datapath data/hepatitis_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-46.log
+python gm_prior_logistic_regression_2_time_lambda.py -datapath data/hepatitis_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-47.log
+python gm_prior_logistic_regression_2_time_lambda_origin_hyper_scale.py -datapath data/hepatitis_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-48.log
+
+#5-9 yes
+python gm_prior_logistic_regression.py -datapath data/horse-colic-train-test-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-49.log
+python gm_prior_logistic_regression_origin_hyper_scale.py -datapath data/horse-colic-train-test-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-50.log
+python gm_prior_logistic_regression_2_time_lambda.py -datapath data/horse-colic-train-test-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-51.log
+python gm_prior_logistic_regression_2_time_lambda_origin_hyper_scale.py -datapath data/horse-colic-train-test-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-52.log
+
+#5-9 yes
+python gm_prior_logistic_regression.py -datapath data/ionosphere_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-53.log
+python gm_prior_logistic_regression_origin_hyper_scale.py -datapath data/ionosphere_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-54.log
+python gm_prior_logistic_regression_2_time_lambda.py -datapath data/ionosphere_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-55.log
+python gm_prior_logistic_regression_2_time_lambda_origin_hyper_scale.py -datapath data/ionosphere_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-56.log
+
+python gm_prior_logistic_regression.py -datapath data/simulator.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 300000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-57.log
+python gm_prior_logistic_regression_origin_hyper_scale.py -datapath data/simulator.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 300000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-58.log
+python gm_prior_logistic_regression_2_time_lambda.py -datapath data/simulator.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 300000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-59.log
+python gm_prior_logistic_regression_2_time_lambda_origin_hyper_scale.py -datapath data/simulator.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 300000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-60.log
+
+
+python huber_one_weight_logistic_regression.py -datapath data/simulator.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 5 -maxiter 300000 | tee -a /data/zhaojing/regularization/log0908/9-8-fine-tune-small-six/9-8-fine-tune-small-six-61.log
