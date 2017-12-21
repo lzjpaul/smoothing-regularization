@@ -1,0 +1,1 @@
+python gm_prior_logistic_regression_CV.py -datapath data/pop_failures_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -pirlr 4 -lambdaslr 4 -maxiter 120000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log1007/regularization-CV/regularization-CV-35.log

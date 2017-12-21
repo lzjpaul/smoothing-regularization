@@ -1,0 +1,4 @@
+python lasso_logistic_regression_CV.py -datapath data/house-votes-84-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -maxiter 120000 | tee -a /data/zhaojing/regularization/log1007/regularization-CV/regularization-CV-11.log
+python logistic_regression_CV.py -datapath data/house-votes-84-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -maxiter 120000 | tee -a /data/zhaojing/regularization/log1007/regularization-CV/regularization-CV-12.log
+python elasticnet_logistic_regression_CV.py -datapath data/house-votes-84-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -maxiter 120000 | tee -a /data/zhaojing/regularization/log1007/regularization-CV/regularization-CV-13.log
+python huber_one_weight_logistic_regression_CV.py -datapath data/house-votes-84-normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 4 -maxiter 120000 | tee -a /data/zhaojing/regularization/log1007/regularization-CV/regularization-CV-14.log

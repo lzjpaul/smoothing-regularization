@@ -1,0 +1,4 @@
+python lasso_logistic_regression_CV.py -datapath data/LACE-CNN-1500-lastcase.pkl -onehot 0 -sparsify 0 -batchsize 50 -wlr 4 -maxiter 120000 | tee -a /data/zhaojing/regularization/log1007/regularization-CV/regularization-CV-1.log
+python logistic_regression_CV.py -datapath data/LACE-CNN-1500-lastcase.pkl -onehot 0 -sparsify 0 -batchsize 50 -wlr 4 -maxiter 120000 | tee -a /data/zhaojing/regularization/log1007/regularization-CV/regularization-CV-2.log
+python elasticnet_logistic_regression_CV.py -datapath data/LACE-CNN-1500-lastcase.pkl -onehot 0 -sparsify 0 -batchsize 50 -wlr 4 -maxiter 120000 | tee -a /data/zhaojing/regularization/log1007/regularization-CV/regularization-CV-3.log
+python huber_one_weight_logistic_regression_CV.py -datapath data/LACE-CNN-1500-lastcase.pkl -onehot 0 -sparsify 0 -batchsize 50 -wlr 4 -maxiter 120000 | tee -a /data/zhaojing/regularization/log1007/regularization-CV/regularization-CV-4.log

@@ -1,0 +1,4 @@
+python lasso_logistic_regression_CV.py -datapath data/bands_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 5 -maxiter 120000 | tee -a /data/zhaojing/regularization/log1007/regularization-CV/regularization-CV-46.log
+python logistic_regression_CV.py -datapath data/bands_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 5 -maxiter 120000 | tee -a /data/zhaojing/regularization/log1007/regularization-CV/regularization-CV-47.log
+python elasticnet_logistic_regression_CV.py -datapath data/bands_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 5 -maxiter 120000 | tee -a /data/zhaojing/regularization/log1007/regularization-CV/regularization-CV-48.log
+python huber_one_weight_logistic_regression_CV.py -datapath data/bands_normed.pkl -onehot 0 -sparsify 0 -batchsize 30 -wlr 5 -maxiter 120000 | tee -a /data/zhaojing/regularization/log1007/regularization-CV/regularization-CV-49.log

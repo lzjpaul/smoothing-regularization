@@ -113,3 +113,6 @@ grid for gmm prior
 
 5-2
 learning scheme (fixed first)
+
+9-8
+scale is 1,2,5,10 ...
