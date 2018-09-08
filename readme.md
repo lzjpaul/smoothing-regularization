@@ -116,3 +116,6 @@ learning scheme (fixed first)
 
 9-8
 scale is 1,2,5,10 ...
+
+2018-9-8:
+tkde reuse this code, now the head is /home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/smoothing-regularization-tkde
