@@ -119,6 +119,7 @@ scale is 1,2,5,10 ...
 
 2018-9-8:
 tkde reuse this code, now the head is /home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/smoothing-regularization-tkde
+the logistic regression.py is copy from logistic_regression_URL_best.py because the fit need xtest and xtrain
 
-2018-9-8 tkde sparse:
-(1) sparse: has the gmmuptfreq && use partial responsibility
+archive:
+logistic regression does not need testx and testy as input, this is to calculate the test accuracy instantly ...
