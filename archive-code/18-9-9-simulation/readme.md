@@ -93,36 +93,21 @@ pirlr, lambdaslr: only 1e-8 works
 4-12
 for gmm-hyper sparse update, should use (iter_num - self.gm_prior_u) to update
 
-4-19
-adding test data into fit -- not allowed
+4-13
+the i-th symbol not using [0, 1], but using probability
+1) data set: 10000 training + 40000 testing + 3 gaussians
+2) code:
+   in main: y_vals = np.genfromtxt('generated_y_vals.dta', delimiter = ','), also read in the probability for test loss
+   search "yvals" in logistic_regression.py
+   train_index = range(0, 40000)
+   test_index = range(40000, 50000)
 
-4-20
-URL: only 1/10 data
-_complete_URL_best.py: using data_loader_URL_complete
+4-17:
+y_vals should be permutated also
 
-4-22
-subsamples
-(1) delete if i > 0: break
+2018-9-9:
+generate new simulation data:
 
-4-24
-svm.py: only run 1 time and then break
-
-4-25
-learning rate: 300 epochs change a magnitude
-grid for gmm prior
-
-5-2
-learning scheme (fixed first)
-
-9-8
-scale is 1,2,5,10 ...
-
-2018-9-8:
-tkde reuse this code, now the head is /home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/smoothing-regularization-tkde
-
-2018-9-8 tkde sparse:
-(0) running folder is in /home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/smoothing-regularization-tkde-URL-18-9-8
-(1) sparse: has the gmmuptfreq && use partial responsibility
-
-2018-9-9 tkde simulation dataset:
-(0) running folder is in /home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/simulation-data/smoothing-regularization-tkde-true-prob-18-9-9
+(1)
+need to modify self.w_origin = np.random.choice(2, size=(self.dimension), p=self.pi)
+2 is number of gaussian numbers
