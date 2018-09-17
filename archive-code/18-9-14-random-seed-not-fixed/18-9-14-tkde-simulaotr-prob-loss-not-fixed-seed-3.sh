@@ -1,0 +1,7 @@
+# running folder: /home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/simulation-data/smoothing-regularization-tkde-true-prob-18-9-14-seed-not-fixed
+# running machine:
+# logbase
+python gm_prior_logistic_regression_a_b_all_1_1.py -datapath simulator.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 300000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log180914/tkde-simulator-prob-loss/tkde-simulator-prob-loss-18-09-14-1.log
+python gm_prior_logistic_regression_a_b_all_1_2.py -datapath simulator.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 300000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log180914/tkde-simulator-prob-loss/tkde-simulator-prob-loss-18-09-14-2.log
+python gm_prior_logistic_regression_a_b_all_2_1.py -datapath simulator.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 300000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log180914/tkde-simulator-prob-loss/tkde-simulator-prob-loss-18-09-14-3.log
+python gm_prior_logistic_regression_a_b_all_2_2.py -datapath simulator.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 300000 -gmnum 4 -gmoptmethod 2 | tee -a /data/zhaojing/regularization/log180914/tkde-simulator-prob-loss/tkde-simulator-prob-loss-18-09-14-4.log

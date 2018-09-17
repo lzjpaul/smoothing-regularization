@@ -1,0 +1,3 @@
+# ncrc
+python gm_prior_logistic_regression_a_b_all_2_2.py -datapath simulator.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 300000 -gmnum 4 -gmoptmethod 2 | tee -a /hdd1/zhaojing/regularization/log180909/tkde-simulator-prob-loss/tkde-simulator-prob-loss-18-09-09-7.log
+python gm_prior_logistic_regression_a_b_all_2_2.py -datapath simulator.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 5 -pirlr 5 -lambdaslr 5 -maxiter 300000 -gmnum 4 -gmoptmethod 1 | tee -a /hdd1/zhaojing/regularization/log180909/tkde-simulator-prob-loss/tkde-simulator-prob-loss-18-09-09-8.log
