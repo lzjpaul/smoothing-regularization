@@ -208,7 +208,7 @@ DEFAULT_BURNIN     = 100
 
 class GP(AbstractModel):
     """Gaussian process model
-    
+
     Parameters
     ----------
     num_dims : int
@@ -253,7 +253,7 @@ class GP(AbstractModel):
         self._random_state               = npr.get_state()
         self._samplers                   = []
         self._use_mean_if_single_fantasy = True
-        
+
         self._kernel            = None
         self._kernel_with_noise = None
 
@@ -309,10 +309,10 @@ class GP(AbstractModel):
         self._cache_list          = []
         self._fantasy_values_list = []
         self._hypers_list         = []
-        
+
         self._reset_params()
         self.chain_length = 0
-            
+
 
     def _build(self):
         # Build the transformer
@@ -405,7 +405,7 @@ class GP(AbstractModel):
     def inputs(self):
         if self.pending is None or len(self._fantasy_values_list) < self.num_states:
             return self._inputs
-            
+
         return np.vstack((self._inputs, self.pending)) # Could perhaps cache this to make it faster.
 
     @property
@@ -416,7 +416,7 @@ class GP(AbstractModel):
     def values(self):
         if self.pending is None or len(self._fantasy_values_list) < self.num_states:
             return self._values
-        
+
         if self.num_fantasies == 1:
             return np.append(self._values, self._fantasy_values_list[self.state].flatten(), axis=0)
         else:
@@ -477,14 +477,16 @@ class GP(AbstractModel):
 
     def fit(self, inputs, values, pending=None, hypers=None, reburn=False, fit_hypers=True):
         """return a set of hyperparameters after fitting the GP to the input and values
-        
+
         inputs : 2d array
             matrix of input data
         values : 1d array
             the values corresponding to the input data
-        hypers : dict 
+        hypers : dict
             initial values for the hyperparameters
         """
+        print ("in GP, inputs shape: ", inputs.shape)
+        print ("in GP, values shape: ", values.shape)
         # Set the data for the GP
         self._inputs = inputs
         self._values = values
@@ -528,7 +530,7 @@ class GP(AbstractModel):
     def log_likelihood(self):
         """
         GP Marginal likelihood
-        
+
         Notes
         -----
         This is called by the samplers when fitting the hyperparameters.
@@ -553,7 +555,7 @@ class GP(AbstractModel):
 
         # The primary covariances for prediction.
         cand_cross = self.noiseless_kernel.cross_cov(inputs, pred)
-        
+
         chol, alpha = self._pull_from_cache_or_compute()
 
         # Solve the linear systems.
@@ -564,7 +566,7 @@ class GP(AbstractModel):
         func_m = np.dot(cand_cross.T, alpha) + self.mean.value
 
         if full_cov:
-            # Return the covariance matrix of the pred inputs, 
+            # Return the covariance matrix of the pred inputs,
             # rather than just the individual variances at each input
             cand_cov = self.noiseless_kernel.cov(pred)
             func_v = cand_cov - np.dot(beta.T, beta)
@@ -588,7 +590,7 @@ class GP(AbstractModel):
         # Not very important -- just to make sure grad_xp_v.shape = grad_xp_m.shape
         if values.ndim > 1:
             grad_xp_v = grad_xp_v[:,:,np.newaxis]
-        
+
         # In case this is a function over a 1D input,
         # return a numpy array rather than a float
         if np.ndim(grad_xp_m) == 0:

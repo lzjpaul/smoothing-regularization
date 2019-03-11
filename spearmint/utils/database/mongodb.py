@@ -195,7 +195,7 @@ class MongoDB(AbstractDB):
         try:
             self.client = pymongo.MongoClient(database_address)
             self.db     = self.client[database_name]
-            
+
             # Get the ID of this connection for locking.
             self.myId = self.db.last_status()['connectionId']
         except:
@@ -237,12 +237,14 @@ class MongoDB(AbstractDB):
 
     def load(self, experiment_name, experiment_field, field_filters=None):
         # Return a list of documents from the database, decompressing any numpy arrays
-
+        print ("in mongodb load")
         if field_filters is None:
             field_filters = {}
 
         dbcollection = self.db[experiment_name][experiment_field]
         dbdocs       = list(dbcollection.find(field_filters))
+        print ("in mongodb load dbcollection: ", dbcollection)
+        print ("in mongodb load dbdocs: ", dbdocs)
 
         if len(dbdocs) == 0:
             return None
