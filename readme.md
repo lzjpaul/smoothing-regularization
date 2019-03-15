@@ -126,3 +126,25 @@ tkde reuse this code, now the head is /home/singa/zhaojing/smooth-regularization
 
 2018-9-9 tkde simulation dataset:
 (0) running folder is in /home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/simulation-data/smoothing-regularization-tkde-true-prob-18-9-9
+
+2018-9-14:
+/home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/simulation-data/smoothing-regularization-tkde-true-prob-18-9-9
+(1) scientific -scale
+(2) huber_one_weight
+(3) gm-fixed
+
+/home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/simulation-data/smoothing-regularization-tkde-true-prob-18-9-14-seed-not-fixed
+(1) random seed not fixed (but failedddd)
+
+/home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/smoothing-regularization-tkde-URL-18-9-8
+(1) logistic regression, huber one weit, gm dense and gm sparse, 1 epoch for time, previously, these methods were not run successfully in 9-8
+
+/home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/smoothing-regularization-tkde-URL-18-9-14
+(1) all methods, 100 epoch, this time, I pass test data into the fit function to see test accuracy each epoch -- not allowedddd!!!
+
+2019-3-15-tkde-revision:
+(1) since logistic-regression-5-fold.py in /4-29-small-data-set-more/logistic_regression_5_fold.py and /5-29-5-fold/logistic_regression_5_fold.py does not have the main body of logistic-regression.py,
+
+so I diff /home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/smoothing-regularization-tkde/logistic_regression.py /data/zhaojing/regularization/smoothing-regularization-CV/logistic_regression.py to see they are the same.
+
+Hence, I can safely use the logistic_regression.py in /home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/smoothing-regularization-tkde/
