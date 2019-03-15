@@ -334,7 +334,7 @@ def branin(reg_lambda_value, datapath, onehot, sparsify, batchsize, wlr, maxiter
             print do
             elapsed = done - start
             print elapsed
-            np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
+            # np.savetxt('weight-out/'+sys.argv[0][:-3]+'_w.out', LG.w, delimiter=',')
 
     print accuracy_df
     pandas.options.display.float_format = '{:,.6f}'.format

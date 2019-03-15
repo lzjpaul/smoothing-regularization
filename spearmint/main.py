@@ -203,6 +203,8 @@ from spearmint.resources.resource import print_resources_status
 
 from spearmint.utils.parsing import parse_db_address
 
+from pickle_transformer import Dataset
+
 def get_options():
     parser = optparse.OptionParser(usage="usage: %prog [options] directory")
 
@@ -247,10 +249,10 @@ def get_options():
 
 def main():
     options, expt_dir = get_options()
-    print ("options:\n", options)
-    print ("expt_dir:\n", expt_dir)
+    print ("main.py main() options:\n", options)
+    print ("main.py main() expt_dir:\n", expt_dir)
     resources = parse_resources_from_config(options)
-    print ("resources:\n", resources)
+    print ("main.py main() resources:\n", resources)
 
     # Load up the chooser.
     chooser_module = importlib.import_module('spearmint.choosers.' + options['chooser'])
@@ -261,16 +263,17 @@ def main():
     db_address = options['database']['address']
     sys.stderr.write('Using database at %s.\n' % db_address)
     db         = MongoDB(database_address=db_address)
+    print ("main.py main() after db init: load_hypers(db, options['experiment-name']): ", load_hypers(db, options['experiment-name']))
 
     while True:
 
         for resource_name, resource in resources.iteritems():
-            print ("in for, resource_name: ", resource_name)
-            print ("in for, resource: ", resource)
+            print ("main.py main() in for, resource_name: ", resource_name)
+            print ("main.py main() in for, resource: ", resource)
 
             jobs = load_jobs(db, experiment_name)
             # resource.printStatus(jobs)
-
+            print ("main.py main() in for after load_jobs: load_hypers(db, options['experiment-name']): ", load_hypers(db, options['experiment-name']))
             # If the resource is currently accepting more jobs
             # TODO: here cost will eventually also be considered: even if the
             #       resource is not full, we might wait because of cost incurred
@@ -287,10 +290,11 @@ def main():
                 remove_broken_jobs(db, jobs, experiment_name, resources)
 
                 # Get a suggestion for the next job
-                print ("chooser: \n", chooser)
+                print ("main.py main() chooser: \n", chooser)
                 suggested_job = get_suggestion(chooser, resource.tasks, db, expt_dir, options, resource_name)
 
                 # Submit the job to the appropriate resource
+                print ("main.py main() before resource.attemptDispatch")
                 process_id = resource.attemptDispatch(experiment_name, suggested_job, db_address, expt_dir)
 
                 # Set the status of the job appropriately (successfully submitted or not)
@@ -355,11 +359,11 @@ def get_suggestion(chooser, task_names, db, expt_dir, options, resource_name):
 
     # Load the model hypers from the database.
     hypers = load_hypers(db, experiment_name)
-    print ("before chooser fit hypers: ", hypers)
+    print ("main.py get_suggestion() before chooser fit hypers: ", hypers)
 
     # "Fit" the chooser - give the chooser data and let it fit the model.
     hypers = chooser.fit(task_group, hypers, task_options)
-    print ("after chooser fit hypers: ", hypers)
+    print ("main.py get_suggestion() after chooser fit hypers: ", hypers)
 
     # Save the hyperparameters to the database.
     save_hypers(hypers, db, experiment_name)

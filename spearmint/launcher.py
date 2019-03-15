@@ -188,8 +188,9 @@ import time
 import optparse
 import subprocess
 import numpy as np
-
+import datetime
 from spearmint.utils.database.mongodb import MongoDB
+from pickle_transformer import Dataset
 
 def main():
     parser = optparse.OptionParser(usage="usage: %prog [options]")
@@ -230,7 +231,7 @@ def launch(db_address, experiment_name, job_id):
     job['start time'] = start_time
     db.save(job, experiment_name, 'jobs', {'id' : job_id})
 
-    sys.stderr.write("Job launching after %0.2f seconds in submission.\n" 
+    sys.stderr.write("Job launching after %0.2f seconds in submission.\n"
                      % (start_time-job['submit time']))
 
     success = False
@@ -240,6 +241,7 @@ def launch(db_address, experiment_name, job_id):
             result = matlab_launcher(job)
 
         elif job['language'].lower() == 'python':
+            sys.stderr.write ("launcher.py launch() python_launcher")
             result = python_launcher(job)
 
         elif job['language'].lower() == 'shell':
@@ -262,7 +264,7 @@ def launch(db_address, experiment_name, job_id):
                 result = {job['tasks'][0] : result}
             else:
                 result = {'main' : result}
-        
+
         if set(result.keys()) != set(job['tasks']):
             raise Exception("Result task names %s did not match job task names %s." % (result.keys(), job['tasks']))
 
@@ -272,20 +274,20 @@ def launch(db_address, experiment_name, job_id):
         traceback.print_exc()
         sys.stderr.write("Problem executing the function\n")
         print sys.exc_info()
-        
+
     end_time = time.time()
 
     if success:
-        sys.stderr.write("Completed successfully in %0.2f seconds. [%s]\n" 
+        sys.stderr.write("Completed successfully in %0.2f seconds. [%s]\n"
                          % (end_time-start_time, result))
-        
+
         job['values']   = result
         job['status']   = 'complete'
         job['end time'] = end_time
 
     else:
         sys.stderr.write("Job failed in %0.2f seconds.\n" % (end_time-start_time))
-    
+
         # Update metadata.
         job['status']   = 'broken'
         job['end time'] = end_time
@@ -295,6 +297,7 @@ def launch(db_address, experiment_name, job_id):
 def python_launcher(job):
     # Run a Python function
     sys.stderr.write("Running python job.\n")
+    sys.stderr.write("launcher.py python_launcher() Running python job.\n")
 
     # Add directory to the system path.
     sys.path.append(os.path.realpath(job['expt_dir']))
@@ -323,8 +326,11 @@ def python_launcher(job):
         main_file = main_file[:-3]
     sys.stderr.write('Importing %s.py\n' % main_file)
     module  = __import__(main_file)
+    print (module.Dataset)
     sys.stderr.write('Running %s.main()\n' % main_file)
+    sys.stderr.write("launcher.py python_launcher() before Running %s.main()\n" % main_file )
     result = module.main(job['id'], params)
+    sys.stderr.write("launcher.py python_launcher() return result time: %s \n" % datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
 
     # Change back out.
     os.chdir('..')
@@ -366,7 +372,7 @@ def matlab_launcher(job):
         # instead i do this silly workaround to put it in a variable and then
         # copy that over into the struct
         # session.run('params_%s'%param['name'])
-        
+
     sys.stderr.write('Running function %s\n' % job['function-name'])
 
     # Execute the function
@@ -376,7 +382,7 @@ def matlab_launcher(job):
     result = session.getvalue('result')
 
     # TODO: this only works for single-task right now
-    result = float(result) 
+    result = float(result)
     sys.stderr.write("Got result %s\n" % (result))
 
     del session
