@@ -133,7 +133,8 @@ class Logistic_Regression(object):
     def delta_w(self, xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method):
         grad_w = self.likelihood_grad(xTrain, yTrain, index, epoch_num, iter_num, gm_opt_method)
         reg_grad_w = self.reg_lambda * self.w
-        if iter_num < 100 or iter_num % 100 ==0:
+        # if iter_num < 100 or iter_num % 100 ==0:
+        if iter_num % 100000 ==0:
             print "grad_w norm: ", np.linalg.norm(grad_w)
             print "reg_grad_w norm: ", np.linalg.norm(reg_grad_w)
         reg_grad_w[-1, 0] = 0.0 # bias
@@ -204,7 +205,7 @@ class Logistic_Regression(object):
                 # https://www.coursera.org/learn/machine-learning/lecture/fKi0M/stochastic-gradient-descent-convergence
                 iter += 1
                 batch_iter += 1
-                if iter % 1000 == 0:
+                if iter % 100000 == 0:
                     # print test metrics -- not allowed
                     print "\n\ntest accuracy: %.6f\t|\ttest auc: %6f\t|\ttest loss: %6f" % (self.accuracy(self.predict(xTest, sparsify), yTest), \
                                                                self.auroc(self.predict_proba(xTest, sparsify), yTest), self.loss(xTest, yTest, sparsify))
@@ -225,7 +226,7 @@ class Logistic_Regression(object):
                     print "iter %4d\tw norm is nan"%(iter)
                     break
                 # print useful information
-                if iter % 100 == 0:
+                if iter % 100000 == 0:
                     # print np.sum(np.abs(self.w))/self.featureNum, np.linalg.norm(self.w, ord=2)
                     train_accuracy = self.accuracy(self.predict(xTrain, sparsify), yTrain)
                     train_loss = self.loss(xTrain, yTrain, sparsify)
@@ -311,8 +312,8 @@ def branin(reg_lambda_value, datapath, onehot, sparsify, batchsize, wlr, maxiter
             start = time.time()
             st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
             print st
-            print "train_index: ", train_index
-            print "test_index: ", test_index
+            # print "train_index: ", train_index
+            # print "test_index: ", test_index
             xTrain, yTrain, xTest, yTest = x[train_index], y[train_index], x[test_index], y[test_index]
             learning_rate, max_iter = math.pow(10, (-1 * wlr)), maxiter
             eps, batch_size = 1e-10, batchsize
