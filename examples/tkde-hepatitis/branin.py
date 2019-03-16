@@ -72,13 +72,13 @@ def loadData(fileName, onehot=True, sparsify=True):
         print '\n===============================================\n'
         print "X shape: ", X.shape
         print "Y shape: ", Y.shape
-        print "Y[:10] before transform: ", Y[:10]
+        # print "Y[:10] before transform: ", Y[:10]
         if Y.dtype != 'bool':
             Y = (Y > 0.5)
-        print "Y[:10] after transform: ", Y[:10]
+        # print "Y[:10] after transform: ", Y[:10]
         np.random.seed(10)
         idx = np.random.permutation(X.shape[0])
-        print "idx: ", idx
+       #  print "idx: ", idx
         X = X[idx]
         Y = Y[idx]
         # return X, Y
@@ -153,7 +153,7 @@ class Logistic_Regression(object):
         else:
             np.random.seed(10)
             self.w = np.random.normal(0, 0.01, size=(self.featureNum+1, 1))#np.zeros(shape=(self.featureNum+1, 1), dtype='float32')
-        print "self.w[:10]: ", self.w[:10]
+        # print "self.w[:10]: ", self.w[:10]
 
         # adding 1s to each training examples
         if sparsify:
@@ -339,34 +339,51 @@ def branin(reg_lambda_value, datapath, onehot, sparsify, batchsize, wlr, maxiter
 
     print accuracy_df
     pandas.options.display.float_format = '{:,.6f}'.format
-    print accuracy_df.values
-    print "\n\naccuracy pandas results\n\n"
-    print "mean: ", accuracy_df.mean().values
-    print "std: ", accuracy_df.std().values
-    print "max mean index: ", accuracy_df.mean().idxmax()
-    print "max mean: ", accuracy_df.mean().max()
-    print "max mean std: ", accuracy_df.std().loc[accuracy_df.mean().idxmax()]
+    # print accuracy_df.values
+    # print "\n\naccuracy pandas results\n\n"
+    # print "mean: ", accuracy_df.mean().values
+    # print "std: ", accuracy_df.std().values
+    # print "max mean index: ", accuracy_df.mean().idxmax()
+    # print "max mean: ", accuracy_df.mean().max()
+    # print "max mean std: ", accuracy_df.std().loc[accuracy_df.mean().idxmax()]
     print("accuracy best parameter %0.6f (+/-%0.06f)"
                           % (accuracy_df.mean().max(), accuracy_df.std().loc[accuracy_df.mean().idxmax()]))
     # print "max mean std: ", result_df.loc['Std'].loc[result_df['Mean'].idxmax()]
-    print "best each subsample: \n", accuracy_df.max(axis=1)
-    print "best each subsample index: \n", accuracy_df.idxmax(axis=1)
-    print "mean of each subsample best: ", accuracy_df.max(axis=1).mean()
-    print "std of each subsample best: ", accuracy_df.max(axis=1).std()
-    print("accuracy best subsample %0.6f (+/-%0.06f)"
-                          % (accuracy_df.max(axis=1).mean(), accuracy_df.max(axis=1).std()))
+    # print "best each subsample: \n", accuracy_df.max(axis=1)
+    # print "best each subsample index: \n", accuracy_df.idxmax(axis=1)
+    # print "mean of each subsample best: ", accuracy_df.max(axis=1).mean()
+    # print "std of each subsample best: ", accuracy_df.max(axis=1).std()
+    # print("accuracy best subsample %0.6f (+/-%0.06f)"
+    #                       % (accuracy_df.max(axis=1).mean(), accuracy_df.max(axis=1).std()))
 
+    print loss_df
+    pandas.options.display.float_format = '{:,.6f}'.format
+    # print loss_df.values
+    # print "\n\nloss pandas results\n\n"
+    # print "mean: ", loss_df.mean().values
+    # print "std: ", loss_df.std().values
+    # print "min mean index: ", loss_df.mean().idxmin()
+    # print "min mean: ", loss_df.mean().min()
+    # print "min mean std: ", loss_df.std().loc[loss_df.mean().idxmin()]
+    print("loss best parameter %0.6f (+/-%0.06f)"
+                         % (loss_df.mean().min(), loss_df.std().loc[loss_df.mean().idxmin()]))
+    # print "min mean std: ", result_df.loc['Std'].loc[result_df['Mean'].idxmin()]
+    # print "best each subsample: \n", loss_df.min(axis=1)
+    # print "best each subsample index: \n", loss_df.idxmin(axis=1)
+    # print "mean of each subsample best: ", loss_df.min(axis=1).mean()
+    # print "std of each subsample best: ", loss_df.min(axis=1).std()
+    # print("loss best subsample %0.6f (+/-%0.06f)"
+    #                      % (loss_df.min(axis=1).mean(), loss_df.min(axis=1).std()))
 
-
-    # accuracy for this parameter parameter
-    result = float(accuracy_df.mean().max())
+    # loss for this parameter parameter
+    result = float(loss_df.mean().min())
     sys.stderr.write ('Result = %f\n' % result)
     #time.sleep(np.random.randint(60))
     return result
 
 # Write a function like this called 'main'
 def main(job_id, params):
-    sys.stderr.write("simple/brain.py main()\n")
+    sys.stderr.write("in brain.py main()\n")
     sys.stderr.write('Anything printed here will end up in the output directory for job #%d\n' % job_id)
     sys.stderr.write('params\n')
     print ("in brain.py main() params: ", params)
