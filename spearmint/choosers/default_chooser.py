@@ -250,7 +250,7 @@ class DefaultChooser(object):
         ----------
         task_goup : object of type TaskGroup
         """
-        print ("in default chooser fit\n")
+        print ("default_chooser.py fit() in default chooser fit\n")
         self.task_group = task_group
         self.num_dims   = task_group.num_dims
         new_hypers      = {}
@@ -277,11 +277,11 @@ class DefaultChooser(object):
 
         for task_name, task in task_group.tasks.iteritems():
             if task.type.lower() == 'objective':
-                print ("task.type.lower() == objective")
+                print ("default_chooser.py fit() task.type.lower() == objective")
                 data_dict = self.objective # confusing: this is how self.objective gets populated
-                print ("data_dict: ", data_dict)
+                print ("default_chooser.py fit() data_dict: ", data_dict)
             elif task.type.lower() == 'constraint':
-                print ("task.type.lower() == constraint")
+                print ("default_chooser.py fit() task.type.lower() == constraint")
                 self.constraints[task_name] = {}
                 data_dict = self.constraints[task_name]
             else:
@@ -290,8 +290,8 @@ class DefaultChooser(object):
             data_dict['num_dims'] = task_group.num_dims
             data_dict['name']     = task_name
             data_dict.update(task.valid_normalized_data_dict)
-            # print ("task.valid_normalized_data_dict: \n", task.valid_normalized_data_dict)
-            # print ("after update data_dict: \n", data_dict)
+            print ("default_chooser.py fit() task.valid_normalized_data_dict: \n", task.valid_normalized_data_dict)
+            print ("default_chooser.py fit() after update data_dict: \n", data_dict)
 
             # print 'Task %s (%s %s): found %d value%s' % (task_name,
             #     task.options['likelihood'].lower(), task.type.lower(),
@@ -308,7 +308,7 @@ class DefaultChooser(object):
                 vals = data_dict['values'] if data_dict.has_key('values') else data_dict['counts']
 
                 sys.stderr.write('Fitting %s for %s task...\n' % (model_class, task_name))
-                print ("self.models[task_name]: ", self.models[task_name])
+                print ("default_chooser.py fit() self.models[task_name]: ", self.models[task_name])
                 new_hypers[task_name] = self.models[task_name].fit(
                     data_dict['inputs'],
                     vals,

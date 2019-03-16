@@ -187,6 +187,8 @@ from abstract_scheduler import AbstractScheduler
 import os
 import subprocess
 import sys
+import datetime
+import time
 
 def init(*args, **kwargs):
     return LocalScheduler(*args, **kwargs)
@@ -196,9 +198,10 @@ class LocalScheduler(AbstractScheduler):
 
     def submit(self, job_id, experiment_name, experiment_dir, database_address):
         base_path = os.path.dirname(os.path.realpath(spearmint.__file__))
-        cmd = ('python %s/launcher.py --database-address %s --experiment-name %s --job-id %s' % 
+        cmd = ('python %s/launcher.py --database-address %s --experiment-name %s --job-id %s' %
                (base_path, database_address, experiment_name, job_id))
-        
+        print ("local.py submit() cmd: ", cmd)
+
         output_directory = os.path.join(experiment_dir, 'output')
         if not os.path.isdir(output_directory):
             os.mkdir(output_directory)
@@ -211,10 +214,13 @@ class LocalScheduler(AbstractScheduler):
 
         output_filename = os.path.join(output_directory, '%08d.out' % job_id)
         output_file = open(output_filename, 'w')
-
-        process = subprocess.Popen(cmd, stdout=output_file, 
-                                        stderr=output_file, 
+        print ("local.py submit() before Popen")
+        print ("local.py submit() before Popen time: ", datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
+        process = subprocess.Popen(cmd, stdout=None,
+                                        stderr=None,
                                         shell=True)
+        print ("local.py submit() after Popen")
+        print ("local.py submit() after Popen time: ", datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
 
         process.poll()
         if process.returncode is not None and process.returncode < 0:
@@ -225,7 +231,7 @@ class LocalScheduler(AbstractScheduler):
             # sys.stderr.write("Submitted job as process: %d\n" % process.pid)
 
         return process.pid
-        
+
 
     def alive(self, process_id):
         try:

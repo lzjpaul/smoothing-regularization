@@ -226,7 +226,7 @@ def parse_tasks_in_resource_from_config(config, resource_name):
                 if resource_name in task_config["resources"]:
                     tasks.append(task_name)
 
-        return tasks 
+        return tasks
 
 
 def resource_factory(resource_name, task_names, config):
@@ -237,7 +237,7 @@ def resource_factory(resource_name, task_names, config):
     max_concurrent = config.get('max-concurrent', 1)
     max_finished_jobs = config.get('max-finished-jobs', np.inf)
 
-    return Resource(resource_name, task_names, scheduler_object, 
+    return Resource(resource_name, task_names, scheduler_object,
                     scheduler_class, max_concurrent, max_finished_jobs)
 
 def print_resources_status(resources, jobs):
@@ -266,7 +266,7 @@ def print_resources_status(resources, jobs):
 
 class Resource(object):
     """class which manages the job resources
-    
+
     Parameters
     ----------
     name : str
@@ -321,11 +321,11 @@ class Resource(object):
         """Is this resource currently accepting new jobs?"""
         if self.numPending(jobs) >= self.max_concurrent:
             return False
-        
+
         if self.numComplete(jobs) >= self.max_finished_jobs:
             return False
 
-        return True 
+        return True
 
     def printStatus(self, jobs):
         sys.stderr.write("%-12s: %5d pending %5d complete\n" %
@@ -340,25 +340,25 @@ class Resource(object):
 
     def attemptDispatch(self, experiment_name, job, db_address, expt_dir):
         """submit a new job using the scheduler
-        
+
         Parameters
         ----------
         experiment_name : str
         job : dict
         db_address : str
         expt_dir : str
-        
+
         Returns
         -------
         process_id : str
         """
         if job['resource'] != self.name:
             raise Exception("This job does not belong to me!")
-
+        print ("in resource.py attemptDispatch() self.scheduler: ", self.scheduler)
         process_id = self.scheduler.submit(job['id'], experiment_name, expt_dir, db_address)
 
         if process_id is not None:
-            sys.stderr.write('Submitted job %d with %s scheduler (process id: %d).\n' % 
+            sys.stderr.write('Submitted job %d with %s scheduler (process id: %d).\n' %
                 (job['id'], self.scheduler_class, process_id))
         else:
             sys.stderr.write('Failed to submit job %d.\n' % job['id'])

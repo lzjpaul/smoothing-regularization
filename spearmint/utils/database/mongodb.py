@@ -237,20 +237,21 @@ class MongoDB(AbstractDB):
 
     def load(self, experiment_name, experiment_field, field_filters=None):
         # Return a list of documents from the database, decompressing any numpy arrays
-        print ("in mongodb load")
+        # print ("mongodb.py load() mongodb load")
         if field_filters is None:
             field_filters = {}
 
         dbcollection = self.db[experiment_name][experiment_field]
         dbdocs       = list(dbcollection.find(field_filters))
-        print ("in mongodb load dbcollection: ", dbcollection)
-        print ("in mongodb load dbdocs: ", dbdocs)
+        # print ("in mongodb load dbcollection: ", dbcollection)
+        # print ("in mongodb load dbdocs: ", dbdocs)
 
         if len(dbdocs) == 0:
             return None
         elif len(dbdocs) == 1:
             return decompress_nested_container(dbdocs[0])
         else:
+            # print ("len(dbdocs): ", len(dbdocs))
             return [decompress_nested_container(dbdoc) for dbdoc in dbdocs]
 
     def remove(self, experiment_name, experiment_field, field_filters={}):
