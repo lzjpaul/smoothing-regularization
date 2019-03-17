@@ -390,7 +390,7 @@ def main(job_id, params):
     sys.stderr.write('Anything printed here will end up in the output directory for job #%d\n' % job_id)
     sys.stderr.write('params\n')
     print ("in brain.py main() params: ", params)
-    datapath = "/home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/spearmint/Spearmint/examples/data/hepatitis_normed.pkl"
+    datapath = "/home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/spearmint/Spearmint/examples/data/crx_normed.pkl"
     onehot = 0
     sparsify = 0
     batchsize = 30
