@@ -150,4 +150,6 @@ so I diff /home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/smoothin
 Hence, I can safely use the logistic_regression.py in /home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/smoothing-regularization-tkde/
 
 (2) running folder is /home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/smoothing-regularization-tkde-revision-run
+(3) adding all necessary classes and python files to brain.py
 
+(4) the running and code folder is in /home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/spearmint
