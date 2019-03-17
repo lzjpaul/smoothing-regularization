@@ -126,3 +126,7 @@ tkde reuse this code, now the head is /home/singa/zhaojing/smooth-regularization
 
 2018-9-9 tkde simulation dataset:
 (0) running folder is in /home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/simulation-data/smoothing-regularization-tkde-true-prob-18-9-9
+
+2019-3-17 plot:
+originally in home ubuntu machine: /home/zhaojing/research/18-9-16-tkde-plot/smoothing-regularization/archive-code/18-9-9-simulation
+in any computer is archive-code/18-9-9-simulation/plot_weight_save_png.py

@@ -8,7 +8,7 @@ need to modify self.w_origin = np.random.choice(2, size=(self.dimension), p=self
 '''
 
 import numpy as np
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import pickle
 
 class Simulator():
@@ -82,8 +82,9 @@ if __name__ == '__main__':
     with open('simulator.pkl', 'w') as saveFile:
         pickle.dump(simulator, saveFile)
 
-    # plt.hist(simulator.w, bins=50, normed=1, color='g', alpha=0.75)
-    # plt.show()
+    np.savetxt('weight-out/simulation_w.out', simulator.w, delimiter=',')
+    plt.hist(simulator.w, bins=50, normed=1, color='g', alpha=0.75)
+    plt.show()
 
 '''
 generated results see generated_y_vals.dta
@@ -105,6 +106,18 @@ probability distribution:distribution[ 0.31718  0.06432  0.04568  0.03804  0.034
   0.06638  0.31514]
   noise misclassification rate:rate0.069360
 '''
-
+'''
+2018-9-18
+1)
+optimal accuracy:  0.11762
+probability distribution:	[ 0.33878  0.05878  0.03902  0.03314  0.03118  0.03126  0.03206  0.04028
+  0.05578  0.33972]
+noise misclassification rate:	0.060680
+2)
+optimal accuracy:  0.12352
+probability distribution:	[ 0.32736  0.06156  0.04054  0.03476  0.03386  0.03206  0.03516  0.04196
+  0.06112  0.33162]
+noise misclassification rate:	0.065260
+'''
 
 
