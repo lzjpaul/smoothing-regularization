@@ -191,6 +191,7 @@ import numpy as np
 import datetime
 from spearmint.utils.database.mongodb import MongoDB
 from pickle_transformer import Dataset
+from gm_prior_simulation import Simulator
 
 def main():
     parser = optparse.OptionParser(usage="usage: %prog [options]")

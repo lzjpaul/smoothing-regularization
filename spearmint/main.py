@@ -205,6 +205,7 @@ from spearmint.resources.resource import print_resources_status
 from spearmint.utils.parsing import parse_db_address
 
 from pickle_transformer import Dataset
+from gm_prior_simulation import Simulator
 
 def get_options():
     parser = optparse.OptionParser(usage="usage: %prog [options] directory")
