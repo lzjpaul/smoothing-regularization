@@ -243,12 +243,16 @@ class BaseTask(object):
     def paramify_and_print(self, data_vector, left_indent=0, indent_top_row=False):
         params = self.paramify(data_vector)
         indentation = ' '*left_indent
-        
+
         if indent_top_row:
-            sys.stderr.write(indentation)
-        sys.stderr.write('NAME          TYPE       VALUE\n')
-        sys.stderr.write(indentation)
-        sys.stderr.write('----          ----       -----\n')
+            # sys.stderr.write(indentation)
+            print (indentation)
+        # sys.stderr.write('NAME          TYPE       VALUE\n')
+        # sys.stderr.write(indentation)
+        # sys.stderr.write('----          ----       -----\n')
+        print ('NAME          TYPE       VALUE\n')
+        print (indentation)
+        print ('----          ----       -----\n')
 
         for param_name, param in params.iteritems():
 
@@ -261,9 +265,11 @@ class BaseTask(object):
 
             for i in xrange(len(param['values'])):
                 if i == 0:
-                    sys.stderr.write(format_str % (indentation, param_name, param['type'], param['values'][i]))
+                    # sys.stderr.write(format_str % (indentation, param_name, param['type'], param['values'][i]))
+                    print (format_str % (indentation, param_name, param['type'], param['values'][i]))
                 else:
-                    sys.stderr.write(format_str % (indentation, '',                        param['values'][i]))
+                    # sys.stderr.write(format_str % (indentation, '',                        param['values'][i]))
+                    print (format_str % (indentation, '',                        param['values'][i]))
 
     # Converts a vector in input space to the corresponding dict of params
     def paramify(self, data_vector):
@@ -286,7 +292,7 @@ class BaseTask(object):
                     params[name]['values'].append(vdict['options'][data_vector[ind].argmax(0)])
             else:
                 raise Exception('Unknown parameter type.')
-            
+
         return params
 
     # Converts a dict of params to the corresponding vector in puts space
@@ -336,7 +342,7 @@ class BaseTask(object):
             U = np.squeeze(U)
 
         return U
-        
+
     def from_unit(self, U):
         if U.shape[0] == 0:
             return np.array([])
@@ -377,7 +383,7 @@ class BaseTask(object):
     # Convert primitive types to the unit hypercube
     def int_to_unit(self, v, vmin, vmax):
         unit = (np.double(v) - vmin) / (vmax - vmin)
-        
+
         # Make sure we are not over bounds
         try:
             unit[unit > 1] = 1
@@ -391,7 +397,7 @@ class BaseTask(object):
 
     def float_to_unit(self, v, vmin, vmax):
         unit = (np.double(v) - vmin) / (vmax - vmin)
-        
+
         # Make sure we are not over bounds
         try:
             unit[unit > 1] = 1.0

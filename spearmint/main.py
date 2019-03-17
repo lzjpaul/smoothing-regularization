@@ -186,6 +186,7 @@ import sys
 import optparse
 import importlib
 import time
+import datetime
 import os
 
 import numpy as np
@@ -264,12 +265,21 @@ def main():
     sys.stderr.write('Using database at %s.\n' % db_address)
     db         = MongoDB(database_address=db_address)
     print ("main.py main() after db init: load_hypers(db, options['experiment-name']): ", load_hypers(db, options['experiment-name']))
-
-    while True:
-
+    start_time = time.time()
+    print ("start_time: \n")
+    print(datetime.datetime.fromtimestamp(start_time).strftime('%Y-%m-%d %H:%M:%S'))
+    done_time = time.time()
+    time_tol = 14400 # run for 14400 seconds
+    # while True:
+    while (done_time-start_time) < time_tol:
         for resource_name, resource in resources.iteritems():
-            print ("main.py main() in for, resource_name: ", resource_name)
-            print ("main.py main() in for, resource: ", resource)
+            done_time = time.time()
+            if (done_time-start_time) > time_tol:
+                # print ('main.py main() in for resource done_time\n')
+                # print (datetime.datetime.fromtimestamp(done_time).strftime('%Y-%m-%d %H:%M:%S'))
+                break
+            # print ("main.py main() in for, resource_name: ", resource_name)
+            # print ("main.py main() in for, resource: ", resource)
 
             jobs = load_jobs(db, experiment_name)
             # resource.printStatus(jobs)
@@ -316,6 +326,10 @@ def main():
         # (they might be accepting if suggest takes a while and so some jobs already finished by the time this point is reached)
         if tired(db, experiment_name, resources):
             time.sleep(options.get('polling-time', 5))
+        done_time = time.time()
+        print ('main.py main() break for resource done_time\n')
+        print (datetime.datetime.fromtimestamp(done_time).strftime('%Y-%m-%d %H:%M:%S'))
+    print ("finish in main!!\n")
 
 def tired(db, experiment_name, resources):
     """

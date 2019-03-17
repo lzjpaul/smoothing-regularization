@@ -279,7 +279,7 @@ class DefaultChooser(object):
             if task.type.lower() == 'objective':
                 print ("default_chooser.py fit() task.type.lower() == objective")
                 data_dict = self.objective # confusing: this is how self.objective gets populated
-                print ("default_chooser.py fit() data_dict: ", data_dict)
+                # print ("default_chooser.py fit() data_dict: ", data_dict)
             elif task.type.lower() == 'constraint':
                 print ("default_chooser.py fit() task.type.lower() == constraint")
                 self.constraints[task_name] = {}
@@ -290,8 +290,8 @@ class DefaultChooser(object):
             data_dict['num_dims'] = task_group.num_dims
             data_dict['name']     = task_name
             data_dict.update(task.valid_normalized_data_dict)
-            print ("default_chooser.py fit() task.valid_normalized_data_dict: \n", task.valid_normalized_data_dict)
-            print ("default_chooser.py fit() after update data_dict: \n", data_dict)
+            # print ("default_chooser.py fit() task.valid_normalized_data_dict: \n", task.valid_normalized_data_dict)
+            # print ("default_chooser.py fit() after update data_dict: \n", data_dict)
 
             # print 'Task %s (%s %s): found %d value%s' % (task_name,
             #     task.options['likelihood'].lower(), task.type.lower(),
@@ -330,7 +330,8 @@ class DefaultChooser(object):
 
         if self.objective['inputs'].shape[0] < DEFAULT_NUMDESIGN:
             suggestion = self.task_group.from_unit(self.grid[self.design_index])
-            sys.stderr.write("\nSuggestion:     ")
+            # sys.stderr.write("\nSuggestion:     ")
+            print("\nSuggestion:     ")
             self.task_group.paramify_and_print(suggestion.flatten(), left_indent=16)
             return suggestion
 
@@ -434,7 +435,9 @@ class DefaultChooser(object):
             unnormalized_std_at_best = obj_task.unstandardize_variance(std_at_best)
 
             # Print out the minimum according to the model
-            sys.stderr.write('\nMinimum expected objective value under model '
+            # sys.stderr.write('\nMinimum expected objective value under model '
+            #     'is %.5f (+/- %.5f), at location:\n' % (unnormalized_best_value, unnormalized_std_at_best))
+            print('\nMinimum expected objective value under model '
                 'is %.5f (+/- %.5f), at location:\n' % (unnormalized_best_value, unnormalized_std_at_best))
             self.task_group.paramify_and_print(self.task_group.from_unit(current_best_location).flatten(),
                                                left_indent=16, indent_top_row=True)
@@ -446,7 +449,8 @@ class DefaultChooser(object):
             best_observed_location = inps[np.argmin(vals),:][None]
 
             # Don't need to un-normalize inputs here because these are the raw inputs
-            sys.stderr.write('\nMinimum of observed values is %f, at location:\n' % best_observed_value)
+            # sys.stderr.write('\nMinimum of observed values is %f, at location:\n' % best_observed_value)
+            print('\nMinimum of observed values is %f, at location:\n' % best_observed_value)
             self.task_group.paramify_and_print(best_observed_location.flatten(), left_indent=16, indent_top_row=True)
 
         else:
