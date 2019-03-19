@@ -327,7 +327,7 @@ def python_launcher(job):
         main_file = main_file[:-3]
     sys.stderr.write('Importing %s.py\n' % main_file)
     module  = __import__(main_file)
-    print (module.Dataset)
+    # print (module.Dataset)
     sys.stderr.write('Running %s.main()\n' % main_file)
     sys.stderr.write("launcher.py python_launcher() before Running %s.main()\n" % main_file )
     result = module.main(job['id'], params)
