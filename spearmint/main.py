@@ -270,7 +270,7 @@ def main():
     print ("start_time: \n")
     print(datetime.datetime.fromtimestamp(start_time).strftime('%Y-%m-%d %H:%M:%S'))
     done_time = time.time()
-    time_tol = 14400 # run for 14400 seconds
+    time_tol = 172800 # run for 48 hours
     # while True:
     while (done_time-start_time) < time_tol:
         for resource_name, resource in resources.iteritems():
@@ -284,7 +284,7 @@ def main():
 
             jobs = load_jobs(db, experiment_name)
             # resource.printStatus(jobs)
-            print ("main.py main() in for after load_jobs: load_hypers(db, options['experiment-name']): ", load_hypers(db, options['experiment-name']))
+            # print ("main.py main() in for after load_jobs: load_hypers(db, options['experiment-name']): ", load_hypers(db, options['experiment-name']))
             # If the resource is currently accepting more jobs
             # TODO: here cost will eventually also be considered: even if the
             #       resource is not full, we might wait because of cost incurred
@@ -328,8 +328,8 @@ def main():
         if tired(db, experiment_name, resources):
             time.sleep(options.get('polling-time', 5))
         done_time = time.time()
-        print ('main.py main() break for resource done_time\n')
-        print (datetime.datetime.fromtimestamp(done_time).strftime('%Y-%m-%d %H:%M:%S'))
+        # print ('main.py main() break for resource done_time\n')
+        # print (datetime.datetime.fromtimestamp(done_time).strftime('%Y-%m-%d %H:%M:%S'))
     print ("finish in main!!\n")
 
 def tired(db, experiment_name, resources):

@@ -203,8 +203,9 @@ def train(data, net, max_epoch, get_lr, weight_decay, batch_size=100,
         if epoch == (max_epoch-1):
             print 'final test loss = %f, final test accuracy = %f' \
             % (test_loss_print, test_accuracy_print)
+            print 'test_x.shape[0]: ', test_x.shape[0]
             resfile = open("resnet-result.txt","a+")
-            resfile.write("\n%f"%test_loss_print)
+            resfile.write("\n%f"%(test_loss_print*test_x.shape[0]))
             resfile.close()
     
     model_time = time.time()
