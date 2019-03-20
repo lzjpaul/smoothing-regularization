@@ -24,7 +24,7 @@ class BOOptimizer(Optimizer):
 
     def calcRegGrad(self, dev, bo_reg_lambda, net, epoch, value, grad, name, step):
         grad.to_device(dev)
-        if epoch == 0 and step < 5:
+        if epoch == 0 and step < 3:
             print 'calcRegGrad name: ', name
             print 'calcRegGrad bo_reg_lambda: ', bo_reg_lambda
         tensor.axpy(bo_reg_lambda, value, grad)

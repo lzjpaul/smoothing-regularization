@@ -33,13 +33,13 @@ from singa.proto import core_pb2
 # from caffe import caffe_net
 
 import bo_optimizer
-import alexnet
+# import alexnet
 # import vgg
-# import resnet
+import resnet
+import gm_prior_data as dt
 
 import datetime
 import time
-
 
 def load_dataset(filepath):
     print 'Loading data file %s' % filepath
@@ -80,6 +80,14 @@ def normalize_for_vgg(train_x, test_x):
     test_x /= std
     return train_x, test_x
 
+def normalize_for_resnet(train_x, test_x):
+    mean = train_x.mean()
+    std = train_x.std()
+    train_x -= mean
+    test_x -= mean
+    train_x /= std
+    test_x /= std
+    return train_x, test_x
 
 def normalize_for_alexnet(train_x, test_x):
     mean = np.average(train_x, axis=0)
@@ -131,8 +139,8 @@ def train(data, net, max_epoch, get_lr, weight_decay, batch_size=100,
     opt = bo_optimizer.BOSGD(net=net, momentum=0.9, weight_decay=weight_decay)
     for (p, specs) in zip(net.param_names(), net.param_specs()):
         opt.register(p, specs)
-    
-    lambdasfileHandle = open("alexnet-lambdas.txt", "r")
+
+    lambdasfileHandle = open("resnet-lambdas.txt", "r")
     lambdaslineList = lambdasfileHandle.readlines()
     lambdasfileHandle.close()
 
@@ -153,8 +161,10 @@ def train(data, net, max_epoch, get_lr, weight_decay, batch_size=100,
         np.random.shuffle(idx)
         loss, acc = 0.0, 0.0
         print 'Epoch %d' % epoch
+        print 'train_x l2: ', np.linalg.norm(train_x)
+        print "idx: ", idx
         for b in range(num_train_batch):
-            x = train_x[idx[b * batch_size: (b + 1) * batch_size]]
+            x = dt.batch_data_augment_tool(epoch, train_x.shape[0], idx[b * batch_size: (b + 1) * batch_size], train_x[idx[b * batch_size: (b + 1) * batch_size]]) 
             y = train_y[idx[b * batch_size: (b + 1) * batch_size]]
             tx.copy_from_numpy(x)
             ty.copy_from_numpy(y)
@@ -193,10 +203,10 @@ def train(data, net, max_epoch, get_lr, weight_decay, batch_size=100,
         if epoch == (max_epoch-1):
             print 'final test loss = %f, final test accuracy = %f' \
             % (test_loss_print, test_accuracy_print)
-            resfile = open("alexnet-result.txt","a+")
+            resfile = open("resnet-result.txt","a+")
             resfile.write("\n%f"%test_loss_print)
             resfile.close()
-
+    
     model_time = time.time()
     model_time = datetime.datetime.fromtimestamp(model_time).strftime('%Y-%m-%d-%H-%M-%S')
     print 'model time: ', model_time
@@ -214,13 +224,13 @@ if __name__ == '__main__':
     print 'Loading data ..................'
     train_x, train_y = load_train_data(args.data)
     test_x, test_y = load_test_data(args.data)
-    if args.model == 'alexnet':
-        train_x, test_x = normalize_for_alexnet(train_x, test_x)
+    if args.model == 'resnet':
+        train_x, test_x = normalize_for_resnet(train_x, test_x)
         start = time.time()
         st = datetime.datetime.fromtimestamp(start).strftime('%Y-%m-%d %H:%M:%S')
         print st
-        net = alexnet.create_net(args.use_cpu)
-        train((train_x, train_y, test_x, test_y), net, 160, alexnet_lr, 0.004,
+        net = resnet.create_net(args.use_cpu)
+        train((train_x, train_y, test_x, test_y), net, 200, resnet_lr, 1e-4,
               use_cpu=args.use_cpu)
         done = time.time()
         do = datetime.datetime.fromtimestamp(done).strftime('%Y-%m-%d %H:%M:%S')
@@ -231,4 +241,3 @@ if __name__ == '__main__':
         print("Invalid model name, exiting...")
         exit()
 
-# CUDA_VISIBLE_DEVICES=0 /home/wangwei/miniconda2/bin/python train_no_data_augment.py alexnet cifar-10-batches-py/

@@ -37,5 +37,5 @@ def main(job_id, params):
     sys.stderr.write("brain.py main()\n")
     sys.stderr.write('Anything printed here will end up in the output directory for job #%d\n' % job_id)
     sys.stderr.write('params\n')
-    print ("in brain.py main() params: ", params)
+    print ("check file  in brain.py main() params: ", params)
     return branin(params['lambdaone'][0], params['lambdatwo'][0], params['lambdathree'][0], params['lambdafour'][0])
