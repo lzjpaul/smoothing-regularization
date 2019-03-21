@@ -1,0 +1,141 @@
+{
+    "language"        : "PYTHON",
+    "main-file"       : "branin.py",
+    "experiment-name" : "simple-resnet-example",
+    "likelihood"      : "GAUSSIAN",
+    "variables" : {
+        "lambda_1" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_2" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_3" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_4" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_5" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_6" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_7" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_8" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_9" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_10" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_11" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_12" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_13" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_14" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_15" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_16" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_17" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_18" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_19" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_20" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_21" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        },
+        "lambda_22" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00005,
+            "max"  : 0.0005
+        }
+    }
+}
+

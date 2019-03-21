@@ -1,0 +1,33 @@
+{
+    "language"        : "PYTHON",
+    "main-file"       : "branin.py",
+    "experiment-name" : "simple-alexnet-example",
+    "likelihood"      : "GAUSSIAN",
+    "variables" : {
+        "lambdaone" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.0001,
+            "max"  : 0.001
+        },
+        "lambdatwo" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.0001,
+            "max"  : 0.001
+        },
+        "lambdathree" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.0001,
+            "max"  : 0.001
+        },
+        "lambdafour" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.0001,
+            "max"  : 0.001
+        }
+    }
+}
+
