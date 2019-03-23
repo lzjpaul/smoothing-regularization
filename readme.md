@@ -153,3 +153,6 @@ Hence, I can safely use the logistic_regression.py in /home/singa/zhaojing/smoot
 (3) adding all necessary classes and python files to brain.py
 
 (4) the running and code folder is in /home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/spearmint
+
+2019-3-15-simulation-dataset:
+(1) refer to 2018-9-14(log above):/home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/simulation-data/smoothing-regularization-tkde-true-prob-18-9-9
