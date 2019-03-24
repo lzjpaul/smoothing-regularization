@@ -1,0 +1,21 @@
+{
+    "language"        : "PYTHON",
+    "main-file"       : "branin_simulation_en.py",
+    "experiment-name" : "simple-simulation-en-example",
+    "likelihood"      : "GAUSSIAN",
+    "variables" : {
+        "x" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.0001,
+            "max"  : 1000.0
+        },
+        "y" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.01,
+            "max"  : 0.99
+        }
+    }
+}
+
