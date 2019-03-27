@@ -1,0 +1,13 @@
+grep -B 6 "accuracy best parameter" 19-3-16-spearmint-exp-one-1 > 19-3-16-spearmint-exp-one-results-1
+grep -B 6 "accuracy best parameter" 19-3-16-spearmint-exp-one-2 > 19-3-16-spearmint-exp-one-results-2
+grep -B 6 "accuracy best parameter" 19-3-16-spearmint-exp-one-3 > 19-3-16-spearmint-exp-one-results-3
+grep -B 6 "accuracy best parameter" 19-3-16-spearmint-exp-one-4 > 19-3-16-spearmint-exp-one-results-4
+grep -B 6 "accuracy best parameter" 19-3-16-spearmint-exp-one-5 > 19-3-16-spearmint-exp-one-results-5
+grep -B 6 "accuracy best parameter" 19-3-16-spearmint-exp-one-6 > 19-3-16-spearmint-exp-one-results-6
+grep -B 6 "accuracy best parameter" 19-3-16-spearmint-exp-one-7 > 19-3-16-spearmint-exp-one-results-7
+grep -B 6 "accuracy best parameter" 19-3-16-spearmint-exp-one-8 > 19-3-16-spearmint-exp-one-results-8
+grep -B 6 "accuracy best parameter" 19-3-16-spearmint-exp-one-9 > 19-3-16-spearmint-exp-one-results-9
+grep -B 6 "accuracy best parameter" 19-3-16-spearmint-exp-one-10 > 19-3-16-spearmint-exp-one-results-10
+grep -B 6 "accuracy best parameter" 19-3-16-spearmint-exp-one-11 > 19-3-16-spearmint-exp-one-results-11
+grep -B 6 "accuracy best parameter" 19-3-16-spearmint-exp-one-12 > 19-3-16-spearmint-exp-one-results-12
+grep -B 6 "accuracy best parameter" 19-3-16-spearmint-exp-one-13 > 19-3-16-spearmint-exp-one-results-13
