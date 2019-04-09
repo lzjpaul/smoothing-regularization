@@ -1,0 +1,15 @@
+{
+    "language"        : "PYTHON",
+    "main-file"       : "branin_ionosphere_lasso.py",
+    "experiment-name" : "simple-ionosphere-lasso-example",
+    "likelihood"      : "GAUSSIAN",
+    "variables" : {
+        "x" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.0001,
+            "max"  : 1000.0
+        }
+    }
+}
+

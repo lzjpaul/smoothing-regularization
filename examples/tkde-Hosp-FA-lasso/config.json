@@ -1,0 +1,15 @@
+{
+    "language"        : "PYTHON",
+    "main-file"       : "branin_Hosp_FA_lasso.py",
+    "experiment-name" : "simple-Hosp-FA-lasso-example",
+    "likelihood"      : "GAUSSIAN",
+    "variables" : {
+        "x" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.0001,
+            "max"  : 1000.0
+        }
+    }
+}
+

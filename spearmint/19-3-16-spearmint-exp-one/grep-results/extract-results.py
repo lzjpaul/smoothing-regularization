@@ -24,6 +24,7 @@ if __name__ == '__main__':
     for i in range(len(resultslineList)):
         if i >= 7:
             if (i-7)%8 == 0:
+                # print 'str(resultslineList[i+1].split()[0]): ', str(resultslineList[i+1].split()[0])
                 accuracy_df.loc[0, (str(resultslineList[i+1].split()[0]))] = float(resultslineList[i+2].split()[1])
                 accuracy_df.loc[1, (str(resultslineList[i+1].split()[0]))] = float(resultslineList[i+3].split()[1])
                 accuracy_df.loc[2, (str(resultslineList[i+1].split()[0]))] = float(resultslineList[i+4].split()[1])

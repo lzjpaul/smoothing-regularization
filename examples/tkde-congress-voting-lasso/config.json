@@ -1,0 +1,15 @@
+{
+    "language"        : "PYTHON",
+    "main-file"       : "branin_congress_voting_lasso.py",
+    "experiment-name" : "simple-congress-voting-lasso-example",
+    "likelihood"      : "GAUSSIAN",
+    "variables" : {
+        "x" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.0001,
+            "max"  : 1000.0
+        }
+    }
+}
+

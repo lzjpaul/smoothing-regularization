@@ -424,6 +424,6 @@ def main(job_id, params):
     sparsify = 0
     batchsize = 30
     wlr = 4
-    maxiter = 120
+    maxiter = 120000
     # only one weight decay value
     return branin(params['x'][0], params['y'][0], datapath, onehot, sparsify, batchsize, wlr, maxiter)

@@ -1,0 +1,1 @@
+python main.py ../examples/tkde-Hosp-FA | tee -a 19-3-25-spearmint-exp-five/19-3-25-spearmint-exp-five-1
