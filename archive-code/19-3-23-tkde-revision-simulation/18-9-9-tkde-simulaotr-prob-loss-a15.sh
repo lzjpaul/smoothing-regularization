@@ -1,0 +1,3 @@
+# ncrd
+python lasso_logistic_regression.py -datapath simulator.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 5 -maxiter 300000 | tee -a /data/zhaojing/regularization/log180909/tkde-simulator-prob-loss/tkde-simulator-prob-loss-18-09-09-9.log
+python logistic_regression.py -datapath simulator.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 5 -maxiter 300000 | tee -a /data/zhaojing/regularization/log180909/tkde-simulator-prob-loss/tkde-simulator-prob-loss-18-09-09-10.log

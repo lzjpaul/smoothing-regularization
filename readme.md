@@ -156,3 +156,6 @@ Hence, I can safely use the logistic_regression.py in /home/singa/zhaojing/smoot
 
 2019-3-15-simulation-dataset:
 (1) refer to 2018-9-14(log above):/home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/simulation-data/smoothing-regularization-tkde-true-prob-18-9-9
+
+2019-3-23:
+(1) saved code in

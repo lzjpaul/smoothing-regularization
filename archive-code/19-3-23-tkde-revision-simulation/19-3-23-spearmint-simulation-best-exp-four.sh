@@ -1,0 +1,3 @@
+# running folder: /home/singa/zhaojing/smooth-regularization-dbpcm-bak-logistic/simulation-data/smoothing-regularization-tkde-true-prob-18-9-9
+# running machine: logbase-b22
+python logistic_regression_simulation_tkde_spearmint_best.py -datapath simulator.pkl -onehot 0 -sparsify 0 -batchsize 500 -wlr 5 -maxiter 300000 | tee -a /data/zhaojing/regularization/log190323/spearmint-simulation-best-exp/spearmint-simulation-best-exp-19-03-23-1.log
