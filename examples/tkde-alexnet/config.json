@@ -7,26 +7,26 @@
         "lambdaone" : {
             "type" : "FLOAT",
             "size" : 1,
-            "min"  : 0.0001,
-            "max"  : 0.001
+            "min"  : 0.001,
+            "max"  : 0.01
         },
         "lambdatwo" : {
             "type" : "FLOAT",
             "size" : 1,
-            "min"  : 0.0001,
-            "max"  : 0.001
+            "min"  : 0.001,
+            "max"  : 0.01
         },
         "lambdathree" : {
             "type" : "FLOAT",
             "size" : 1,
-            "min"  : 0.0001,
-            "max"  : 0.001
+            "min"  : 0.001,
+            "max"  : 0.01
         },
         "lambdafour" : {
             "type" : "FLOAT",
             "size" : 1,
-            "min"  : 0.0001,
-            "max"  : 0.001
+            "min"  : 0.25,
+            "max"  : 2.5
         }
     }
 }

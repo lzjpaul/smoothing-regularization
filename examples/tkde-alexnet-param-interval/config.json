@@ -1,0 +1,33 @@
+{
+    "language"        : "PYTHON",
+    "main-file"       : "branin.py",
+    "experiment-name" : "simple-alexnet-param-interval-example",
+    "likelihood"      : "GAUSSIAN",
+    "variables" : {
+        "lambdaone" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00001,
+            "max"  : 1.0
+        },
+        "lambdatwo" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00001,
+            "max"  : 1.0
+        },
+        "lambdathree" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.00001,
+            "max"  : 1.0
+        },
+        "lambdafour" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.0025,
+            "max"  : 250
+        }
+    }
+}
+
